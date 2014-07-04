@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>考勤!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+	<!--link rel="stylesheet/less" href="/static/layoutit/less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="/static/layoutit/less/responsive.less" type="text/css" /-->
+	<!--script src="/static/layoutit/js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	
+	<link href="/static/layoutit/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/layoutit/css/style.css" rel="stylesheet">
+	<link href="/static/css/mycss.css" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="/static/layoutit/js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <!-- 
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/layoutit/img/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/layoutit/img/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/layoutit/img/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="/static/layoutit/img/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="/static/layoutit/img/favicon.png">
+   -->
+	<script type="text/javascript" src="/static/layoutit/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/static/layoutit/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/layoutit/js/scripts.js"></script>
+	<script type="text/javascript" src="/static/js/highcharts/js/highcharts.js"></script>
+	<script type="text/javascript" src="/static/js/highcharts/js/highcharts-more.js"></script>
+	<script type="text/javascript" src="/static/js/myjs/mycharts.js"></script>
+</head>
+
+<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="navbar-header">
+					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="http://www.cnblogs.com/CSGrandeur/" target="_blank">考勤</a>
+				</div>
+				
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="active">
+							<a href="http://www.cnblogs.com/CSGrandeur/" target="_blank">首页</a>
+						</li>
+						<li>
+							<a href="http://www.cnblogs.com/CSGrandeur/" target="_blank">实验室通知</a>
+						</li>
+						<li class="dropdown">
+							 <a href="http://www.cnblogs.com/CSGrandeur/" target="_blank" class="dropdown-toggle" data-toggle="dropdown">设备管理<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="http://www.cnblogs.com/CSGrandeur/" target="_blank">计算机</a>
+								</li>
+								<li>
+									<a href="/static/layoutit/#">耗材</a>
+								</li>
+								<li>
+									<a href="/static/layoutit/#">桌椅板凳</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									<a href="/static/layoutit/#">其他设备</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<form class="navbar-form navbar-left" role="search">
+						<div class="form-group">
+							<input type="text" class="form-control">
+						</div> <button type="submit" class="btn btn-default">站内搜索</button>
+					</form>
+					<div class="navbar-form navbar-right">
+						<a class="btn btn-primary" href="/accounts/signup">登录</a>
+						<a class="btn btn-default" href="/accounts/login/">注册</a>
+					</div>
+				</div>
+				
+			</nav>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-1 column">
+		</div>
+		<div class="col-md-2 column">
+			 <span class="label label-default">学号：</span>
+			 <span >{{stuid}}</span>
+		</div>
+		<div class="col-md-2 column">
+			 <span class="label label-default">姓名：</span>
+			 <span >{{name}}</span>
+		</div>
+		<div class="col-md-4 column">
+			 <span class="label label-default">估测正在：</span>
+			 <span ><strong><font color='red' id = 'whatdoing'>（分析中...）</font></strong></span>
+		</div>
+		<div class="col-md-3 column">
+			 <span class="label label-default">本周已累计工作：</span>
+			 <span >63小时</span>
+		</div>
+	</div>
+	
+		<br/>
+		
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div id="charts">
+			   <div id="cpuload" class='chart'></div>
+			   <div id="memload" class='chart'></div>
+			   <div id="mousebutton0" class='chart'></div>
+			   <div id="mousebutton1" class='chart'></div>
+			   <div id="mousemove" class='chart'></div>
+			   <div id="keybutton" class='chart'></div>
+			   <div id="upload" class='chart'></div>
+			   <div id="download" class='chart'></div>
+			   <div id="appprocessnum" class='chart'></div>
+			   <div id="processnum" class='chart'></div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+$(document).ready(function ()
+{
+	$(".chart").height(150);
+	ChartDatas("{{onlyname}}");
+	setInterval(function(){AddPoints("{{onlyname}}");}, timeperiod);
+})  
+
+</script>
+</html>
+
+
+
+	
