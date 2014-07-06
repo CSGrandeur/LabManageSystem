@@ -1,18 +1,15 @@
 #from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render, render_to_response
+from django.template.response import TemplateResponse
 from django.http import Http404, HttpResponse
-from models import CheckingIn, Name2Onlyname
-from django.utils import simplejson
+import simplejson
+from django.db.models import Q
+from pyfuncs import funcs
 import base64
 import datetime
+
+from CheckingIn.models import CheckingIn, Name2Onlyname
 # Create your views here.
-def display_meta(request):
-    values = request.META.items()
-    values.sort()
-    html = []
-    for k, v in values:
-        html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, v))
-    return HttpResponse('<table>%s</table>' % '\n'.join(html))
 def receive(request):
     if 'info' in request.GET:
         info = Base64JsonDecode(request.GET['info'])
@@ -30,8 +27,8 @@ def receive(request):
                 appprocessnum = info['appprocessnum'],
                 processnum = info['processnum'],
                 )
-            return render_to_response('receive.html', {'response': 'ok!!!'})
-    return render_to_response('receive.html', {'response': 'not ok'})
+            return TemplateResponse(request, 'CheckingIn/smt/receive.html', {'response': 'ok!!!'})
+    return TemplateResponse(request, 'CheckingIn/smt/receive.html', {'response': 'not ok'})
          
 def display_charts(request, stuid):
     stuid = stuid.strip()
@@ -42,7 +39,7 @@ def display_charts(request, stuid):
     except Name2Onlyname.DoesNotExist:
         raise Http404()
     else:
-        return render_to_response('display_charts.html', {'stuid': student.stuid,
+        return TemplateResponse(request, 'CheckingIn/smt/display_charts.html', {'stuid': student.stuid,
                                                           'name': student.name,
                                                           'onlyname': student.onlyname
                                                 })

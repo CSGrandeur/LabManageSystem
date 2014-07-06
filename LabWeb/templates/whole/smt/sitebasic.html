@@ -1,0 +1,127 @@
+{% extends "whole/smt/basic.html" %}
+{% load i18n %}
+{% block title %}
+	<title>{% trans 'CSU_ACM Power_Judge' %}</title>
+{% endblock %}
+
+{% block icon %}
+	{# <link rel="image_src" type="image/jpeg" href="images/share.png" /> #}
+{% endblock %}
+
+{% block body %}
+	<body id="powerjudgebody">
+	{% block sidebar %}
+			{# 左边栏目录  #}
+			<div id="sidemenu" class="ui vertical js_invertset inverted labeled thin sidebar menu js_colorset black">
+			{% block userlogin %}
+				{# 登录信息  #}
+				<h3 class="item ui header">{% trans 'User Info' %}</h3>
+				
+				<div class="item" id="logout_form_div" style="display: none;">
+					<form id="logout_form" action="/powerjudge/logout_function/" method="post" >{% csrf_token %}
+						<label>
+							<a id="welcome" class="ui red huge label">
+								{% trans 'Welcome!' %}
+							</a>
+						</label>
+						<div id="username_display">
+								{{ request.session.j_username }}
+						</div>
+						<div>
+							<button id="logout_submit" type="submit" class="ui js_colorset black mini submit button">
+								{% trans 'Logout' %}
+							</button>
+						</div>
+						
+					</form>
+				</div>
+				<div class="item" id="login_form_div" >
+					<form id="login_form" action="/powerjudge/login_function/" method="post" >{% csrf_token %}
+						<label>{% trans 'Username' %}:</label>
+						<div class="ui input">
+							<input name="username" type="text" placeholder="{% trans 'Username' %}">
+						</div>
+							<label>{% trans 'Password' %}:</label>
+						<div class="ui input">
+							<input name="password" type="password">
+						</div>
+						<div class="ui two column divided grid">
+							<div class="column">
+								<button id="login_submit" type="submit" class="ui js_colorset black mini submit button">
+									{% trans 'Login' %}
+								</button>
+							</div>
+							<div  class="column">
+								<a data-pjax href="/powerjudge/register">
+									<div class="column ui js_colorset black mini submit button">{% trans 'Register' %}</div>
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- 登录信息end -->
+			{% endblock %}
+			
+			{% block menu %}
+				{# 菜单框 #}
+				{# 搜索 #}
+				<div class="header item">
+					<i class="search icon"></i>
+					{% trans 'Search In Site' %}
+				</div>
+				<div class="item">
+					<div class="ui icon input">
+						<input type="text" placeholder="Search...">
+						<i class="search icon"></i>
+					</div>
+				</div>
+			
+				{# OJ菜单 #}
+				<div class="header item">
+					<i class="desktop icon"></i>
+					{% trans 'Power Judge' %}
+				</div>
+				<a class="item" data-pjax href="/powerjudge">
+					{% trans 'Home' %}
+				</a>
+				<a class="item" data-pjax href="/powerjudge/problem_list">
+					{% trans 'Problems' %}
+				</a>
+				<a class="item">
+					{% trans 'Status' %}
+				</a>
+			
+				<a class="item">
+					{% trans 'Contest' %}
+				</a>
+				{# 其他菜单 #}
+				<div class="header item">
+					<i class="home icon"></i>
+					{% trans 'Other Things' %}
+				</div>
+				<a class="item">
+					{% trans 'Contact Us' %}
+				</a>
+			
+				<a class="item">
+					{% trans 'F.A.Qs' %}
+				</a>
+			{# 菜单框end #}
+			{% endblock %}
+		</div>
+		{# 左边栏目录end #}
+	{% endblock %}
+	
+	{% block topbar %}
+	{# 顶栏 #}
+	{% endblock %}
+	
+	{% block page_content %}
+	{# 页面内容 #}
+	{% endblock %}
+	</body>
+{% endblock %}
+
+
+{% block addmaterials %}
+{% endblock %}

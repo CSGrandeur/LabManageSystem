@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpSend.cs" />
     <Compile Include="PrinterManager.cs">
       <SubType>Component</SubType>
     </Compile>

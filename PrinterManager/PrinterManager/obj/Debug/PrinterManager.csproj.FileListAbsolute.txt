@@ -6,3 +6,6 @@ D:\workspace\PrinterManager\PrinterManager\bin\Debug\PrinterManager.exe
 D:\workspace\PrinterManager\PrinterManager\bin\Debug\PrinterManager.pdb
 D:\workspace\PrinterManager\PrinterManager\obj\Debug\PrinterManager.exe
 D:\workspace\PrinterManager\PrinterManager\obj\Debug\PrinterManager.pdb
+D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.exe.config
+D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.exe
+D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.pdb
