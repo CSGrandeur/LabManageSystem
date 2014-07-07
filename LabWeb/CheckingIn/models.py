@@ -21,7 +21,6 @@ class CheckingIn(models.Model):
         ordering = ['receivetime']
    
 class Name2Onlyname(models.Model):
-    stuid = models.CharField(max_length=20)
-    name = models.CharField(max_length=50)
+    uid = models.CharField(max_length=20)
     onlyname = models.CharField(max_length=100)
     

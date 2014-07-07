@@ -3,6 +3,7 @@ import re
 from django.contrib.auth.hashers import check_password, make_password
 import simplejson
 from django.http import Http404, HttpResponse
+import base64
 #username合法性
 def JudgeUsername(username):
     if username == "":
@@ -64,5 +65,16 @@ def orderPowerJudgeProbDatatableStrInBackend(orderRow, orderDir):
     if orderDir == "desc":
         orderStr = "-" + orderStr
     return orderStr
-        
-        
+#json格式数据base64编码的解码    
+def Base64JsonDecode(reqget):
+    try:
+        getinfo = base64.b64decode(reqget)
+    except :
+        return {"wrong_type": True}
+    else:
+        try:
+            info = simplejson.loads(getinfo)
+        except :
+            return {"wrong_type": True}
+        else:
+            return info    

@@ -44,12 +44,13 @@ namespace PrinterManager
             foreach (PrintQueue pq in myPrintQueues)
             {
                 pq.Refresh();
-                if (pq.Name == "发送至 OneNote 2013" ||
-                    pq.Name == "Microsoft XPS Document Writer" ||
-                    pq.Name == "Foxit Reader PDF Printer" ||
-                    pq.Name == "Fax"
-                    )
-                    continue;
+                //排除非打印机的打印任务，暂时没找到更好的识别真实打印机的方法
+                //if (pq.Name == "发送至 OneNote 2013" ||
+                //    pq.Name == "Microsoft XPS Document Writer" ||
+                //    pq.Name == "Foxit Reader PDF Printer" ||
+                //    pq.Name == "Fax"
+                //    )
+                //    continue;
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
                 {
                     sw.WriteLine(pq.Name);

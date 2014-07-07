@@ -7,5 +7,6 @@ urlpatterns = patterns('',
     #CheckingIn
     #主页
     (r'^CheckingIn/', include('CheckingIn.urls')),
+    (r'^PrintServer/', include('PrintServer.urls')),
 
 )
