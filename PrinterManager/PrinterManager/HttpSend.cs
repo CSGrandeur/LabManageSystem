@@ -55,35 +55,43 @@ namespace PrinterManager
 
         }
 
-
-
-        public string HttpGet(string Url, string postDataStr)
+        public static string HttpGet(string Url, string postDataStr)
         {
+            string tagUrl = Url + "?info=" + postDataStr;
+            string responsestr = CreateGetHttpResponse(tagUrl);
+            return responsestr;
+        }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url + (postDataStr == "" ? "" : "?") + postDataStr);
-
+        public static string CreateGetHttpResponse(string url)
+        {
+            HttpWebRequest request = null;
+            request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
 
-            request.ContentType = "text/html;charset=UTF-8";
+            request.Timeout = ConstVal.http_timeout;
+            HttpWebResponse response;
 
-
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            Stream myResponseStream = response.GetResponseStream();
-
-            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
-
-            string retString = myStreamReader.ReadToEnd();
-
-            myStreamReader.Close();
-
-            myResponseStream.Close();
-
-
-
-            return retString;
-
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                return GetResponseString(response);
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Status == WebExceptionStatus.Timeout)
+                {
+                    return "1";
+                }
+            }
+            return "1";
+        }
+        public static string GetResponseString(HttpWebResponse webresponse)
+        {
+            using (Stream s = webresponse.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(s, Encoding.UTF8);
+                return reader.ReadToEnd();
+            }
         }
     }
 }

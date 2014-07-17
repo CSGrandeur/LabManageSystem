@@ -45,7 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConstVal.cs" />
+    <Compile Include="Encrypt.cs" />
     <Compile Include="HttpSend.cs" />
+    <Compile Include="InfoToSend.cs" />
     <Compile Include="PrinterManager.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -60,6 +63,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SendThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

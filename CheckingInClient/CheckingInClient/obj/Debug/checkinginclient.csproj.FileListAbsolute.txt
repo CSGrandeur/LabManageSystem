@@ -16,3 +16,6 @@ D:\workspace\CheckingInSystem\checkinginclient\checkinginclient\obj\Debug\checki
 D:\workspace\CheckingInSystem\checkinginclient\checkinginclient\obj\Debug\checkinginclient.CheckingInSystem.resources
 D:\workspace\CheckingInSystem\checkinginclient\checkinginclient\obj\Debug\checkinginclient.Properties.Resources.resources
 D:\workspace\CheckingInSystem\checkinginclient\checkinginclient\obj\Debug\checkinginclient.csproj.GenerateResource.Cache
+D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\bin\Debug\CheckingInClient.exe.config
+D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Debug\CheckingInClient.exe
+D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Debug\CheckingInClient.pdb

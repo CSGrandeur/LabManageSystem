@@ -6,26 +6,23 @@ import simplejson
 from django.db.models import Q
 from pyfuncs import funcs
 import datetime
-
-from PrintServer.models import PaperArrange, PaperUse
+import hashlib
+from PrintServer.models import PrintArrange, PrintRecord, PrintCount
 # Create your views here.
 def receive(request):
     if 'info' in request.GET:
         info = funcs.Base64JsonDecode(request.GET['info'])
-        if 'wront_type' not in info and 'onlyname' in info:
-            CheckingIn.objects.create(
-                onlyname = info['onlyname'],
-                cpuload = info['cpuload'],
-                memload = info['memload'],
-                mousebutton0 = info['mousebutton0'],
-                mousebutton1 = info['mousebutton1'],
-                mousemove = info['mousemove'],
-                keybutton = info['keybutton'],
-                upload = info['upload'],
-                download = info['download'],
-                appprocessnum = info['appprocessnum'],
-                processnum = info['processnum'],
+        if 'wront_type' not in info and 'uid' in info:
+            info['infohash'] = hashlib.md5(request.GET['info'].encode(encoding='utf-8')).hexdigest()
+#           尚未完成，需要验证PrintCount并更新。
+            PrintRecord.objects.create(
+                uid = info['uid'],
+                papernum = info['papernum'],
+                jobname = info['jobname'],
+                identifier = info['identifier'],
+                submittime = datetime.datetime.strptime(info['submittime'], "%Y/%m/%d %H:%M:%S"),
+                infohash = info['infohash']
                 )
-            return TemplateResponse(request, 'CheckingIn/smt/receive.html', {'response': 'ok!!!'})
-    return TemplateResponse(request, 'CheckingIn/smt/receive.html', {'response': 'not ok'})
+            return HttpResponse("1")
+    return HttpResponse("What The Fuck!")
          

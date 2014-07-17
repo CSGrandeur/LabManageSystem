@@ -7,6 +7,7 @@ using System.Linq;
 using System.Printing;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -19,11 +20,14 @@ namespace PrinterManager
             InitializeComponent();
         }
 
-        public Timer timer = new Timer();
+        public System.Timers.Timer timer = new System.Timers.Timer();
+        public static int maxidentifier;
+        private static Mutex mut = new Mutex();
         protected override void OnStart(string[] args)
         {
+            maxidentifier = -1;
             timer.Elapsed += new ElapsedEventHandler(GetPrintInfo);
-            timer.Interval = 1 * 1000;
+            timer.Interval = ConstVal.timer_period;
             timer.Enabled = true;
         }
         private static void GetPrintInfo(object source, ElapsedEventArgs e)
@@ -35,12 +39,16 @@ namespace PrinterManager
         }
         public static void GetAllPrinterQueues()
         {
-            //Dictionary<string, int> TempDict = new Dictionary<string, int>();
-
+            //SendThread st = new SendThread();
             PrintServer myPrintServer = new PrintServer(); // Get all the printers installed on this PC
-
             // List the print server's queues
             PrintQueueCollection myPrintQueues = myPrintServer.GetPrintQueues();
+            mut.WaitOne();
+            int nmaxidentifier = maxidentifier;
+            mut.ReleaseMutex();
+            InfoToSend its = new InfoToSend();
+            List<PrintSystemJobInfo> joblist = new List<PrintSystemJobInfo>();
+            string sendstr = "";
             foreach (PrintQueue pq in myPrintQueues)
             {
                 pq.Refresh();
@@ -51,36 +59,39 @@ namespace PrinterManager
                 //    pq.Name == "Fax"
                 //    )
                 //    continue;
-                using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
-                {
-                    sw.WriteLine(pq.Name);
-                }
-
                 var Jobs = pq.GetPrintJobInfoCollection();
-                int PGcount = 0;
-                string PrintMsg = "";
                 foreach (PrintSystemJobInfo Job in Jobs)
                 {
-                    PGcount += Job.NumberOfPages;
-                    PrintMsg += "------------------------\r\nSubmitter = " + Job.Submitter + "\t\r\n" +
-                        "Identifier = " + Job.JobIdentifier + "\t\r\n" +
-                        "JobName = " + Job.JobName + "\t\r\n" +
-                        "status = " + Job.JobStatus + "\t\r\n" +
-                        "Pages = " + Job.NumberOfPages + "\t\r\n" +
-                        "TimeJobSubmitted = " + Job.TimeJobSubmitted + "\t\r\n" +
-                        "Name = " + Job.Name + "\t\r\n";
-
-                    if (!Job.IsPaused)
+                    if(Job.JobIdentifier > maxidentifier)
+                    {
                         Job.Pause();
-                    
-
+                        joblist.Add(Job);
+                        if(Job.JobIdentifier > nmaxidentifier)
+                            nmaxidentifier = Job.JobIdentifier;
+                    }
                 }
+                mut.WaitOne();
+                maxidentifier = nmaxidentifier;
+                mut.ReleaseMutex();
+            }
+            for (int i = 0; i < joblist.Count; i++)
+            {
+                its.submitter = joblist[i].Submitter;
+                its.pagenum = joblist[i].NumberOfPages;
+                its.jobname = joblist[i].JobName;
+                its.identifier = joblist[i].JobIdentifier;
+                its.jobtime = joblist[i].TimeJobSubmitted + "";
+                sendstr = its.ToHttpGetStr();
 
+                string retstr = HttpSend.HttpGet(ConstVal.send_url, Encrypt.Base64Encode(sendstr));
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
                 {
-                    sw.WriteLine(PrintMsg + "\t\r\n");
+                    sw.WriteLine("response:" + retstr + "\t\r\n");
                 }
             }
+            //Thread thread = new Thread(new ThreadStart(st.SendInfo));
+            //thread.Start();
         }
+
     }
 }
