@@ -84,6 +84,10 @@ namespace PrinterManager
                 sendstr = its.ToHttpGetStr();
 
                 string retstr = HttpSend.HttpGet(ConstVal.send_url, Encrypt.Base64Encode(sendstr));
+                if (retstr == "1")
+                    joblist[i].Resume();
+                else
+                    joblist[i].Cancel();
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
                 {
                     sw.WriteLine("response:" + retstr + "\t\r\n");

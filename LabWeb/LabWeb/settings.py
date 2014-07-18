@@ -94,6 +94,8 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
                  '/LabWeb/templates/',
                  '/LabWeb/CheckingIn/templates/',
+                 '/LabWeb/PrintServer/templates/',
+                 '/LabWeb/UserInfo/templates/'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

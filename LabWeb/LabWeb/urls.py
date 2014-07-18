@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     #主页
     (r'^CheckingIn/', include('CheckingIn.urls')),
     (r'^PrintServer/', include('PrintServer.urls')),
+    (r'^UserInfo/', include('UserInfo.urls')),
 
 )

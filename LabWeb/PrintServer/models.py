@@ -21,3 +21,9 @@ class PrintCount(models.Model):
     papersum = models.IntegerField()
     month = models.DateField(auto_now=False, auto_now_add=False)
     
+class PrintAddition(models.Model):
+    uid = models.CharField(max_length=20)
+    addnum = models.IntegerField()
+    month = models.DateField(auto_now=False, auto_now_add=False)
+    available = models.CharField(max_length=2)
+    
