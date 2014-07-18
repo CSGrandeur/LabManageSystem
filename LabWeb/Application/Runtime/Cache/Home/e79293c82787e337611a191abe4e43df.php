@@ -139,7 +139,7 @@
 						</h2>
 			        </div>
 					<div class="item">
-						<a href="http://www.csu.edu.cn/" target=_blank class="ui small image">
+						<a href="http://www.csu.edu.cn/" target=_blank class="ui image">
 							<img src="/Public/img/csulogo_small.png">
 						</a>
 			        </div>
