@@ -1,1 +1,51 @@
-<extend name="./Application/Home/View/default/Public/basic.html" />
+<div class='infotablediv'>
+<table class="ui celled table segment">
+	<tbody>
+	<tr>
+		<th colspan="8">个人信息（{$strlist[$userinfo['kind']]}）：</th>
+	</tr>
+	<tr>
+		<td class="positive">姓名：</td>
+		<td>{$userinfo['name']}</td>
+		<td class="positive">学号：</td>
+		<td>{$userinfo['uid']}</td>
+		<td class="positive">性别：</td>
+		<td>{$strlist[$userinfo['sex']]}</td>
+		<td class="positive">攻读学位：</td>
+		<td>{$strlist[$userinfo['degree']]}</td>
+	</tr>
+	<tr>
+		<td class="positive">学院：</td>
+		<td colspan="3">{$strlist[$userinfo['institute']]}</td>	
+		<td class="positive">专业：</td>
+		<td colspan="3">{$strlist[$userinfo['major']]}</td>	
+		</tr>
+	<tr>
+		<td class="positive">年级：</td>
+		<td>{$userinfo['grade']}</td>
+		<td class="positive">出生年月：</td>
+		<td>{$userinfo['birthday']}</td>
+		<td class="positive">手机号：</td>
+		<td>{$userinfo['phone']}</td>
+		<td class="positive">邮箱：</td>
+		<td>{$userinfo['email']}</td>
+	</tr>
+	<tr>
+		<td class="positive">民族：</td>
+		<td >{$userinfo['nation']}</td>	
+		<td class="positive">政治面貌：</td>
+		<td>{$userinfo['political']}</td>
+		<td class="positive">导师：</td>
+		<td><a data-pjax href="/home/user/userinfo?uid={$userinfo['supervisorid']}">{$userinfo['supervisor']}</a></td>
+		<td class="positive">负责老师：</td>
+		<td><a data-pjax href="/home/user/userinfo?uid={$userinfo['teacherid']}">{$userinfo['teacher']}</a></td>
+	</tr>
+	<tr>
+		<th colspan="8">学术/项目成果：</th>
+	</tr>
+	<tr>
+		<td colspan="8">敬请期待。。。</td>
+	</tr>
+	</tbody>
+</table>
+</div>

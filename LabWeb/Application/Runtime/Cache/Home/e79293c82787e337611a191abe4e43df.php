@@ -36,9 +36,9 @@
 </head>
 
 <body id="labserverbody">
-	
+	<block name="TP_sidebar">
 			<div id="sidemenu" class="ui vertical inverted labeled thin sidebar menu black">
-			
+			<block name="TP_userlogin">
 				<h3 class="item ui header">用户信息</h3>
 				
 				<div class="item" id="logout_form_div" style="display: none;">
@@ -60,14 +60,12 @@
 					</form>
 				</div>
 				<div class="item" id="login_form_div" >
-					<form id="login_form" action="/labserver/login_function/" method="post" >
-						<label>用户名:</label>
+					<form id="login_form" action="/home/user/login_function/" method="post" >
 						<div class="ui input">
-							<input name="username" type="text" placeholder="userid">
+							<input name="uid" type="text" placeholder="帐号...">
 						</div>
-							<label>密码:</label>
 						<div class="ui input">
-							<input name="password" type="password">
+							<input name="passwd" type="password" placeholder="密码...">
 						</div>
 						<div class="ui two column divided grid">
 							<div class="column">
@@ -75,11 +73,13 @@
 									登录
 								</button>
 							</div>
+							<!-- 
 							<div  class="column">
 								<a data-pjax href="/labserver/register">
 									<div class="column ui black mini submit button">注册</div>
 								</a>
 							</div>
+							 -->
 						</div>
 					</form>
 				</div>
@@ -88,35 +88,45 @@
 			
 			
 				<div class="header item">
-					<i class="desktop icon"></i>
-					信息站
+					<i class="volume up icon"></i>
+					信息中心
 				</div>
 				<a class="item" data-pjax href="/labserver">
-					主页
+					最新通知
+				</a>
+				<a class="item" data-pjax href="/labserver">
+					学校新闻
+				</a>
+				<div class="header item">
+					<i class="calendar icon"></i>
+					考勤
+				</div>
+				<a class="item" data-pjax href="/labserver/problem_list">
+					打卡状态
 				</a>
 				<a class="item" data-pjax href="/labserver/problem_list">
-					考勤
+					计算机信息
 				</a>
-				<a class="item">
+				<div class="header item">
+					<i class="print icon"></i>
 					打印机
-				</a>
+				</div>
 				<a class="item">
-					Contest
+					使用状况
 				</a>
 				<div class="header item">
 					<i class="home icon"></i>
-					Other Things
+					关于系统
 				</div>
 				<a class="item">
-					Contact Us
+					作者博客
 				</a>
-			
 				<a class="item">
-					F.A.Qs
+					常见问题
 				</a>
 			
 		</div>
-	
+	</block>
 
 	
 		<div id="topbar" class="ui fixed transparent js_invertset inverted thin menu js_colorset black">
@@ -154,14 +164,65 @@
 				<div class="ui loader">Loading</div>
 			</div>
 			
-			
+			<block name="TP_pjax_content">
+			<div class='infotablediv'>
+<table class="ui celled table segment">
+	<tbody>
+	<tr>
+		<th colspan="8">个人信息（<?php echo ($strlist[$userinfo['kind']]); ?>）：</th>
+	</tr>
+	<tr>
+		<td class="positive">姓名：</td>
+		<td><?php echo ($userinfo['name']); ?></td>
+		<td class="positive">学号：</td>
+		<td><?php echo ($userinfo['uid']); ?></td>
+		<td class="positive">性别：</td>
+		<td><?php echo ($strlist[$userinfo['sex']]); ?></td>
+		<td class="positive">攻读学位：</td>
+		<td><?php echo ($strlist[$userinfo['degree']]); ?></td>
+	</tr>
+	<tr>
+		<td class="positive">学院：</td>
+		<td colspan="3"><?php echo ($strlist[$userinfo['institute']]); ?></td>	
+		<td class="positive">专业：</td>
+		<td colspan="3"><?php echo ($strlist[$userinfo['major']]); ?></td>	
+		</tr>
+	<tr>
+		<td class="positive">年级：</td>
+		<td><?php echo ($userinfo['grade']); ?></td>
+		<td class="positive">出生年月：</td>
+		<td><?php echo ($userinfo['birthday']); ?></td>
+		<td class="positive">手机号：</td>
+		<td><?php echo ($userinfo['phone']); ?></td>
+		<td class="positive">邮箱：</td>
+		<td><?php echo ($userinfo['email']); ?></td>
+	</tr>
+	<tr>
+		<td class="positive">民族：</td>
+		<td ><?php echo ($userinfo['nation']); ?></td>	
+		<td class="positive">政治面貌：</td>
+		<td><?php echo ($userinfo['political']); ?></td>
+		<td class="positive">导师：</td>
+		<td><a data-pjax href="/home/user/userinfo?uid=<?php echo ($userinfo['supervisorid']); ?>"><?php echo ($userinfo['supervisor']); ?></a></td>
+		<td class="positive">负责老师：</td>
+		<td><a data-pjax href="/home/user/userinfo?uid=<?php echo ($userinfo['teacherid']); ?>"><?php echo ($userinfo['teacher']); ?></a></td>
+	</tr>
+	<tr>
+		<th colspan="8">学术/项目成果：</th>
+	</tr>
+	<tr>
+		<td colspan="8">敬请期待。。。</td>
+	</tr>
+	</tbody>
+</table>
+</div>
 			
 			
 		</div>
-	
+	</block>
 	
 	
 	
 </body>
-
+</block>
 </html>

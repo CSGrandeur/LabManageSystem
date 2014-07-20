@@ -44,12 +44,12 @@ $(document).on('pjax:success', function() {
 function LoginAjaxSubmit()
 {
 	$('#login_form').ajaxSubmit(function(data){
-    	jsondata = $.parseJSON(data);
-    	if(jsondata["valid"] == false)
-	    	alertify.error( jsondata["retMsg"] );
+    	jsondata = data;
+    	if(jsondata["wrongcode"] != 999)
+	    	alertify.error( jsondata["wrongmsg"] );
         else
         {
-			ChangeLoginLogoutDiv(jsondata["username"], true);
+			ChangeLoginLogoutDiv(jsondata["uname"], true);
 			alertify.success("Successfully logged in");
 			$.pjax({url: window.location.href, container: '#mainpage'});
         }
@@ -60,7 +60,7 @@ function LoginAjaxSubmit()
 function LogoutAjaxSubmit()
 {
     $('#logout_form').ajaxSubmit(function(data){
-    	jsondata = $.parseJSON(data);
+    	jsondata = data;
     	if(jsondata["valid"] == false)
         	alertify.error(jsondata["retMsg"]);
         else
@@ -94,8 +94,8 @@ function WhetherLoggedIn()
 	$.get(
 		"/home/user/whether_loggedin_ajax/", 
 		function(data){
-			if(data['valid'] == true)
-				ChangeLoginLogoutDiv(data['username'], true);
+			if(data['valid'] == true && data['loggedin'] == true)
+				ChangeLoginLogoutDiv(data['uname'], true);
 			else
 				ChangeLoginLogoutDiv("", false);
 				
