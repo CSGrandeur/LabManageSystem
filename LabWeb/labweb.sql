@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-07-20 12:53:15
+-- Generation Time: 2014-07-21 03:46:13
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `lab_checkingin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL COMMENT '学号',
+  `uid` varchar(30) NOT NULL COMMENT '学号',
   `onlyname` varchar(255) NOT NULL,
   `cpuload` double NOT NULL,
   `memload` double NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `lab_checkingin` (
 
 CREATE TABLE IF NOT EXISTS `lab_name2onlyname` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL,
+  `uid` varchar(30) NOT NULL,
   `onlyname` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `lab_name2onlyname` (
 
 CREATE TABLE IF NOT EXISTS `lab_printaddition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL,
+  `uid` varchar(30) NOT NULL,
   `addnum` int(11) NOT NULL,
   `month` date NOT NULL,
   `available` varchar(2) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `lab_printaddition` (
 
 CREATE TABLE IF NOT EXISTS `lab_printarrange` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL,
+  `uid` varchar(30) NOT NULL,
   `paperlimit` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `lab_printarrange` (
 
 CREATE TABLE IF NOT EXISTS `lab_printcount` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL,
+  `uid` varchar(30) NOT NULL,
   `papersum` int(11) NOT NULL,
   `month` date NOT NULL,
   PRIMARY KEY (`id`)
@@ -118,7 +118,7 @@ INSERT INTO `lab_printcount` (`id`, `uid`, `papersum`, `month`) VALUES
 
 CREATE TABLE IF NOT EXISTS `lab_printrecord` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL,
+  `uid` varchar(30) NOT NULL,
   `papernum` int(11) NOT NULL,
   `jobname` varchar(255) NOT NULL,
   `identifier` int(11) NOT NULL,
@@ -138,44 +138,60 @@ INSERT INTO `lab_printrecord` (`id`, `uid`, `papernum`, `jobname`, `identifier`,
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `lab_user`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(30) NOT NULL COMMENT '学号/编号/帐号',
+  `passwd` varchar(30) NOT NULL,
+  `name` varchar(50) NOT NULL COMMENT '姓名',
+  `kind` tinyint(1) DEFAULT NULL COMMENT '是老师还是学生。41老师，42学生。详见ConstVal.php',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `lab_user`
+--
+
+INSERT INTO `lab_user` (`id`, `uid`, `passwd`, `name`, `kind`) VALUES
+(1, '1246xxxxx', '11121', '121', 42);
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `lab_userdetail`
 --
 
 CREATE TABLE IF NOT EXISTS `lab_userdetail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL COMMENT '学号',
-  `phone` varchar(20) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `degree` varchar(20) NOT NULL,
-  `grade` varchar(20) NOT NULL,
-  `birthday` date NOT NULL,
-  `idcard` varchar(30) NOT NULL,
-  `nation` varchar(20) NOT NULL,
-  `political` varchar(20) NOT NULL,
-  `institute` varchar(20) NOT NULL,
-  `major` varchar(20) NOT NULL,
+  `uid` varchar(30) NOT NULL COMMENT '学号',
+  `sex` tinyint(1) NOT NULL COMMENT '性别',
+  `phone` varchar(20) NOT NULL COMMENT '电话',
+  `email` varchar(50) NOT NULL COMMENT '邮箱',
+  `degree` tinyint(1) NOT NULL COMMENT '攻读学位',
+  `grade` varchar(20) NOT NULL COMMENT '年级',
+  `birthday` date NOT NULL COMMENT '生日',
+  `idcard` varchar(30) NOT NULL COMMENT '身份证号',
+  `nation` varchar(20) NOT NULL COMMENT '民族',
+  `political` varchar(20) NOT NULL COMMENT '政治面貌',
+  `institute` int(1) NOT NULL COMMENT '学院',
+  `major` int(1) NOT NULL COMMENT '专业',
   `supervisor` varchar(50) NOT NULL,
   `teacher` varchar(50) NOT NULL,
+  `supervisorid` varchar(20) NOT NULL COMMENT '导师',
+  `teacherid` varchar(20) NOT NULL COMMENT '小导师',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- 表的结构 `lab_userinfo`
+-- 转存表中的数据 `lab_userdetail`
 --
 
-CREATE TABLE IF NOT EXISTS `lab_userinfo` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(20) NOT NULL COMMENT '学号',
-  `name` varchar(50) NOT NULL,
-  `sex` varchar(2) NOT NULL,
-  `supervisorid` varchar(20) NOT NULL,
-  `teacherid` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+INSERT INTO `lab_userdetail` (`id`, `uid`, `sex`, `phone`, `email`, `degree`, `grade`, `birthday`, `idcard`, `nation`, `political`, `institute`, `major`, `supervisor`, `teacher`, `supervisorid`, `teacherid`) VALUES
+(1, '1246xxxxx', 51, '1511633xxxx', 'csgrandeur@csu.edu.cn', 21, '21', '0000-00-00', '212', '12', '1221', 201, 31, '13', '13', '31', '31');
 
 --
 -- 限制导出的表
@@ -185,31 +201,31 @@ CREATE TABLE IF NOT EXISTS `lab_userinfo` (
 -- 限制表 `lab_checkingin`
 --
 ALTER TABLE `lab_checkingin`
-  ADD CONSTRAINT `lab_checkingin_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_userinfo` (`uid`) ON DELETE CASCADE;
+  ADD CONSTRAINT `lab_checkingin_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 --
 -- 限制表 `lab_name2onlyname`
 --
 ALTER TABLE `lab_name2onlyname`
-  ADD CONSTRAINT `lab_name2onlyname_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_userinfo` (`uid`) ON DELETE CASCADE;
+  ADD CONSTRAINT `lab_name2onlyname_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 --
 -- 限制表 `lab_printaddition`
 --
 ALTER TABLE `lab_printaddition`
-  ADD CONSTRAINT `lab_printaddition_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_userinfo` (`uid`) ON DELETE CASCADE;
+  ADD CONSTRAINT `lab_printaddition_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 --
 -- 限制表 `lab_printarrange`
 --
 ALTER TABLE `lab_printarrange`
-  ADD CONSTRAINT `lab_printarrange_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_userinfo` (`uid`) ON DELETE CASCADE;
+  ADD CONSTRAINT `lab_printarrange_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 --
 -- 限制表 `lab_userdetail`
 --
 ALTER TABLE `lab_userdetail`
-  ADD CONSTRAINT `lab_userdetail_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_userinfo` (`uid`) ON DELETE CASCADE;
+  ADD CONSTRAINT `lab_userdetail_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
