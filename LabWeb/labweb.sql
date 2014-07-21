@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-07-21 03:46:13
+-- Generation Time: 2014-07-21 12:14:51
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `lab_printaddition` (
   `uid` varchar(30) NOT NULL,
   `addnum` int(11) NOT NULL,
   `month` date NOT NULL,
-  `available` varchar(2) NOT NULL,
+  `available` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `lab_printarrange` (
 CREATE TABLE IF NOT EXISTS `lab_printcount` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(30) NOT NULL,
-  `papersum` int(11) NOT NULL,
+  `papersum` int(11) NOT NULL DEFAULT '0',
   `month` date NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `lab_printcount` (
 --
 
 INSERT INTO `lab_printcount` (`id`, `uid`, `papersum`, `month`) VALUES
-(1, 'CSGrandeur', 1, '2014-07-01');
+(1, 'CSGrandeur', 3, '2014-07-01');
 
 -- --------------------------------------------------------
 
@@ -126,14 +126,34 @@ CREATE TABLE IF NOT EXISTS `lab_printrecord` (
   `updatetime` datetime NOT NULL,
   `infohash` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `lab_printrecord`
 --
 
 INSERT INTO `lab_printrecord` (`id`, `uid`, `papernum`, `jobname`, `identifier`, `submittime`, `updatetime`, `infohash`) VALUES
-(1, 'CSGrandeur', 1, 'Print System Document', 28, '2014-07-17 12:34:41', '2014-07-18 11:37:26', 'c90b4a01e0e04e50cfa4d295825a8c4e');
+(1, 'CSGrandeur', 1, 'Print System Document', 28, '2014-07-17 12:34:41', '2014-07-18 11:37:26', 'c90b4a01e0e04e50cfa4d295825a8c4e'),
+(2, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:12:36', '8edef83eb128e1e46df9522049e9f3b6'),
+(3, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:13:27', '8edef83eb128e1e46df9522049e9f3b6'),
+(4, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:13:29', '8edef83eb128e1e46df9522049e9f3b6'),
+(5, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:13:30', '8edef83eb128e1e46df9522049e9f3b6'),
+(6, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:16:15', '8edef83eb128e1e46df9522049e9f3b6'),
+(7, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:16:18', '8edef83eb128e1e46df9522049e9f3b6');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `lab_privilege`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_privilege` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT '学号/编号/帐号',
+  `privilege` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '权限',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -220,6 +240,12 @@ ALTER TABLE `lab_printaddition`
 --
 ALTER TABLE `lab_printarrange`
   ADD CONSTRAINT `lab_printarrange_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
+
+--
+-- 限制表 `lab_privilege`
+--
+ALTER TABLE `lab_privilege`
+  ADD CONSTRAINT `lab_privilege_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 --
 -- 限制表 `lab_userdetail`

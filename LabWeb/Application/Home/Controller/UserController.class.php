@@ -78,9 +78,14 @@ class UserController extends Controller {
     		{
     			if($passwd == $userinfo['passwd'])
     			{
-    				session('uid', $uid);
-    				session('uname', $userinfo['name']);
+    				session('lab_uid', $uid);
+    				session('lab_uname', $userinfo['name']);
+    				$Privilege = M('privilege');
+    				$privilegelist = $Privilege->where('uid='.$uid)->field('privilege')->select();
+    				foreach($privilegelist as $privilege)
+    					session($privilege['privilege'], true);
     				$data['uname'] = $userinfo['name'];
+    				$data['privilege'] = $privilegelist;
     			}
     			else 
     				$data['wrongcode'] = $WRONG_CODE['passwd_error'];
@@ -96,7 +101,7 @@ class UserController extends Controller {
     	$WRONG_CODE = C('WRONG_CODE');
     	$WRONG_MSG = C('WRONG_MSG');
     	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(session('?uid'))
+    	if(session('?lab_uid'))
     	{
     		session(null);
     		$data['msg'] = $WRONG_CODE['成功登出'];
@@ -113,11 +118,11 @@ class UserController extends Controller {
     	$WRONG_CODE = C('WRONG_CODE');
     	$data['wrongcode'] = $WRONG_CODE['totally_right'];
     	$data['loggedin'] = false;
-    	if(session('?uid'))
+    	if(session('?lab_uid'))
     	{
     		$data['loggedin'] = true;
-    		$data['uid'] = session('uid');
-    		$data['uname'] = session('uname');
+    		$data['uid'] = session('lab_uid');
+    		$data['uname'] = session('lab_uname');
     	}
     	$this->ajaxReturn($data);
     }

@@ -3,6 +3,7 @@
 return array(
 		'DISPLAY_ITEM_NUM' => 20,
 		'PAGE_ITEM_NUM' => 25,
+		'PAPER_LIMIT' => 3,				//打印纸默认规定月使用量
 		'WRONG_CODE' => array(
 			'not_exist' => -10,				//某变量不存在(具体情况具体分析)
 			'yes_exist' => -11,				//某变量存在(具体情况具体分析)
@@ -46,7 +47,7 @@ return array(
 			21 => 'E-Mail长度不能多于50',
 			22 => 'E-Mail不合法',
 				
-			31 => 'POST或GET数据不正确',
+			31 => '查询错误',
 			32 => 'POST与GET弄反了',
 				
 			41 => '用户未登录，不能进行该操作',

@@ -134,6 +134,19 @@ function IsPjax()
 	return array_key_exists('HTTP_X_PJAX', $_SERVER) && $_SERVER['HTTP_X_PJAX'] === 'true';
 }
 /************************************************************/
+//将base64加密过的json字符串转换为php关联数组返回
+/************************************************************/
+function base64_json_decode($str)
+{
+	$jsonstr = base64_decode($str);
+	if($jsonstr != false)
+	{
+		$jsondata = json_decode($jsonstr, true);
+		return $jsondata;
+	}
+	return false;
+}
+/************************************************************/
 //数据库操作通用函数
 /************************************************************/
 //在某个table的一个field(列)查询为某个item的条目是否存在，如果consider_del，则del条目为true的也视为不存在
@@ -141,7 +154,7 @@ function ItemExists($item, $field, $table, $consider_del)
 {
 	$WRONG_CODE = C('WRONG_CODE');
 	$map[$field] = $item;
-	if($consider_del) $map['del'] = 1;
+	if($consider_del) $map['del'] = 0;
 	if(M($table)->where($map)->getField($field, 1) != null)
 		return $WRONG_CODE['yes_exist'];
 	else 
