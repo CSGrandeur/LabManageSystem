@@ -84,7 +84,7 @@ namespace PrinterManager
                 sendstr = its.ToHttpGetStr();
 
                 string retstr = HttpSend.HttpGet(ConstVal.send_url, Encrypt.Base64Encode(sendstr));
-                if (retstr == "1")
+                if (retstr != "0")
                     joblist[i].Resume();
                 else
                     joblist[i].Cancel();

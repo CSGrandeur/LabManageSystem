@@ -52,7 +52,7 @@
 	margin: 0 auto;
 }
 .infotablediv{
-	width:900px;
+	width:1000px;
 	margin: 0 auto;
 }
 .one_page_step{
@@ -65,3 +65,20 @@
 }
 /*去掉超链接下划线*/
 a{text-decoration:none}
+
+.td_2w
+{
+	width:80px;
+}
+.td_3w
+{
+	width:100px;
+}
+.td_4w
+{
+	width:120px;
+}
+.td_5w
+{
+	width:140px;
+}
