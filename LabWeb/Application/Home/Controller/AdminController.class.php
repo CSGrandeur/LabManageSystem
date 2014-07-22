@@ -4,10 +4,15 @@ use Think\Controller;
 class AdminController extends Controller {
 	public function index()
 	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
 		
 		
 		
@@ -16,10 +21,15 @@ class AdminController extends Controller {
 	//添加用户
 	public function adduser()
 	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
 		
 		$this->display();
 	}
@@ -217,10 +227,15 @@ class AdminController extends Controller {
 	//用户管理页
 	public function manageuser()
 	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
 		$this->display();
 	}
 	//用户列表数据json
@@ -320,10 +335,15 @@ class AdminController extends Controller {
 	//权限管理页
 	public function manageprivilege()
 	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
 		$Privilege = M('privilege');
 		$data['privilegelist'] = $Privilege->table('lab_privilege privilege')
 									->join('LEFT JOIN lab_user user ON user.uid = privilege.uid')
