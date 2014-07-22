@@ -81,9 +81,11 @@ class UserController extends Controller {
     				session('lab_uid', $uid);
     				session('lab_uname', $userinfo['name']);
     				$Privilege = M('privilege');
-    				$privilegelist = $Privilege->where('uid='.$uid)->field('privilege')->select();
+    				$privilegelist = $Privilege->where('uid='.$uid)->field('privi')->select();
     				foreach($privilegelist as $privilege)
-    					session($privilege['privilege'], true);
+    					session($privilege['privi'], true);
+    				if(session('?lab_super_admin') && session('lab_super_admin') == true)
+    					session('lab_admin', true);
     				$data['uname'] = $userinfo['name'];
     				$data['privilege'] = $privilegelist;
     			}

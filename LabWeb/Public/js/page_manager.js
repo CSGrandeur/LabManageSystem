@@ -50,7 +50,7 @@ function LoginAjaxSubmit()
         else
         {
 			ChangeLoginLogoutDiv(jsondata["uname"], true);
-			alertify.success("Successfully logged in");
+			alertify.success("欢迎！登陆成功！");
 			$.pjax({url: window.location.href, container: '#mainpage'});
         }
     });
@@ -66,7 +66,7 @@ function LogoutAjaxSubmit()
         else
         {
 			ChangeLoginLogoutDiv("", false);
-			alertify.success("Successfully logged out");
+			alertify.success("拜拜~~~");
 			$.pjax({url: window.location.href, container: '#mainpage'});
         }
     });

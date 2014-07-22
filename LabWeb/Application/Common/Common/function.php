@@ -134,6 +134,13 @@ function IsPjax()
 	return array_key_exists('HTTP_X_PJAX', $_SERVER) && $_SERVER['HTTP_X_PJAX'] === 'true';
 }
 /************************************************************/
+//admin判断
+/************************************************************/
+function IsAdmin()
+{
+	return session('?lab_admin') && session('lab_admin') == true;
+}
+/************************************************************/
 //将base64加密过的json字符串转换为php关联数组返回
 /************************************************************/
 function base64_json_decode($str)

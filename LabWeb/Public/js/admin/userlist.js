@@ -46,13 +46,13 @@ function InitProblemListTable()
             {
             	"data": "sex",
             	"width": "50px",
-            	className: "center"
+            	className: "center",
+                "searchable": false
             },
             {
             	"data": "grade",
             	"width": "50px",
             	className: "center",
-                "searchable": false
             },
             {
             	"data": "degree",

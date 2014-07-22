@@ -13,18 +13,88 @@ class AdminController extends Controller {
 		
 		$this->display();
 	}
-
+	//添加用户
 	public function adduser()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
-	
-	
-	
+		
 		$this->display();
 	}
+	//添加用户逻辑处理
+	public function adduser_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+    	if(session('?lab_admin') == null)
+    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
+    	else if(I('param.adduser', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+    	else
+    	{
+    		$ADDUSER_ITEM = C('ADDUSER_ITEM');
+    		$addusertext = I('param.adduser');
+    		$adduserlist = preg_split("/[\\r\\n]{1,2}/", $addusertext);
+    		$add_cnt = 0;
+    		$update_cnt = 0;
+    		$fail_cnt = 0;
+    		$useradd_i = 0;
+    		foreach($adduserlist as $singleusertext)
+    		{
+    			if(strlen(trim($singleusertext)) == 0) continue;
+    			$singleuserinfo = preg_split("/[$\\t]/i", $singleusertext);
+    			$userinfo[$useradd_i] = array();
+    			for($i = 0; $i < count($singleuserinfo) && $i < count($ADDUSER_ITEM); $i ++)
+    				$userinfo[$useradd_i][$ADDUSER_ITEM[$i]] = trim($singleuserinfo[$i]);
+    			$userinfo[$useradd_i]['graduate'] = 0;
+    			if(count($singleuserinfo) < 2 || 
+    				TestUserID($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'] ||
+    				strlen($userinfo[$useradd_i]['name']) > 25 ||
+    				$userinfo[$useradd_i]['passwd'] != null && $userinfo[$useradd_i]['passwd'] != "" && 
+    				TestPasswd($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'])
+    				$fail_cnt ++;	
+    			else 
+    			{
+    				if($userinfo[$useradd_i]['passwd'] == null)
+    					$userinfo[$useradd_i]['passwd'] = $userinfo[$useradd_i]['uid'];
+    				if($userinfo[$useradd_i]['kind'] != null)
+    					$userinfo[$useradd_i]['kind'] = intval($userinfo[$useradd_i]['kind']);
+    				$userinfo[$useradd_i]['passwd'] = MkPasswd($userinfo[$useradd_i]['passwd']);
+    				$useradd_i ++;
+    			}
+    		}
+    		if($useradd_i > 0)
+    		{
+	    		$User = M('user');
+	    		for($i = 0; $i < $useradd_i; $i ++)
+	    		{
+	    			$existuser = $User->where("uid='%s'", $userinfo[$i]['uid'])->find();
+	    			$ret = true;
+	    			if($existuser == null)
+	    			{
+	    				$ret = $User->add($userinfo[$i]);
+	    				$add_cnt ++;
+	    			}
+	    			else
+	    			{
+	    				$User->where("uid='%s'", $userinfo[$i]['uid'])->save($userinfo[$i]);
+	    				$update_cnt ++;
+	    			}
+					if($ret == false)
+						$fail_cnt ++;
+	    		}
+    		}
+    		$data['add_cnt'] = $add_cnt;
+    		$data['update_cnt'] = $update_cnt;
+    		$data['fail_cnt'] = $fail_cnt;
+    	}
+    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//更改用户信息前的信息获取
     private function changeinfo_data()
     {
     	$WRONG_CODE = C('WRONG_CODE');
@@ -75,6 +145,7 @@ class AdminController extends Controller {
     	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
     	return $data;
     }
+	//更改用户信息页
     public function changeinfo()
     {
     	$WRONG_CODE = C('WRONG_CODE');
@@ -87,12 +158,13 @@ class AdminController extends Controller {
         else
         	$this->display();
     }
+	//更改用户信息逻辑处理
     public function changeinfo_ajax()
     {
     	$WRONG_CODE = C('WRONG_CODE');
     	$WRONG_MSG = C('WRONG_MSG');
     	$data = $this->changeinfo_data();
-		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+    	$data['strlist'] = C('STR_LIST');
     	if(session('?lab_admin') == null)
     		$data['wrongcode'] = $WRONG_CODE['admin_not'];
     	else if(I('param.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
@@ -116,7 +188,7 @@ class AdminController extends Controller {
     				$userdetail = array();
     			}
     			$userdetail['name'] = trim($param['name']);
-    			$userdetail['sex'] = trim($param['sex']);
+    			$userdetail['sex'] = $data['strlist'][trim($param['sex'])];
     			$userdetail['degree'] = trim($param['degree']);
     			$userdetail['institute'] = trim($param['institute']);
     			$userdetail['major'] = trim($param['major']);
@@ -142,6 +214,7 @@ class AdminController extends Controller {
     	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
         $this->ajaxReturn($data);
     }
+	//用户管理页
 	public function manageuser()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
@@ -150,6 +223,7 @@ class AdminController extends Controller {
 		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
 		$this->display();
 	}
+	//用户列表数据json
 	public function user_list_ajax()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
@@ -176,16 +250,15 @@ class AdminController extends Controller {
 			$d_orderdir = $reqdata['order'][0]['dir'];
 			$d_searchvalue = $reqdata['search']['value'];
 			$d_searchregex = $reqdata['search']['regex'];
-			
 			$map = array(
 				'user.uid' => array('like', '%'.$d_searchvalue.'%'),
 				'user.name' => array('like', '%'.$d_searchvalue.'%'),
 // 				'user.kind' => array('like', '%'.$d_searchvalue.'%'),
-				'userdetail.sex' => array('like', '%'.$d_searchvalue.'%'),
+//				'userdetail.sex' => array('like', '%'.$d_searchvalue.'%'),
 				'userdetail.phone' => array('like', '%'.$d_searchvalue.'%'),
 				'userdetail.email' => array('like', '%'.$d_searchvalue.'%'),
 // 				'userdetail.degree' => array('like', '%'.$d_searchvalue.'%'),
-// 				'userdetail.grade' => array('like', '%'.$d_searchvalue.'%'),
+ 				'userdetail.grade' => array('like', '%'.$d_searchvalue.'%'),
 // 				'userdetail.birthday' => array('like', '%'.$d_searchvalue.'%'),
 // 				'userdetail.idcard' => array('like', '%'.$d_searchvalue.'%'),
 // 				'userdetail.nation' => array('like', '%'.$d_searchvalue.'%'),
@@ -220,6 +293,7 @@ class AdminController extends Controller {
 					->order(array($d_ordercol=>$d_orderdir))
 					->limit($d_start, $d_length)
 					->select();
+		if($userlist == false) $userlist = array();
 		for($i = 0; $i < count($userlist); $i ++)
 		{
 			if($userlist[$i]['graduate'] == 0)
@@ -232,7 +306,7 @@ class AdminController extends Controller {
 			$userlist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
 		}
 		$data['data'] = $userlist;
-			file_put_contents("loog.txt",print_r(I('post.'),true));
+	//		file_put_contents("loog.txt",print_r(I('post.'),true));
 			$fp = fopen("loog.txt", "a+");
 			fwrite ($fp, $User->_sql());
 			fwrite ($fp, "\n");
@@ -241,6 +315,95 @@ class AdminController extends Controller {
 		$data['recordsTotal'] = $User->count();
 		$data['recordsFiltered'] = count($data['data']);
 		
+		$this->ajaxReturn($data);
+	}
+	//权限管理页
+	public function manageprivilege()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		$Privilege = M('privilege');
+		$data['privilegelist'] = $Privilege->table('lab_privilege privilege')
+									->join('LEFT JOIN lab_user user ON user.uid = privilege.uid')
+									->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = privilege.uid')
+									->field('
+											privilege.id id,
+											privilege.uid uid,
+											user.name name,
+											privilege.privi privi,
+											user.graduate graduate,
+											userdetail.sex sex, 
+											userdetail.phone phone, 
+											userdetail.email email, 
+											userdetail.degree degree, 
+											userdetail.grade grade, 
+											userdetail.supervisor supervisor, 
+											userdetail.teacher teacher,
+											userdetail.supervisorid supervisorid,
+											userdetail.teacherid teacherid
+											')
+									->order(array('privilege.kind' => 'asc'))
+									->select();
+		if($data['privilegelist'] == false) $data['privilegelist'] = array();
+    	$data['strlist'] = C('STR_LIST');
+		$this->assign($data);
+		$this->display();
+	}
+	public function add_privilege_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(session('?lab_super_admin') == null)
+    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else if(ItemExists(trim(I('param.uid')), 'uid', 'user', false) == $WRONG_CODE['not_exist'])
+    		$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+    	else
+    	{
+			$uid = trim(I('param.uid'));
+			$Privilege = M('privilege');
+			$privilegeinfo = $Privilege->where("uid='%s'", $uid)->find();
+			if($privilegeinfo == null)
+			{
+				$privilegeinfo = array(
+					'uid' => $uid,
+					'privi' => 'lab_admin',
+					'kind' => 1
+				);
+				$Privilege->add($privilegeinfo);
+			}
+			else
+				$data['wrongcode'] = $WRONG_CODE['yes_exist'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	public function del_privilege_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(session('?lab_super_admin') == null)
+    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+    	else
+    	{
+			$id = intval(trim(I('param.id')));
+			$Privilege = M('privilege');
+			$privilegeinfo = $Privilege->where("id=".$id)->find();
+			if($privilegeinfo['uid'] == session('lab_uid'))
+				$data['wrongcode'] = $WRONG_CODE['admin_wrongdel'];
+			else if($privilegeinfo['privi'] == 'lab_super_admin')
+				$data['wrongcode'] = $WRONG_CODE['admin_not'];
+			else	
+				$Privilege->where("id=".$id)->delete();
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
 }

@@ -1,181 +1,43 @@
-Array
-(
-    [draw] => 2
-    [columns] => Array
-        (
-            [0] => Array
-                (
-                    [data] => uid
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [1] => Array
-                (
-                    [data] => name
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [2] => Array
-                (
-                    [data] => sex
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [3] => Array
-                (
-                    [data] => grade
-                    [name] => 
-                    [searchable] => false
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [4] => Array
-                (
-                    [data] => degree
-                    [name] => 
-                    [searchable] => false
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [5] => Array
-                (
-                    [data] => supervisor
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [6] => Array
-                (
-                    [data] => teacher
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => true
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [7] => Array
-                (
-                    [data] => phone
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => false
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [8] => Array
-                (
-                    [data] => email
-                    [name] => 
-                    [searchable] => true
-                    [orderable] => false
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [9] => Array
-                (
-                    [data] => graduate
-                    [name] => 
-                    [searchable] => false
-                    [orderable] => false
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-            [10] => Array
-                (
-                    [data] => changeinfo
-                    [name] => 
-                    [searchable] => false
-                    [orderable] => false
-                    [search] => Array
-                        (
-                            [value] => 
-                            [regex] => false
-                        )
-
-                )
-
-        )
-
-    [order] => Array
-        (
-            [0] => Array
-                (
-                    [column] => 0
-                    [dir] => asc
-                )
-
-        )
-
-    [start] => 0
-    [length] => 50
-    [search] => Array
-        (
-            [value] => 
-            [regex] => false
-        )
-
-)
-SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.sex LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  ORDER BY ``  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
+SELECT user.uid uid,user.name name,user.graduate graduate,userdetail.sex sex,userdetail.phone phone,userdetail.email email,userdetail.degree degree,userdetail.grade grade,userdetail.supervisor supervisor,userdetail.teacher teacher,userdetail.supervisorid supervisorid,userdetail.teacherid teacherid FROM lab_user user LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid  WHERE user.uid LIKE '%%' OR user.name LIKE '%%' OR userdetail.phone LIKE '%%' OR userdetail.email LIKE '%%' OR userdetail.grade LIKE '%%' OR userdetail.supervisor LIKE '%%' OR userdetail.teacher LIKE '%%' ORDER BY `uid` asc LIMIT 0,50  
