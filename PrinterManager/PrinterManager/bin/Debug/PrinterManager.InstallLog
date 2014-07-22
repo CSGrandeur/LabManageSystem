@@ -2091,3 +2091,12 @@ System.ComponentModel.Win32Exception: 指定的服务未安装。
    logtoconsole = 
    logfile = D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.InstallLog
    assemblypath = D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.exe
+正在卸载程序集“D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.InstallLog
+   assemblypath = D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.exe
+正在移除 EventLog 源 PrinterManager。
+正在从系统中移除服务 PrinterManager...
+已成功地从系统中移除服务 PrinterManager。
+尝试停止服务 PrinterManager。
