@@ -17,7 +17,7 @@
 		<td class="positive td_2w">性别：</td>
 		<td>
 			<div id="selectsex" class="ui mini selection dropdown">
-				<input type="hidden" name="sex">
+				<input type="hidden" name="sex" value="{$userinfo['sex']}">
 				<div class="default text">{$strlist[$userinfo['sex']]}</div>
 				<i class="dropdown icon"></i>
 				<div class="menu">
@@ -29,7 +29,7 @@
 		<td class="positive td_4w">攻读学位：</td>
 		<td>
 			<div id="selectdegree" class="ui mini selection dropdown">
-				<input type="hidden" name="degree">
+				<input type="hidden" name="degree" value="{$userinfo['degree']}">
 				<div class="default text">{$strlist[$userinfo['degree']]}</div>
 				<i class="dropdown icon"></i>
 				<div class="menu">
@@ -47,7 +47,7 @@
 		<td class="positive td_2w">学院：</td>
 		<td colspan="3">
 			<div id="selectinstitute" class="ui mini selection dropdown">
-				<input type="hidden" name="institute">
+				<input type="hidden" name="institute" value="{$userinfo['institute']}">
 				<div class="default text">{$strlist[$userinfo['institute']]}</div>
 				<i class="dropdown icon"></i>
 				<div class="menu">
@@ -68,7 +68,7 @@
 		<td class="positive td_2w">专业：</td>
 		<td colspan="3">
 		<div id="selectmajor" class="ui mini selection dropdown">
-				<input type="hidden" name="major">
+				<input type="hidden" name="major" value="{$userinfo['major']}">
 				<div class="default text">{$strlist[$userinfo['major']]}</div>
 				<i class="dropdown icon"></i>
 				<div class="menu">
@@ -90,7 +90,7 @@
 		<td class="positive td_2w">年级：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="20xx" value="{$userinfo['grade']}">
+				<input name="grade" type="text" placeholder="20xx" value="{$userinfo['grade']}">
 			</div>
 		</td>
 		<td class="positive td_4w">出生年月：</td>
@@ -98,13 +98,13 @@
 		<td class="positive td_3w">手机号：</td>
 		<td class="td_5w">
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="手机号..." value="{$userinfo['phone']}">
+				<input name="phone" type="text" placeholder="手机号..." value="{$userinfo['phone']}">
 			</div>
 		</td>
 		<td class="positive td_2w">邮箱：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="xx@xx.xx" value="{$userinfo['email']}">
+				<input name="email" type="text" placeholder="xx@xx.xx" value="{$userinfo['email']}">
 			</div>
 		</td>
 	</tr>
@@ -112,25 +112,25 @@
 		<td class="positive td_2w">民族：</td>
 		<td >
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="民族..." value="{$userinfo['nation']}">
+				<input name="nation" type="text" placeholder="民族..." value="{$userinfo['nation']}">
 			</div>
 		</td>	
 		<td class="positive td_4w">政治面貌：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="党员、团员等..." value="{$userinfo['political']}">
+				<input name="political" type="text" placeholder="党员、团员等..." value="{$userinfo['political']}">
 			</div>
 		</td>
 		<td class="positive td_2w">导师：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="导师..." value="{$userinfo['supervisor']}">
+				<input name="supervisor" type="text" placeholder="导师..." value="{$userinfo['supervisor']}">
 			</div>
 		</td>
 		<td class="positive td_4w">导师帐号：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="导师在本系统帐号..." value="{$userinfo['supervisorid']}">
+				<input name="supervisorid" type="text" placeholder="导师在本系统帐号..." value="{$userinfo['supervisorid']}">
 			</div>
 		</td>
 	</tr>
@@ -138,19 +138,45 @@
 		<td class="positive td_2w">证件：</td>
 		<td colspan="3">
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="身份证号..." value="{$userinfo['idcard']}">
+				<input name="idcard" type="text" placeholder="身份证号..." value="{$userinfo['idcard']}">
 			</div>
 		</td>
 		<td class="positive td_3w">小导师：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="导师..." value="{$userinfo['teacher']}">
+				<input name="teacher" type="text" placeholder="导师..." value="{$userinfo['teacher']}">
 			</div>
 		</td>
 		<td class="positive td_4w">小导师帐号：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="name" type="text" placeholder="小导师在本系统帐号..." value="{$userinfo['teacherid']}">
+				<input name="teacherid" type="text" placeholder="小导师在本系统帐号..." value="{$userinfo['teacherid']}">
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="positive td_2w">身份：</td>
+		<td colspan="3">
+			<div id="selectkind" class="ui mini selection dropdown">
+				<input type="hidden" name="kind" value="{$userinfo['kind']}">
+				<div class="default text">{$strlist[$userinfo['kind']]}</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					<div class="item" data-value="41">学生</div>
+					<div class="item" data-value="42">讲师/教授</div>		
+				</div>
+			</div>
+		</td>
+		<td class="positive td_2w">状态：</td>
+		<td colspan="3">
+			<div id="selectgraduate" class="ui mini selection dropdown">
+				<input type="hidden" name="graduate" value="{$userinfo['graduate']}">
+				<div class="default text">{$strlist[$userinfo['graduate']]}</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					<div class="item" data-value="61">在校</div>
+					<div class="item" data-value="62">离校</div>		
+				</div>
 			</div>
 		</td>
 	</tr>

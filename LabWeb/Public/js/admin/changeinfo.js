@@ -11,8 +11,10 @@ function ondo_changeinfo()
 {
 	$('#selectsex').unbind('dropdown').dropdown();
 	$('#selectdegree').unbind('dropdown').dropdown();
-	$('#selectinstitute').unbind('dropdown').dropdown();selectmajor
+	$('#selectinstitute').unbind('dropdown').dropdown();
 	$('#selectmajor').unbind('dropdown').dropdown();
+	$('#selectkind').unbind('dropdown').dropdown();
+	$('#selectgraduate').unbind('dropdown').dropdown();
 	$.tools.dateinput.localize("en", {
 		months: '1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月',
 		shortMonths:	'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
@@ -21,7 +23,7 @@ function ondo_changeinfo()
 	});
 	$(":date").unbind('dateinput').dateinput({
 		selectors: true,             	// whether month/year dropdowns are shown
-		offset: [10, 20],            	// tweak the position of the calendar
+		offset: [-100, -20],            	// tweak the position of the calendar
 		speed: 'fast',               	// calendar reveal speed
 		firstDay: 1,                  	// which day starts a week. 0 = sunday, 1 = monday etc..
 		yearRange: [-60, 1],
@@ -39,11 +41,13 @@ function ChangeinfoAjaxSubmit()
 {
     $('#changeinfo_form').ajaxSubmit(function(data){
     	jsondata = data;
-    	if(jsondata["wrongcode"] != 999)
+    	if(jsondata["wrongcode"] == 72)
+        	alertify.log(jsondata["wrongmsg"]);
+    	else if(jsondata["wrongcode"] != 999)
         	alertify.error(jsondata["wrongmsg"]);
         else
         {
-        	alertify.success( "Successfully Changed!");
+        	alertify.success( "用户信息已更新!");
         }
         return false;
     });

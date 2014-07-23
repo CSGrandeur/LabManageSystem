@@ -72,6 +72,8 @@ class AdminController extends Controller {
     					$userinfo[$useradd_i]['passwd'] = $userinfo[$useradd_i]['uid'];
     				if($userinfo[$useradd_i]['kind'] != null)
     					$userinfo[$useradd_i]['kind'] = intval($userinfo[$useradd_i]['kind']);
+    				else 
+    					$userinfo[$useradd_i]['kind'] = 41;//41是学生，参考/Common/Conf/ConstVal.php
     				$userinfo[$useradd_i]['passwd'] = MkPasswd($userinfo[$useradd_i]['passwd']);
     				$useradd_i ++;
     			}
@@ -124,6 +126,7 @@ class AdminController extends Controller {
 								user.uid uid, 
 								user.name name, 
 								user.kind kind, 
+								user.graduate graduate, 
 								userdetail.sex sex, 
 								userdetail.phone phone, 
 								userdetail.email email, 
@@ -173,11 +176,10 @@ class AdminController extends Controller {
     {
     	$WRONG_CODE = C('WRONG_CODE');
     	$WRONG_MSG = C('WRONG_MSG');
-    	$data = $this->changeinfo_data();
-    	$data['strlist'] = C('STR_LIST');
+    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
     	if(session('?lab_admin') == null)
     		$data['wrongcode'] = $WRONG_CODE['admin_not'];
-    	else if(I('param.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
+    	else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
     		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
     	else
     	{
@@ -188,22 +190,29 @@ class AdminController extends Controller {
     			$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
     		else
     		{
+    			$userinfo['name'] = trim($param['name']);
+    			$uesrinfo['kind'] = intval(trim($param['kind']));
+    			$userinfo['graduate'] = intval(trim($param['graduate']));
+    			$res = $User->save($userinfo);
+    					//file_put_contents("loog.txt",print_r(I('post.'),true));
+    						$fp = fopen("loog.txt", "a+");
+    						fwrite ($fp, $User->_sql());
+    						fwrite ($fp, "\n");
+    						fclose($fp);
     			$Userdetail = M('userdetail');
-    			$userdetail = $Userdetail->where('uid='.$param['uid'])->find();
+    			$userdetail = $Userdetail->where("uid='%s'", trim($param['uid']))->find();
     			$flag = true;
     			if($userdetail == null)
     			{
     				$flag = false;
-    				$userdetail['uid'] = trim($param['uid']);
     				$userdetail = array();
+    				$userdetail['uid'] = trim($param['uid']);
     			}
-    			$userdetail['name'] = trim($param['name']);
-    			$userdetail['sex'] = $data['strlist'][trim($param['sex'])];
-    			$userdetail['degree'] = trim($param['degree']);
-    			$userdetail['institute'] = trim($param['institute']);
-    			$userdetail['major'] = trim($param['major']);
+    			$userdetail['sex'] = intval(trim($param['sex']));
+    			$userdetail['degree'] = intval(trim($param['degree']));
+    			$userdetail['institute'] = intval(trim($param['institute']));
+    			$userdetail['major'] = intval(trim($param['major']));
     			$userdetail['grade'] = trim($param['grade']);
-    			$userdetail['birthday'] = trim($param['birthday']);
     			$userdetail['birthday'] = date("Y-m-d", trim($param['birthday']));
     			$userdetail['phone'] = trim($param['phone']);
     			$userdetail['email'] = trim($param['email']);
@@ -214,10 +223,10 @@ class AdminController extends Controller {
     			$userdetail['idcard'] = trim($param['idcard']);
     			$userdetail['teacher'] = trim($param['teacher']);
     			$userdetail['teacherid'] = trim($param['teacherid']);
-    			$res;
-    			if($flag) $res = $Userdetail->save($userdetail);
-    			else $res = $Userdetail->add($userdetail);
-    			if($res == false) $data['wrongcode'] = $WRONG_CODE['sql_error'];
+    			if($flag) $res = $res || $Userdetail->save($userdetail);
+    			else $res = $res || $Userdetail->add($userdetail);
+
+    			if($res == false) $data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
     		}	
     	}
         
@@ -321,11 +330,6 @@ class AdminController extends Controller {
 			$userlist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
 		}
 		$data['data'] = $userlist;
-	//		file_put_contents("loog.txt",print_r(I('post.'),true));
-			$fp = fopen("loog.txt", "a+");
-			fwrite ($fp, $User->_sql());
-			fwrite ($fp, "\n");
-			fclose($fp);
 		$data['draw'] = $d_draw;
 		$data['recordsTotal'] = $User->count();
 		$data['recordsFiltered'] = count($data['data']);

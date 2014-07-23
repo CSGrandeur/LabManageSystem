@@ -6,6 +6,18 @@ $(document).ready(function(){
 	});
 	//menubutton
 	$('#sidemenu').sidebar('attach events', '#menubutton');
+	
+	if($.cookie('sidebaropen') == 'true') 
+		$('#sidemenu').sidebar('show');
+	else 
+		$('#sidemenu').sidebar('hide');
+	
+	$('#menubutton').click(function(){
+		if($('#sidemenu').sidebar('is open'))
+			$.cookie('sidebaropen', 'true');
+		else
+			$.cookie('sidebaropen', 'false');
+	});
 	$('#menubutton').unbind("mouseover").mouseover(function(){
 		$('#menubutton>span').show();
 	});
@@ -94,7 +106,7 @@ function WhetherLoggedIn()
 	$.get(
 		"/home/user/whether_loggedin_ajax/", 
 		function(data){
-			if(data['valid'] == true && data['loggedin'] == true)
+			if(data['wrongcode'] == 999 && data['loggedin'] == true)
 				ChangeLoginLogoutDiv(data['uname'], true);
 			else
 				ChangeLoginLogoutDiv("", false);
