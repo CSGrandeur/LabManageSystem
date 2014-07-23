@@ -162,8 +162,30 @@ function ItemExists($item, $field, $table, $consider_del)
 	$WRONG_CODE = C('WRONG_CODE');
 	$map[$field] = $item;
 	if($consider_del) $map['del'] = 0;
-	if(M($table)->where($map)->getField($field, 1) != null)
+	if(M($table)->where($map)->field($field)->find() != null)
 		return $WRONG_CODE['yes_exist'];
 	else 
 		return $WRONG_CODE['not_exist'];
+}
+function ContentMatch($item1, $item2, $field1, $field2, $table, $consider_del)
+{
+	$WRONG_CODE = C('WRONG_CODE');
+	$map[$field1] = $item1;
+	if($consider_del) $map['del'] = 0;
+	$content = M($table)->where($map)->field($field2)->find();
+	if($content == null)
+		return $WRONG_CODE['userid_notexist'];
+	else if($content[$field2] != $item2)
+		return $WRONG_CODE['content_wrongmatch'];
+	return $WRONG_CODE['totally_right'];
+}
+function ContentFind($item1, $field1, $field2, $table, $consider_del)
+{
+	$WRONG_CODE = C('WRONG_CODE');
+	$map[$field1] = $item1;
+	if($consider_del) $map['del'] = 0;
+	$content = M($table)->where($map)->field($field2)->find();
+	if($content == null)
+		return "#";
+	return $content[$field2];
 }

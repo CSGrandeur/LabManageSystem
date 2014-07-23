@@ -43,6 +43,8 @@ function ChangeinfoAjaxSubmit()
     	jsondata = data;
     	if(jsondata["wrongcode"] == 72)
         	alertify.log(jsondata["wrongmsg"]);
+    	else if(jsondata["wrongcode"] == 81)
+        	alertify.error('输入导师的姓名和所输入帐号对应导师的姓名不相符');
     	else if(jsondata["wrongcode"] != 999)
         	alertify.error(jsondata["wrongmsg"]);
         else

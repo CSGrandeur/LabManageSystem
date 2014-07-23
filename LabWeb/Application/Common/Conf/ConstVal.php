@@ -34,7 +34,9 @@ return array(
 			'admin_wrongdel' => 62,			//不能删除自己
 			
 			'sql_error' => 71,				//数据库操作出错
-			'sql_notupdate' => 72,			//传给数据库的更新内容和原内容相同
+			'sql_notupdate' => 72,			//传给数据库的更新内容和原内容相同数据库操作出错
+			
+			'content_wrongmatch' => 81,		//内容对应错误，比如老师名字和id不对应
 
 			'totally_right' => 999,			//完全正确
 		),
@@ -69,6 +71,8 @@ return array(
 				
 			71 => '数据库操作出错',
 			72 => '内容已最新',				//update的时候内容没变化会返回false		
+
+			81 => '内容对应错误',				//update的时候内容没变化会返回false
 				
 			999 => '没有错误',
 		),
@@ -80,6 +84,9 @@ return array(
 		),
 		'STR_LIST' => array(
 			0 => '未知',
+				
+			1 => '超级管理员',
+			2 => '管理员',
 				
 			10 => '本科',
 			11 => '学术型硕士',

@@ -39,88 +39,88 @@ class AdminController extends Controller {
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(session('?lab_admin') == null)
-    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
-    	else if(I('param.adduser', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-    	else
-    	{
-    		$ADDUSER_ITEM = C('ADDUSER_ITEM');
-    		$addusertext = I('param.adduser');
-    		$adduserlist = preg_split("/[\\r\\n]{1,2}/", $addusertext);
-    		$add_cnt = 0;
-    		$update_cnt = 0;
-    		$fail_cnt = 0;
-    		$useradd_i = 0;
-    		foreach($adduserlist as $singleusertext)
-    		{
-    			if(strlen(trim($singleusertext)) == 0) continue;
-    			$singleuserinfo = preg_split("/[$\\t]/i", $singleusertext);
-    			$userinfo[$useradd_i] = array();
-    			for($i = 0; $i < count($singleuserinfo) && $i < count($ADDUSER_ITEM); $i ++)
-    				$userinfo[$useradd_i][$ADDUSER_ITEM[$i]] = trim($singleuserinfo[$i]);
-    			$userinfo[$useradd_i]['graduate'] = 0;
-    			if(count($singleuserinfo) < 2 || 
-    				TestUserID($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'] ||
-    				strlen($userinfo[$useradd_i]['name']) > 25 ||
-    				$userinfo[$useradd_i]['passwd'] != null && $userinfo[$useradd_i]['passwd'] != "" && 
-    				TestPasswd($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'])
-    				$fail_cnt ++;	
-    			else 
-    			{
-    				if($userinfo[$useradd_i]['passwd'] == null)
-    					$userinfo[$useradd_i]['passwd'] = $userinfo[$useradd_i]['uid'];
-    				if($userinfo[$useradd_i]['kind'] != null)
-    					$userinfo[$useradd_i]['kind'] = intval($userinfo[$useradd_i]['kind']);
-    				else 
-    					$userinfo[$useradd_i]['kind'] = 41;//41是学生，参考/Common/Conf/ConstVal.php
-    				$userinfo[$useradd_i]['passwd'] = MkPasswd($userinfo[$useradd_i]['passwd']);
-    				$useradd_i ++;
-    			}
-    		}
-    		if($useradd_i > 0)
-    		{
-	    		$User = M('user');
-	    		for($i = 0; $i < $useradd_i; $i ++)
-	    		{
-	    			$existuser = $User->where("uid='%s'", $userinfo[$i]['uid'])->find();
-	    			$ret = true;
-	    			if($existuser == null)
-	    			{
-	    				$ret = $User->add($userinfo[$i]);
-	    				$add_cnt ++;
-	    			}
-	    			else
-	    			{
-	    				$User->where("uid='%s'", $userinfo[$i]['uid'])->save($userinfo[$i]);
-	    				$update_cnt ++;
-	    			}
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.adduser', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$ADDUSER_ITEM = C('ADDUSER_ITEM');
+			$addusertext = I('param.adduser');
+			$adduserlist = preg_split("/[\\r\\n]{1,2}/", $addusertext);
+			$add_cnt = 0;
+			$update_cnt = 0;
+			$fail_cnt = 0;
+			$useradd_i = 0;
+			foreach($adduserlist as $singleusertext)
+			{
+				if(strlen(trim($singleusertext)) == 0) continue;
+				$singleuserinfo = preg_split("/[$\\t]/i", $singleusertext);
+				$userinfo[$useradd_i] = array();
+				for($i = 0; $i < count($singleuserinfo) && $i < count($ADDUSER_ITEM); $i ++)
+					$userinfo[$useradd_i][$ADDUSER_ITEM[$i]] = trim($singleuserinfo[$i]);
+				$userinfo[$useradd_i]['graduate'] = 0;
+				if(count($singleuserinfo) < 2 || 
+					TestUserID($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'] ||
+					strlen($userinfo[$useradd_i]['name']) > 25 ||
+					$userinfo[$useradd_i]['passwd'] != null && $userinfo[$useradd_i]['passwd'] != "" && 
+					TestPasswd($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'])
+					$fail_cnt ++;	
+				else 
+				{
+					if($userinfo[$useradd_i]['passwd'] == null)
+						$userinfo[$useradd_i]['passwd'] = $userinfo[$useradd_i]['uid'];
+					if($userinfo[$useradd_i]['kind'] != null)
+						$userinfo[$useradd_i]['kind'] = intval($userinfo[$useradd_i]['kind']);
+					else 
+						$userinfo[$useradd_i]['kind'] = 41;//41是学生，参考/Common/Conf/ConstVal.php
+					$userinfo[$useradd_i]['passwd'] = MkPasswd($userinfo[$useradd_i]['passwd']);
+					$useradd_i ++;
+				}
+			}
+			if($useradd_i > 0)
+			{
+				$User = M('user');
+				for($i = 0; $i < $useradd_i; $i ++)
+				{
+					$existuser = $User->where("uid='%s'", $userinfo[$i]['uid'])->find();
+					$ret = true;
+					if($existuser == null)
+					{
+						$ret = $User->add($userinfo[$i]);
+						$add_cnt ++;
+					}
+					else
+					{
+						$User->where("uid='%s'", $userinfo[$i]['uid'])->save($userinfo[$i]);
+						$update_cnt ++;
+					}
 					if($ret == false)
 						$fail_cnt ++;
-	    		}
-    		}
-    		$data['add_cnt'] = $add_cnt;
-    		$data['update_cnt'] = $update_cnt;
-    		$data['fail_cnt'] = $fail_cnt;
-    	}
-    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+				}
+			}
+			$data['add_cnt'] = $add_cnt;
+			$data['update_cnt'] = $update_cnt;
+			$data['fail_cnt'] = $fail_cnt;
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
 	//更改用户信息前的信息获取
-    private function changeinfo_data()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	
-    	if(I('param.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
-    	{
-    		$uid = trim(I('param.uid'));
-    		$User = M('user');
-    		$map = array(
-    			'user.uid' => $uid
-    		);
-    		$data['userinfo'] = $User->table('lab_user user')
+	private function changeinfo_data()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(I('param.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
+		{
+			$uid = trim(I('param.uid'));
+			$User = M('user');
+			$map = array(
+				'user.uid' => $uid
+			);
+			$userinfo = $User->table('lab_user user')
 						->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
 						->field('
 								user.uid uid, 
@@ -145,94 +145,124 @@ class AdminController extends Controller {
 								')
 						->where($map)
 						->find();
-    		if($data['userinfo'] == null)
-    		{
-    			$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
-    		}
-    		$data['strlist'] = C('STR_LIST');
-    	}
-    	else 
-    	{
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-    	}
-    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-    	return $data;
-    }
+			if($userinfo == null)
+			{
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			}
+			else///有错误，#
+			{
+				//如果已存在对应老师，则提示其id
+				if(strlen($userinfo['supervisorid']) == 0 && strlen($userinfo['supervisor']) != 0 && $userinfo['supervisorid'] != "#")
+				{
+					$userinfo['supervisorid'] = ContentFind($userinfo['supervisor'], 'name', 'uid', 'user', false);
+				}
+//						file_put_contents("loog.txt", print_r($User->_sql(), true));
+//	 						$fp = fopen("loog.txt", "a+");
+//	 						fwrite ($fp, $userinfo);
+//	 						fwrite ($fp, "\n");
+//	 						fclose($fp);
+				if(strlen($userinfo['teacherid']) == 0 && strlen($userinfo['teacher']) != 0 && $userinfo['teacherid'] != "#")
+				{
+					$userinfo['teacherid'] = ContentFind($userinfo['teacher'], 'name', 'uid', 'user', false);
+				}
+				$data['userinfo'] = $userinfo;
+			}
+			$data['strlist'] = C('STR_LIST');
+		}
+		else 
+		{
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		return $data;
+	}
 	//更改用户信息页
-    public function changeinfo()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data = $this->changeinfo_data();
+	public function changeinfo()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data = $this->changeinfo_data();
 		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
-        $this->assign($data);
-        if($data['wrongcode'] != $WRONG_CODE['totally_right'])
-        	$this->display('Public:alert');
-        else
-        	$this->display();
-    }
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
 	//更改用户信息逻辑处理
-    public function changeinfo_ajax()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(session('?lab_admin') == null)
-    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
-    	else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-    	else
-    	{
-    		$User = M('user');
-    		$param = I('param.');
-    		$userinfo = $User->where('uid='.$param['uid'])->find();
-    		if($userinfo == null)
-    			$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
-    		else
-    		{
-    			$userinfo['name'] = trim($param['name']);
-    			$uesrinfo['kind'] = intval(trim($param['kind']));
-    			$userinfo['graduate'] = intval(trim($param['graduate']));
-    			$res = $User->save($userinfo);
-    					//file_put_contents("loog.txt",print_r(I('post.'),true));
-    						$fp = fopen("loog.txt", "a+");
-    						fwrite ($fp, $User->_sql());
-    						fwrite ($fp, "\n");
-    						fclose($fp);
-    			$Userdetail = M('userdetail');
-    			$userdetail = $Userdetail->where("uid='%s'", trim($param['uid']))->find();
-    			$flag = true;
-    			if($userdetail == null)
-    			{
-    				$flag = false;
-    				$userdetail = array();
-    				$userdetail['uid'] = trim($param['uid']);
-    			}
-    			$userdetail['sex'] = intval(trim($param['sex']));
-    			$userdetail['degree'] = intval(trim($param['degree']));
-    			$userdetail['institute'] = intval(trim($param['institute']));
-    			$userdetail['major'] = intval(trim($param['major']));
-    			$userdetail['grade'] = trim($param['grade']);
-    			$userdetail['birthday'] = date("Y-m-d", trim($param['birthday']));
-    			$userdetail['phone'] = trim($param['phone']);
-    			$userdetail['email'] = trim($param['email']);
-    			$userdetail['nation'] = trim($param['nation']);
-    			$userdetail['political'] = trim($param['political']);
-    			$userdetail['supervisor'] = trim($param['supervisor']);
-    			$userdetail['supervisorid'] = trim($param['supervisorid']);
-    			$userdetail['idcard'] = trim($param['idcard']);
-    			$userdetail['teacher'] = trim($param['teacher']);
-    			$userdetail['teacherid'] = trim($param['teacherid']);
-    			if($flag) $res = $res || $Userdetail->save($userdetail);
-    			else $res = $res || $Userdetail->add($userdetail);
-
-    			if($res == false) $data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
-    		}	
-    	}
-        
-    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-        $this->ajaxReturn($data);
-    }
+	public function changeinfo_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$User = M('user');
+			$param = I('param.');
+			$userinfo = $User->where('uid='.$param['uid'])->field('passwd', true)->find();
+			if($userinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			else
+			{
+				$userinfo['name'] = trim($param['name']);
+				$userinfo['kind'] = intval(trim($param['kind']));
+				$userinfo['graduate'] = intval(trim($param['graduate']));
+				$res = $User->save($userinfo);
+				$Userdetail = M('userdetail');
+				$userdetail = $Userdetail->where("uid='%s'", trim($param['uid']))->find();
+				$flag = true;
+				if($userdetail == null)
+				{
+					$flag = false;
+					$userdetail = array();
+					$userdetail['uid'] = trim($param['uid']);
+				}
+				$userdetail['sex'] = intval(trim($param['sex']));
+				$userdetail['degree'] = intval(trim($param['degree']));
+				$userdetail['institute'] = intval(trim($param['institute']));
+				$userdetail['major'] = intval(trim($param['major']));
+				$userdetail['grade'] = trim($param['grade']);
+				$userdetail['birthday'] = date("Y-m-d", trim($param['birthday']));
+				$userdetail['phone'] = trim($param['phone']);
+				$userdetail['email'] = trim($param['email']);
+				$userdetail['nation'] = trim($param['nation']);
+				$userdetail['political'] = trim($param['political']);
+				$userdetail['supervisor'] = trim($param['supervisor']);
+				$userdetail['supervisorid'] = trim($param['supervisorid']);
+				$userdetail['idcard'] = trim($param['idcard']);
+				$userdetail['teacher'] = trim($param['teacher']);
+				$userdetail['teacherid'] = trim($param['teacherid']);
+				if(strlen($userdetail['supervisorid']) != 0)
+				{
+					if(ContentMatch($userdetail['supervisorid'], $userdetail['supervisor'], 'uid', 'name', 'user', false) != $WRONG_CODE['totally_right'])
+						$data['wrongcode'] = $WRONG_CODE['content_wrongmatch'];
+					else 
+						$userdetail['supervisorid'] = ContentFind($userdetail['supervisor'], 'name', 'uid', 'user', false);
+				}
+				if(strlen($userdetail['teacherid']) != 0)
+				{
+					if(ContentMatch($userdetail['teacherid'], $userdetail['teacher'], 'uid', 'name', 'user', false) != $WRONG_CODE['totally_right'])
+						$data['wrongcode'] = $WRONG_CODE['content_wrongmatch'];
+					else
+						$userdetail['teacherid'] = ContentFind($userdetail['teacher'], 'name', 'uid', 'user', false);
+				}
+				if($data['wrongcode'] == $WRONG_CODE['totally_right'])
+				{
+					if($flag) $res = $res || $Userdetail->save($userdetail);
+					else $res = $res || $Userdetail->add($userdetail);
+	
+					if($res == false) $data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+				}
+			}	
+		}
+		
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
 	//用户管理页
 	public function manageuser()
 	{
@@ -371,7 +401,7 @@ class AdminController extends Controller {
 									->order(array('privilege.kind' => 'asc'))
 									->select();
 		if($data['privilegelist'] == false) $data['privilegelist'] = array();
-    	$data['strlist'] = C('STR_LIST');
+		$data['strlist'] = C('STR_LIST');
 		$this->assign($data);
 		$this->display();
 	}
@@ -381,13 +411,13 @@ class AdminController extends Controller {
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		if(session('?lab_super_admin') == null)
-    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
 		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
 		else if(ItemExists(trim(I('param.uid')), 'uid', 'user', false) == $WRONG_CODE['not_exist'])
-    		$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
-    	else
-    	{
+			$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+		else
+		{
 			$uid = trim(I('param.uid'));
 			$Privilege = M('privilege');
 			$privilegeinfo = $Privilege->where("uid='%s'", $uid)->find();
@@ -396,7 +426,7 @@ class AdminController extends Controller {
 				$privilegeinfo = array(
 					'uid' => $uid,
 					'privi' => 'lab_admin',
-					'kind' => 1
+					'kind' => 2
 				);
 				$Privilege->add($privilegeinfo);
 			}
@@ -412,11 +442,11 @@ class AdminController extends Controller {
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		if(session('?lab_super_admin') == null)
-    		$data['wrongcode'] = $WRONG_CODE['admin_not'];
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
 		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-    	else
-    	{
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
 			$id = intval(trim(I('param.id')));
 			$Privilege = M('privilege');
 			$privilegeinfo = $Privilege->where("id=".$id)->find();
