@@ -149,18 +149,13 @@ class AdminController extends Controller {
 			{
 				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
 			}
-			else///有错误，#
+			else
 			{
 				//如果已存在对应老师，则提示其id
 				if(strlen($userinfo['supervisorid']) == 0 && strlen($userinfo['supervisor']) != 0 && $userinfo['supervisorid'] != "#")
 				{
 					$userinfo['supervisorid'] = ContentFind($userinfo['supervisor'], 'name', 'uid', 'user', false);
 				}
-//						file_put_contents("loog.txt", print_r($User->_sql(), true));
-//	 						$fp = fopen("loog.txt", "a+");
-//	 						fwrite ($fp, $userinfo);
-//	 						fwrite ($fp, "\n");
-//	 						fclose($fp);
 				if(strlen($userinfo['teacherid']) == 0 && strlen($userinfo['teacher']) != 0 && $userinfo['teacherid'] != "#")
 				{
 					$userinfo['teacherid'] = ContentFind($userinfo['teacher'], 'name', 'uid', 'user', false);
@@ -226,7 +221,7 @@ class AdminController extends Controller {
 				$userdetail['institute'] = intval(trim($param['institute']));
 				$userdetail['major'] = intval(trim($param['major']));
 				$userdetail['grade'] = trim($param['grade']);
-				$userdetail['birthday'] = date("Y-m-d", trim($param['birthday']));
+				$userdetail['birthday'] = $param['birthday'];
 				$userdetail['phone'] = trim($param['phone']);
 				$userdetail['email'] = trim($param['email']);
 				$userdetail['nation'] = trim($param['nation']);
@@ -236,14 +231,14 @@ class AdminController extends Controller {
 				$userdetail['idcard'] = trim($param['idcard']);
 				$userdetail['teacher'] = trim($param['teacher']);
 				$userdetail['teacherid'] = trim($param['teacherid']);
-				if(strlen($userdetail['supervisorid']) != 0)
+				if(strlen($userdetail['supervisorid']) != 0 && $userdetail['supervisorid'] != "#")
 				{
 					if(ContentMatch($userdetail['supervisorid'], $userdetail['supervisor'], 'uid', 'name', 'user', false) != $WRONG_CODE['totally_right'])
 						$data['wrongcode'] = $WRONG_CODE['content_wrongmatch'];
 					else 
 						$userdetail['supervisorid'] = ContentFind($userdetail['supervisor'], 'name', 'uid', 'user', false);
 				}
-				if(strlen($userdetail['teacherid']) != 0)
+				if(strlen($userdetail['teacherid']) != 0 && $userdetail['teacherid'] != "#")
 				{
 					if(ContentMatch($userdetail['teacherid'], $userdetail['teacher'], 'uid', 'name', 'user', false) != $WRONG_CODE['totally_right'])
 						$data['wrongcode'] = $WRONG_CODE['content_wrongmatch'];
@@ -254,9 +249,14 @@ class AdminController extends Controller {
 				{
 					if($flag) $res = $res || $Userdetail->save($userdetail);
 					else $res = $res || $Userdetail->add($userdetail);
-	
+
 					if($res == false) $data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
 				}
+// 											file_put_contents("loog.txt", print_r($Userdetail->_sql(), true));
+// 						 						$fp = fopen("loog.txt", "a+");
+// 						 						fwrite ($fp, $Userdetail->_sql());
+// 						 						fwrite ($fp, "\n");
+// 						 						fclose($fp);
 			}	
 		}
 		

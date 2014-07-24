@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-07-21 12:14:51
+-- Generation Time: 2014-07-24 17:14:03
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -101,14 +101,14 @@ CREATE TABLE IF NOT EXISTS `lab_printcount` (
   `papersum` int(11) NOT NULL DEFAULT '0',
   `month` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `lab_printcount`
 --
 
 INSERT INTO `lab_printcount` (`id`, `uid`, `papersum`, `month`) VALUES
-(1, 'CSGrandeur', 3, '2014-07-01');
+(4, 'CSGrandeur', 1, '2014-07-01');
 
 -- --------------------------------------------------------
 
@@ -125,21 +125,24 @@ CREATE TABLE IF NOT EXISTS `lab_printrecord` (
   `submittime` datetime NOT NULL,
   `updatetime` datetime NOT NULL,
   `infohash` varchar(50) NOT NULL,
+  `result` tinyint(1) DEFAULT '0' COMMENT '该打印记录返回的内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
 -- 转存表中的数据 `lab_printrecord`
 --
 
-INSERT INTO `lab_printrecord` (`id`, `uid`, `papernum`, `jobname`, `identifier`, `submittime`, `updatetime`, `infohash`) VALUES
-(1, 'CSGrandeur', 1, 'Print System Document', 28, '2014-07-17 12:34:41', '2014-07-18 11:37:26', 'c90b4a01e0e04e50cfa4d295825a8c4e'),
-(2, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:12:36', '8edef83eb128e1e46df9522049e9f3b6'),
-(3, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:13:27', '8edef83eb128e1e46df9522049e9f3b6'),
-(4, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:13:29', '8edef83eb128e1e46df9522049e9f3b6'),
-(5, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:13:30', '8edef83eb128e1e46df9522049e9f3b6'),
-(6, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:16:15', '8edef83eb128e1e46df9522049e9f3b6'),
-(7, 'CSGrandeur', 1, 'Print System Document', 27, '2014-07-17 12:11:35', '2014-07-21 17:16:18', '8edef83eb128e1e46df9522049e9f3b6');
+INSERT INTO `lab_printrecord` (`id`, `uid`, `papernum`, `jobname`, `identifier`, `submittime`, `updatetime`, `infohash`, `result`) VALUES
+(9, 'CSGrandeur', 0, 'Print System Document', 3, '2014-07-22 01:26:09', '2014-07-22 09:26:09', '9b33a2866d33857ba2b6a1fa78a26e15', NULL),
+(10, 'CSGrandeur', 1, 'Print System Document', 4, '2014-07-22 01:26:16', '2014-07-22 09:26:16', '460c8f4f2b31c752b15cde40d5b28267', NULL),
+(11, 'CSGrandeur', 0, 'Print System Document', 5, '2014-07-22 01:26:20', '2014-07-22 09:26:20', 'e11666807711801b43bb83ff7c45e575', NULL),
+(12, 'CSGrandeur', 1, 'Print System Document', 6, '2014-07-22 01:26:26', '2014-07-22 09:26:26', 'c93667f27e6a3cd54a8084c4caa3b292', NULL),
+(13, 'CSGrandeur', 1, 'Print System Document', 7, '2014-07-22 01:26:31', '2014-07-22 09:26:31', '56303c1f95702076abb87583a365a680', NULL),
+(14, 'CSGrandeur', 1, 'Print System Document', 14, '2014-07-22 01:35:51', '2014-07-22 09:35:51', '3cc134f06a815297b4829f1dd0b5b102', 0),
+(15, 'CSGrandeur', 1, 'Print System Document', 15, '2014-07-22 01:36:10', '2014-07-22 09:36:10', 'eb59937429e1f2f3d4e9b4cfb7edba36', 0),
+(16, 'CSGrandeur', 1, 'Print System Document', 16, '2014-07-22 01:36:22', '2014-07-22 09:36:23', '0e24a5a85f0c4ec39dadd0aec3eb6c8e', 1),
+(17, 'CSGrandeur', 1, 'Print System Document', 17, '2014-07-22 01:37:34', '2014-07-22 09:37:34', '22b3b1e647b6244f302e5ad91c85a29d', 1);
 
 -- --------------------------------------------------------
 
@@ -150,10 +153,17 @@ INSERT INTO `lab_printrecord` (`id`, `uid`, `papernum`, `jobname`, `identifier`,
 CREATE TABLE IF NOT EXISTS `lab_privilege` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT '学号/编号/帐号',
-  `privilege` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '权限',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `privi` varchar(20) CHARACTER SET utf8 DEFAULT NULL COMMENT '权限',
+  `kind` tinyint(1) DEFAULT '0' COMMENT '类型标记',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- 转存表中的数据 `lab_privilege`
+--
+
+INSERT INTO `lab_privilege` (`id`, `uid`, `privi`, `kind`) VALUES
+(4, '124611172', 'lab_super_admin', 1);
 
 -- --------------------------------------------------------
 
@@ -164,19 +174,20 @@ CREATE TABLE IF NOT EXISTS `lab_privilege` (
 CREATE TABLE IF NOT EXISTS `lab_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(30) NOT NULL COMMENT '学号/编号/帐号',
-  `passwd` varchar(30) NOT NULL,
+  `passwd` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL COMMENT '姓名',
-  `kind` tinyint(1) DEFAULT NULL COMMENT '是老师还是学生。41老师，42学生。详见ConstVal.php',
-  PRIMARY KEY (`id`),
+  `kind` tinyint(1) DEFAULT '41' COMMENT '是老师还是学生。41学生，42老师。详见ConstVal.php',
+  `graduate` tinyint(1) DEFAULT '61' COMMENT '是否毕业离校。61在校，62离校',
+  PRIMARY KEY (`id`,`uid`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
 
 --
 -- 转存表中的数据 `lab_user`
 --
 
-INSERT INTO `lab_user` (`id`, `uid`, `passwd`, `name`, `kind`) VALUES
-(1, '1246xxxxx', '11121', '121', 42);
+INSERT INTO `lab_user` (`id`, `uid`, `passwd`, `name`, `kind`, `graduate`) VALUES
+(35, '124611172', 'e0c10f451217b93f76c2654b2b729b85', '郭云镝', 42, 62);
 
 -- --------------------------------------------------------
 
@@ -204,14 +215,14 @@ CREATE TABLE IF NOT EXISTS `lab_userdetail` (
   `teacherid` varchar(20) NOT NULL COMMENT '小导师',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `lab_userdetail`
 --
 
 INSERT INTO `lab_userdetail` (`id`, `uid`, `sex`, `phone`, `email`, `degree`, `grade`, `birthday`, `idcard`, `nation`, `political`, `institute`, `major`, `supervisor`, `teacher`, `supervisorid`, `teacherid`) VALUES
-(1, '1246xxxxx', 51, '1511633xxxx', 'csgrandeur@csu.edu.cn', 21, '21', '0000-00-00', '212', '12', '1221', 201, 31, '13', '13', '31', '31');
+(4, '124611172', 51, '1212', '313', 10, '2121', '0000-00-00', '123', '汉', '', 202, 402, '郭云镝', '郭云镝', '', '');
 
 --
 -- 限制导出的表
@@ -240,12 +251,6 @@ ALTER TABLE `lab_printaddition`
 --
 ALTER TABLE `lab_printarrange`
   ADD CONSTRAINT `lab_printarrange_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
-
---
--- 限制表 `lab_privilege`
---
-ALTER TABLE `lab_privilege`
-  ADD CONSTRAINT `lab_privilege_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
 
 --
 -- 限制表 `lab_userdetail`

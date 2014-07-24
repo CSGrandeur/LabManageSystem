@@ -1,1 +1,0 @@
-SELECT `uid` FROM `lab_user` WHERE `name` = '郭云镝' AND `kind` = 42 LIMIT 1  

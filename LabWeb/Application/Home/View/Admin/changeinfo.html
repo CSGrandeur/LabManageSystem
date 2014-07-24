@@ -93,8 +93,10 @@
 				<input name="grade" type="text" placeholder="20xx" value="{$userinfo['grade']}">
 			</div>
 		</td>
-		<td class="positive td_4w">出生年月：</td>
-		<td class="td_4w"> <input type="date" value="{$userinfo['birthday']}"/></td>
+		<td class="positive td_4w">生日：</td>
+		<td class="td_4w"> 
+			<input name="birthday" type="date" value="{$userinfo['birthday']}"/>
+		</td>
 		<td class="positive td_3w">手机号：</td>
 		<td class="td_5w">
 			<div class="ui mini input">
@@ -130,7 +132,7 @@
 		<td class="positive td_4w">导师帐号：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="supervisorid" type="text" placeholder="导师在本系统帐号..." value="{$userinfo['supervisorid']}">
+				<input name="supervisorid" type="text" placeholder="不填则用'#'占位" value="{$userinfo['supervisorid']}">
 			</div>
 		</td>
 	</tr>
@@ -150,7 +152,7 @@
 		<td class="positive td_4w">小导师帐号：</td>
 		<td>
 			<div class="ui mini input">
-				<input name="teacherid" type="text" placeholder="小导师在本系统帐号..." value="{$userinfo['teacherid']}">
+				<input name="teacherid" type="text" placeholder="不填则用'#'占位" value="{$userinfo['teacherid']}">
 			</div>
 		</td>
 	</tr>
@@ -193,10 +195,4 @@
 </table>
 </form>
 </div>
-<script type="text/javascript">
-$(document).ready(function ()
-{
-	setbirthdate = "<?php echo $userinfo['birthday']; ?>";
-})
-</script>
 <script src="__PUBLIC__/js/admin/changeinfo.js" type="text/javascript"></script>
