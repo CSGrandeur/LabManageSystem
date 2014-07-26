@@ -1,0 +1,35 @@
+Array
+(
+    [wrongcode] => 999
+    [data] => Array
+        (
+            [0] => Array
+                (
+                    [id] => <a data-pjax href="/home/index/announcement?id=4">4</a>
+                    [title] => <a href="/home/admin/editannouncement?id=4">313131</a>
+                    [content] => &lt;p&gt;3131&lt;/p&gt;
+                    [available] => <a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="4">显示=>隐藏</a>
+                    [submitter] => 124611172
+                    [mender] => 
+                    [submittime] => 2014-07-27 00:31:12
+                    [updatetime] => 2014-07-27 00:36:38
+                )
+
+            [1] => Array
+                (
+                    [id] => <a data-pjax href="/home/index/announcement?id=3">3</a>
+                    [title] => <a href="/home/admin/editannouncement?id=3">3333333333</a>
+                    [content] => &lt;p&gt;333333333333333333&lt;/p&gt;
+                    [available] => <a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="3">显示=>隐藏</a>
+                    [submitter] => 124611172
+                    [mender] => 
+                    [submittime] => 2014-07-26 21:45:58
+                    [updatetime] => 2014-07-27 00:36:38
+                )
+
+        )
+
+    [draw] => 1
+    [recordsTotal] => 12
+    [recordsFiltered] => 2
+)

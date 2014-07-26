@@ -1,0 +1,22 @@
+<div class='infotablediv'>
+<form id="editannouncement_form" action="/home/admin/editannouncement_ajax" method="post">
+	<div class="ui fluid input">
+		<input id='announcement_title' name="title" type="text" placeholder="标题..." value="{$announcementinfo['title']}">
+	</div>
+	<div>
+	<script id="ueditor_div" name="content" type="text/plain">
+		{$announcementinfo['content']}
+	</script>
+	<input type="hidden" name="id" value="{$announcementinfo['id']}"/>
+	</div>
+	<div>
+		<button id="editannouncement_submit"  type="submit" class="ui blue button">
+			提交
+		</button>
+	</div>
+</form>
+</div>
+
+<script type="text/javascript" src="__PUBLIC__/ueditor1_4_3-utf8-php/ueditor.config.js"></script>
+<script type="text/javascript" src="__PUBLIC__/ueditor1_4_3-utf8-php/ueditor.all.min.js"></script>
+<script src="__PUBLIC__/js/admin/editannouncement.js" type="text/javascript"></script>

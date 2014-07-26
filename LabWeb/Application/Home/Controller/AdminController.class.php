@@ -252,11 +252,6 @@ class AdminController extends Controller {
 
 					if($res == false) $data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
 				}
-// 											file_put_contents("loog.txt", print_r($Userdetail->_sql(), true));
-// 						 						$fp = fopen("loog.txt", "a+");
-// 						 						fwrite ($fp, $Userdetail->_sql());
-// 						 						fwrite ($fp, "\n");
-// 						 						fclose($fp);
 			}	
 		}
 		
@@ -276,6 +271,37 @@ class AdminController extends Controller {
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		$this->display();
+	}
+	//修改在校/离校状态
+	public function change_graduate_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$User = M('user');
+			$usergraduate = $User->where("uid='%s'", I('param.uid'))->field('graduate')->find();
+			if($usergraduate == null)
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			else 
+			{
+				if($usergraduate['graduate'] == 61)
+					$usergraduate['graduate'] = 62;
+				else 
+					$usergraduate['graduate'] = 61;
+				$data['graduate'] = $usergraduate['graduate'];
+				if($User->where("uid='%s'", I('param.uid'))->save($usergraduate) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
 	}
 	//用户列表数据json
 	public function user_list_ajax()
@@ -350,10 +376,10 @@ class AdminController extends Controller {
 		if($userlist == false) $userlist = array();
 		for($i = 0; $i < count($userlist); $i ++)
 		{
-			if($userlist[$i]['graduate'] == 0)
-				$userlist[$i]['graduate'] = '<a class="ui tiny blue button" name="'.$userlist[$i]['uid'].'">在校</a>';
-			if($userlist[$i]['graduate'] == 0)
-				$userlist[$i]['graduate'] = '<a class="ui grey button" name="'.$userlist[$i]['uid'].'">毕业</a>';
+			if($userlist[$i]['graduate'] == 61)
+				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny blue button change_graduate_button" name="'.$userlist[$i]['uid'].'">在校</a>';
+			if($userlist[$i]['graduate'] == 62)
+				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny grey button change_graduate_button" name="'.$userlist[$i]['uid'].'">离校</a>';
 			$userlist[$i]['changeinfo'] = '<a data-pjax href="/home/admin/changeinfo?uid='.$userlist[$i]['uid'].'">修改</a>';
 			$userlist[$i]['supervisor'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['supervisorid'].'">'.$userlist[$i]['supervisor'].'</a>';
 			$userlist[$i]['teacher'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['teacherid'].'">'.$userlist[$i]['teacher'].'</a>';
@@ -405,6 +431,7 @@ class AdminController extends Controller {
 		$this->assign($data);
 		$this->display();
 	}
+	//添加管理员处理逻辑
 	public function add_privilege_ajax()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
@@ -436,6 +463,7 @@ class AdminController extends Controller {
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
+	//删除管理员处理逻辑
 	public function del_privilege_ajax()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
@@ -456,6 +484,221 @@ class AdminController extends Controller {
 				$data['wrongcode'] = $WRONG_CODE['admin_not'];
 			else	
 				$Privilege->where("id=".$id)->delete();
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//添加公告
+	public function addannouncement()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$this->display();
+	}
+	//添加公告处理逻辑
+	public function addannouncement_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(session('?lab_super_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.title', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Announcement = M('announcement');
+			$announcement_add = array(
+				'title' => trim(I('param.title')),
+				'content' => trim(I('param.content')),
+				'submitter' => session('lab_uid'),
+				'mender' => session('lab_uid'),
+				'submittime' => date('Y-m-d H:i:s'),
+				'updatetime' => date('Y-m-d H:i:s')
+			);
+			if($Announcement->add($announcement_add) == false)
+				$data['wrongcode'] = $WRONG_CODE['sql_error'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//修改公告
+	public function editannouncement()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+		{
+			$data['wrongcode'] = $WRONG_CODE['not_exist'];
+		}
+		else
+		{
+			$Announcement = M('announcement');
+			$map = array(
+				'id' => intval(I('param.id'))
+			);
+			$announcementinfo = $Announcement->where($map)->find();
+			if($announcementinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else 
+			{
+				$announcementinfo['content'] = htmlspecialchars_decode($announcementinfo['content']);
+				$data['announcementinfo'] = $announcementinfo;
+			}
+				
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	//修改公告处理逻辑
+	public function editannouncement_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(session('?lab_super_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.title', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Announcement = M('announcement');
+			$announcement_update = array(
+				'id' => intval(trim(I('param.id'))),
+				'title' => trim(I('param.title')),
+				'content' => trim(I('param.content')),
+				'mender' => session('lab_uid'),
+				'updatetime' => date('Y-m-d H:i:s')
+			);
+			if($Announcement->save($announcement_update) == false)
+				$data['wrongcode'] = $WRONG_CODE['sql_error'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//公告列表
+	public function announcementlist()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$this->display();
+		
+	}
+	//公告列表数据获取
+	public function announcement_list_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
+		{
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			if($d_length > 100) $d_length = 100;
+			
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'id'; break;
+				default: $d_ordercol = 'submittime'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+				'title' => array('like', '%'.$d_searchvalue.'%'),
+			);
+		}
+		$Announcement = M('announcement');
+		$announcementlist = $Announcement->where($map)
+										->order(array($d_ordercol=>$d_orderdir))
+										->limit($d_start, $d_length)
+										->select();
+
+//				file_put_contents("loog.txt", print_r($Announcement->_sql(), true));
+// 				$fp = fopen("loog.txt", "a+");
+// 				fwrite ($fp, $Userdetail->_sql());
+// 				fwrite ($fp, "\n");
+// 				fclose($fp);
+		if($announcementlist == false) $announcementlist = array();
+		for($i = 0; $i < count($announcementlist); $i ++)
+		{
+// 			if(strlen($announcementlist[$i]['title']) > 53)
+// 				$announcementlist[$i]['title'] = substr($announcementlist[$i]['title'], 0, 52) . "...";
+			if($announcementlist[$i]['available'] == 0)
+				$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$announcementlist[$i]['id'].'">隐藏=>显示</a>';
+			else
+				$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$announcementlist[$i]['id'].'">显示=>隐藏</a>';
+			$announcementlist[$i]['title'] = '<a href="/home/admin/editannouncement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a>';
+			$announcementlist[$i]['id'] = '<a data-pjax href="/home/index/announcement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
+			
+		}
+		$data['data'] = $announcementlist;
+		$data['draw'] = $d_draw;
+		$data['recordsTotal'] = $Announcement->count();
+		$data['recordsFiltered'] = $Announcement->where($map)->count();
+		
+		$this->ajaxReturn($data);
+	}
+	//公告显示状态修改
+	public function change_announcementavailable_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Announcement = M('announcement');
+			$map = array(
+				'id' => intval(I('param.id'))
+			);
+			$announcement_available = $Announcement->where($map)->field('available')->find();
+			if($announcement_available == null)
+				$data['wrongcode'] = $WRONG_CODE['announcementid_notexist'];
+			else
+			{
+				if($announcement_available['available'] == 0)
+					$announcement_available['available'] = 1;
+				else
+					$announcement_available['available'] = 0;
+				$data['available'] = $announcement_available['available'];
+				if($Announcement->where($map)->save($announcement_available) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
 		}
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
