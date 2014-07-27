@@ -1,0 +1,77 @@
+<div class='infotablediv'>
+	<div class="half_width">
+		<table class="ui celled table segment">
+			<tbody>
+			<tr>
+				<td class="positive td_3w">学号：</td>
+				<td id='managepaper_uid' class="td_3w">{$singleuser['uid']}</td>
+				<td class="positive td_3w">姓名：</td>
+				<td class="td_3w">{$singleuser['name']}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<br/>
+	<div class="ui action input">
+		<input id="change_paperlimit_input" type="text" placeholder="设定月用打印纸限制..." name='paperlimit'  value="{$singleuser['paperlimit']}">
+		<div id="change_paperlimit_submit" class="ui teal right labeled icon button">
+			<i class="setting icon"></i>
+				设定月用打印纸限制
+		</div>
+	</div>
+	<br/>
+	<div class="ui action input">
+		<input id="paperadd_input" type="text" placeholder="增加本月打印纸配额..." name='paperadd'>
+		<input id="paperadd_month_input" type="hidden" placeholder="增加本月打印纸配额..." name='paperadd_month' value="{$month}">
+		<div id="paperadd_submit" class="ui teal right labeled icon button">
+			<i class="setting icon"></i>
+				增加{$month}打印纸配额
+		</div>
+	</div>
+	<br/>
+<?php
+if($paperaddition != null && $paperaddition != false)
+{
+?>
+	<div class="half_width">
+		<table class="ui celled table segment">
+			<thead>
+				<th>编号</th>
+				<th>本月增配额</th>
+				<th>有效性</th>
+			</thead>
+			<tbody>
+	<?php
+	foreach($paperaddition as $addition)
+	{
+	?>
+		
+			<tr>
+				<td>{$addition['id']}</td>
+				<td>{$addition['addnum']}</td>
+			<?php
+				if($addition['available'] != 0)
+				{
+			?>
+				<td><a onclick="change_paperadd_available(this)" class="ui tiny blue button change_graduate_button" name="{$addition['id']}">有效</a></td>
+			<?php
+				}
+				else
+				{
+			?>
+				<td><a onclick="change_paperadd_available(this)" class="ui tiny grey button change_graduate_button" name="{$addition['id']}">无效</a></td>
+			<?php
+				}
+			?>
+			</tr>
+	<?php
+	}
+	?>
+			</tbody>
+		</table>
+	</div>
+<?php
+}
+?>
+</div>
+<script src="__PUBLIC__/js/admin/managepaper.js" type="text/javascript"></script>

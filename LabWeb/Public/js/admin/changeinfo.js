@@ -35,7 +35,7 @@ function ChangeinfoAjaxSubmit()
         	alertify.error(jsondata["wrongmsg"]);
         else
         {
-        	alertify.success( "用户信息已更新!");
+        	alertify.success( "用户信息更新成功!");
         }
         return false;
     });

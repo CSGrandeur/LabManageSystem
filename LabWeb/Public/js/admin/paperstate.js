@@ -1,20 +1,20 @@
 $(document).ready(function ()
 {
 	//initialise datatables
-	ondo_newsmore();
+	ondo_admin_paperstate();
 	$(document).on('pjax:success', function() {
-		ondo_newsmore();
+		ondo_admin_paperstate();
 	})
 	
 })
-function ondo_newsmore()
+function ondo_admin_paperstate()
 {
-	if(!$.fn.dataTable.isDataTable($('#newsmore_list')))
-		InitNewsListTable();
+	if(!$.fn.dataTable.isDataTable($('#admin_paperstate_list')))
+		InitPaperStateTable();
 }
-function InitNewsListTable()
+function InitPaperStateTable()
 {
-	 $('#newsmore_list').unbind("dataTable").dataTable( {
+	 $('#admin_paperstate_list').unbind("dataTable").dataTable( {
 			"processing": true,
 			"serverSide": true,
 			stateSave: true,// restore table state on page reload
@@ -26,40 +26,60 @@ function InitNewsListTable()
 				"thousands": "."
 			},
 			"ajax": {
-				"url": "/home/index/newsmore_list_ajax/",
+				"url": "/home/admin/paperstate_ajax/",
 				"type": "POST",
+	            "data": function(d){
+	            	d.month = $('#admin_papaerstate_month').val();
+	            },
 				pages: 5 // number of pages to cache
 			},
-		    "order": [ 2, 'desc' ],
+//		    "order": [ 0, 'asc' ],
 			"columns": [
-				{ 
-					"data": "id",
-					"width": "60px",
-					className: "center",
-					"searchable": false
-				},
-				{
-					"data": "title",
-					"width": "700px",
-					"orderDataType": "dom-text",
-					"orderable": false,
-				},
-				{
-					"data": "submittime",
-					"width": "100px",
-					className: "center",
-					"orderSequence": ["desc", "asc"],
-					 "searchable": false
-				},
-				{
-					"data": "updatetime",
-					"width": "100px",
-					className: "center",
-					"orderable": false,
-					 "searchable": false
-				}
+						{ 
+							"data": "uid",
+							"width": "100px",
+							className: "center"
+						},
+						{
+							"data": "name",
+							"width": "100px",
+							className: "center"
+						},
+						{
+							"data": "sex",
+							"width": "50px",
+							className: "center",
+							 "searchable": false
+						},
+						{
+							"data": "grade",
+							"width": "50px",
+							className: "center",
+						},
+						{
+							"data": "degree",
+							"width": "100px",
+							className: "center",
+							 "searchable": false
+						},
+						{
+							"data": "papersum",
+							"width": "100px",
+							className: "center",
+							 "searchable": false
+						},
+						{
+							"data": "paperlimit",
+							"width": "100px",
+							className: "center",
+							 "orderable": false,
+							 "searchable": false
+						},
 			]
 	 } );
+	 $('#admin_papaerstate_month').unbind('input propertychange').bind('input propertychange', function() {
+			$('#admin_paperstate_list').DataTable().ajax.reload();
+		});
 }
 
 //

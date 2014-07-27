@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 class PrinterController extends Controller {
-	 function receive_return()
+	function receive_return()
 	{//返回非0，表示允许打印。只有准确判断纸张数超出规定时候返回0，禁止打印。
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
@@ -23,7 +23,7 @@ class PrinterController extends Controller {
 					$Printarrange = M('printarrange');
 					$arrange = $Printarrange->where('uid='.$info['uid'])->find();
 					$paperlimit = $arrange == null ? C('PAPER_LIMIT') : $arrange['paperlimit'];
-                	//计算本月额外配给纸张数（允许多次配给，求和）
+					//计算本月额外配给纸张数（允许多次配给，求和）
 					$Printaddition = M('printaddition');
 					$map = array(
 						'uid' => $info['uid'],
@@ -74,8 +74,114 @@ class PrinterController extends Controller {
 		}
 		return 2;//没有得到正确信号
 	}
-    public function receive()
-    {
-    	echo $this->receive_return();
-    }
+	public function receive()
+	{
+		echo $this->receive_return();
+	}
+	//打印纸使用状况
+	public function paperstate()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$data['month'] = date('Y-m');
+		$this->assign($data);
+		$this->display();
+	}
+	//打印纸状况表格数据
+	public function paperstate_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			$d_month = date("Y-m-1", strtotime(trim($reqdata['month'])));
+			if($d_length > 100) $d_length = 100;
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'uid'; break;
+				case 1: $d_ordercol = 'name'; break;
+				case 2: $d_ordercol = 'sex'; break;
+				case 3: $d_ordercol = 'grade'; break;
+				case 4: $d_ordercol = 'degree'; break;
+				case 5: $d_ordercol = 'papersum'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+				'user.uid' => array('like', '%'.$d_searchvalue.'%'),
+				'user.name' => array('like', '%'.$d_searchvalue.'%'),
+ 				'userdetail.grade' => array('like', '%'.$d_searchvalue.'%'),
+				'_logic' => 'or'
+			);
+// 			$map = array(
+// 				'_complex' => $map,
+// 				'printcount.month' => $d_month,
+// 				'printaddition.month' => $d_month,
+// 			);
+			$User = M('user');
+			$paperstatelist = $User->table('lab_user user')
+								->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
+								->join('LEFT JOIN lab_printcount printcount ON printcount.uid = user.uid AND printcount.month = \''.$d_month.'\'')
+								->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
+								->join('LEFT JOIN lab_printaddition printaddition ON printaddition.uid = user.uid AND printaddition.month = \''.$d_month.'\'')
+								->field('
+										user.uid uid,
+										user.name name,
+										userdetail.sex sex,
+										userdetail.degree degree,
+										userdetail.grade grade,
+										printcount.papersum papersum,
+										printarrange.paperlimit paperlimit,
+										SUM(printaddition.addnum) addnum
+										')
+								->where($map)
+								->order(array($d_ordercol=>$d_orderdir))
+								->limit($d_start, $d_length)
+								->select();
+			file_put_contents("loog.txt", print_r($User->_sql(), true));
+			// 	$fp = fopen("loog.txt", "a+");
+			// 	fwrite ($fp, $Userdetail->_sql());
+			// 	fwrite ($fp, "\n");
+			// 	fclose($fp);
+			if($paperstatelist != null && $paperstatelist[0]['uid'] != null)
+			{
+				for($i = count($paperstatelist) - 1; $i >= 0; $i --)
+				{
+					$paperstatelist[$i]['paperlimit'] = 
+						($paperstatelist[$i]['paperlimit'] ? $paperstatelist[$i]['paperlimit'] : C('PAPER_LIMIT')) + 
+						($paperstatelist[$i]['addnum'] ? $paperstatelist[$i]['addnum'] : 0);
+					$paperstatelist[$i]['papersum'] = $paperstatelist[$i]['papersum'] ? $paperstatelist[$i]['papersum'] : 0;
+					$paperstatelist[$i]['sex'] = $STR_LIST[$paperstatelist[$i]['sex']];
+					$paperstatelist[$i]['degree'] = $STR_LIST[$paperstatelist[$i]['degree']];
+				}
+			}
+			else 
+				$paperstatelist = false;
+			$data['data'] = $paperstatelist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $User->count();
+			$data['recordsFiltered'] = $User->table('lab_user user')
+											->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
+											->join('LEFT JOIN lab_printcount printcount ON printcount.uid = user.uid')
+											->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
+											->join('LEFT JOIN lab_printaddition printaddition ON printaddition.uid = user.uid')
+											->where($map)
+											->count();
+			
+		}
+
+		$this->ajaxReturn($data);
+	}
 }

@@ -711,4 +711,264 @@ class AdminController extends Controller {
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
+	//打印纸配额列表
+	public function paperstate()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$data['month'] = date('Y-m');
+		$this->assign($data);
+		$this->display();
+	}
+	//打印纸状况表格数据
+	public function paperstate_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+	
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			$d_month = date("Y-m-1", strtotime(trim($reqdata['month'])));
+			if($d_length > 100) $d_length = 100;
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'uid'; break;
+				case 1: $d_ordercol = 'name'; break;
+				case 2: $d_ordercol = 'sex'; break;
+				case 3: $d_ordercol = 'grade'; break;
+				case 4: $d_ordercol = 'degree'; break;
+				case 5: $d_ordercol = 'papersum'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+				'user.uid' => array('like', '%'.$d_searchvalue.'%'),
+				'user.name' => array('like', '%'.$d_searchvalue.'%'),
+ 				'userdetail.grade' => array('like', '%'.$d_searchvalue.'%'),
+				'_logic' => 'or'
+			);
+// 			$map = array(
+// 				'_complex' => $map,
+// 				'printcount.month' => $d_month,
+// 				'printaddition.month' => $d_month,
+// 			);
+			$User = M('user');
+			$paperstatelist = $User->table('lab_user user')
+								->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
+								->join('LEFT JOIN lab_printcount printcount ON printcount.uid = user.uid AND printcount.month = \''.$d_month.'\'')
+								->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
+								->join('LEFT JOIN lab_printaddition printaddition ON printaddition.uid = user.uid AND printaddition.month = \''.$d_month.'\'')
+								->field('
+										user.uid uid,
+										user.name name,
+										userdetail.sex sex,
+										userdetail.degree degree,
+										userdetail.grade grade,
+										printcount.papersum papersum,
+										printarrange.paperlimit paperlimit,
+										SUM(printaddition.addnum) addnum
+										')
+								->where($map)
+								->order(array($d_ordercol=>$d_orderdir))
+								->limit($d_start, $d_length)
+								->select();
+
+			if(count($paperstatelist) > 0 && $paperstatelist[0]['uid'] != null)
+			{
+				for($i = count($paperstatelist) - 1; $i >= 0; $i --)
+				{
+					$paperstatelist[$i]['paperlimit'] = 
+						($paperstatelist[$i]['paperlimit'] ? $paperstatelist[$i]['paperlimit'] : C('PAPER_LIMIT')) + 
+						($paperstatelist[$i]['addnum'] ? $paperstatelist[$i]['addnum'] : 0);
+					$paperstatelist[$i]['papersum'] = $paperstatelist[$i]['papersum'] ? $paperstatelist[$i]['papersum'] : 0;
+					$paperstatelist[$i]['sex'] = $STR_LIST[$paperstatelist[$i]['sex']];
+					$paperstatelist[$i]['degree'] = $STR_LIST[$paperstatelist[$i]['degree']];
+					$paperstatelist[$i]['paperlimit'] = '
+														<a data-pjax href="/home/admin/managepaper?uid='.$paperstatelist[$i]['uid'].'">
+															<button id="addprivilege_submit" class="ui blue labeled icon button">
+																<i class="setting icon"></i>'.$paperstatelist[$i]['paperlimit'].'
+															</button>
+														</a>
+														';
+				}
+			}
+			else 
+				$paperstatelist = false;
+			$data['data'] = $paperstatelist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $User->count();
+			$data['recordsFiltered'] = $User->table('lab_user user')
+											->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
+											->join('LEFT JOIN lab_printcount printcount ON printcount.uid = user.uid')
+											->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
+											->join('LEFT JOIN lab_printaddition printaddition ON printaddition.uid = user.uid')
+											->where($map)
+											->count();
+			
+		}
+		$this->ajaxReturn($data);
+	}
+	//打印纸配额操作页
+	public function managepaper()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$uid = trim(I('param.uid'));
+			$User = M('user');
+			$singleuser = $User->table('lab_user user')
+								->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
+								->field('
+										user.uid uid,
+										user.name name,
+										printarrange.paperlimit paperlimit
+										')
+								->where("user.uid='%s'", $uid)
+								->find();
+			if($singleuser == null)
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			else 
+			{
+				if($singleuser['paperlimit'] == null)
+					$singleuser['paperlimit'] = C('PAPER_LIMIT');
+				$Printaddition = M('printaddition');
+				$map = array(
+					'uid' => $uid,
+					'month' => date("Y-m-1")
+				);
+				$paperaddition = $Printaddition->where($map)->field('id, addnum, available')->order(array('id'=>'desc'))->select();
+			}
+			$data['singleuser'] = $singleuser;
+			$data['paperaddition'] = $paperaddition;
+			$data['month'] = date("Y-m");
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	//增加打印纸配额逻辑处理
+	public function paperadd_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.month', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else if(intval(trim(I('param.addnum'))) <= 0)
+			$data['wrongcode'] = $WRONG_CODE['num_toosmall'];
+		else
+		{
+			$Printaddition = M('printaddition');
+			$paper_add = array(
+				'uid' => trim(I('param.uid')),
+				'addnum' => intval(trim(I('param.addnum'))),
+				'month' => date("Y-m-1", strtotime(trim(I('param.month'))))
+			);
+			if($Printaddition->add($paper_add) == false)
+				$data['wrongcode'] = $WRONG_CODE['sql_error'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//改变增加的打印纸配额有效性
+	public function change_paperadd_available_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Printaddition = M('printaddition');
+			$paperaddinfo = $Printaddition->where('id='.intval(I('param.id')))->find();
+			if($paperaddinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else
+			{
+				$paperaddinfo['available'] = !$paperaddinfo['available'];
+				$data['available'] = $paperaddinfo['available'];
+				if($Printaddition->save($paperaddinfo) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//改变固定打印纸月配额
+	public function change_paperlimit_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.paperlimit', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else if(intval(trim(I('param.paperlimit'))) <= 0)
+			$data['wrongcode'] = $WRONG_CODE['num_toosmall'];
+		else
+		{
+			$uid = trim(I('param.uid'));
+			$paperlimit = intval(trim(I('param.paperlimit')));
+			$Printarrange = M('printarrange');
+			$paperlimitinfo = $Printarrange->where("uid='%s'", $uid)->find();
+			$flag = true;
+			if($paperlimitinfo == null)
+			{
+				$flag = false;
+				$paperlimitinfo = array(
+					'uid' => $uid
+				);
+			}
+			$paperlimitinfo['paperlimit'] = $paperlimit;
+			if($flag)
+			{
+				if($Printarrange->save($paperlimitinfo) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+			}
+			else 
+			{
+				if($Printarrange->add($paperlimitinfo) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
 }

@@ -116,5 +116,5 @@ function WhetherLoggedIn()
 }
 function MakeUserinfoUrl(uid, uname)
 {
-	return "<a data-pjax class='white_url' href='/home/user/userinfo?uid="+uid+"'>"+uname+"</a>";
+	return "<a data-pjax class='red_url' href='/home/user/userinfo?uid="+uid+"'>"+uname+"</a>";
 }

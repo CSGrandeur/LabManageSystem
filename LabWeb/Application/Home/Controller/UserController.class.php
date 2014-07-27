@@ -86,6 +86,7 @@ class UserController extends Controller {
     					session($privilege['privi'], true);
     				if(session('?lab_super_admin') && session('lab_super_admin') == true)
     					session('lab_admin', true);
+    				$data['uid'] = $userinfo['uid'];
     				$data['uname'] = $userinfo['name'];
     				$data['privilege'] = $privilegelist;
     			}

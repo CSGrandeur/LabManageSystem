@@ -19,6 +19,17 @@ function ondo_modify()
 
 	$('#modify_form').unbind("ajaxForm").ajaxForm();
     $('#modify_form').unbind("submit").submit(function(){
+    	passwdlen = $.trim($('#modify_passwd').val()).length;
+    	if(passwdlen != 0 && passwdlen < 6)
+    	{
+        	alertify.error("密码长度不能小于6位");
+        	return false;
+    	}
+    	else if($('#modify_passwd').val() != $('#modify_passwd_confirm').val())
+    	{
+        	alertify.error("两次密码不相等");
+        	return false;
+    	}
     	ModifyAjaxSubmit();
     	return false;
     });
@@ -35,7 +46,7 @@ function ModifyAjaxSubmit()
         	alertify.error(jsondata["wrongmsg"]);
         else
         {
-        	alertify.success( "用户信息已更新!");
+        	alertify.success( "用户信息更新成功!");
         }
         return false;
     });

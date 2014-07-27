@@ -4,11 +4,11 @@ use Think\Controller;
 class IndexController extends Controller {
     public function index()
     {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
-        $this->display();
+//     	$WRONG_CODE = C('WRONG_CODE');
+//     	$WRONG_MSG = C('WRONG_MSG');
+//     	$data['wrongcode'] = $WRONG_CODE['totally_right'];
+//     	if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+        $this->redirect('/home/index/newslist');
     }
     private function newslist_data()
     {
@@ -37,11 +37,7 @@ class IndexController extends Controller {
 						->order(array('submittime' => 'desc'))
 						->limit(10)
 						->select();
-//				file_put_contents("loog.txt", print_r($announcementlist, true));
-// 				$fp = fopen("loog.txt", "a+");
-// 				fwrite ($fp, $Userdetail->_sql());
-// 				fwrite ($fp, "\n");
-// 				fclose($fp);
+
     	$data['newslist'] = $announcementlist;
     	$data['listcount'] = count($announcementlist);
     	return $data;
@@ -151,8 +147,8 @@ class IndexController extends Controller {
 			{
 				if(strlen($announcementlist[$i]['title']) == 0)
 					$announcementlist[$i]['title'] = "#";
-				$announcementlist[$i]['title'] = '<div class="limit_header limit_width_700"><a href="/home/index/news?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a></div>';
-				$announcementlist[$i]['id'] = '<a data-pjax href="/home/index/announcement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
+				$announcementlist[$i]['title'] = '<div class="limit_header limit_width_700"><a data-pjax href="/home/index/news?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a></div>';
+				$announcementlist[$i]['id'] = '<a data-pjax href="/home/index/news?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
 									
 			}
 			$data['data'] = $announcementlist;

@@ -5,6 +5,24 @@
 			{$newsinfo['title']|default='#'}
 		</a>
 	</h2>
+	<h5 >
+		提交者:
+		<a data-pjax href='/home/user/userinfo?uid={$news["submituid"]}'>
+			{$newsinfo['submituname']}
+		</a>
+		提交时间:
+			{$newsinfo['submittime']}
+		|
+		最后修改:
+		<a data-pjax href='/home/user/userinfo?uid={$news["menduid"]}'>
+			{$newsinfo['menduname']}
+		</a>
+		修改时间:
+			{$newsinfo['updatetime']}
+	</h5>
+	<div class="ui horizontal divider">
+		<i class="attachment icon"></i>
+	</div>
 	<div>
 		{$newsinfo['content']|htmlspecialchars_decode|stripslashes}
 	</div>
