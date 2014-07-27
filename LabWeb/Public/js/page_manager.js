@@ -61,7 +61,7 @@ function LoginAjaxSubmit()
 	    	alertify.error( jsondata["wrongmsg"] );
         else
         {
-			ChangeLoginLogoutDiv(jsondata["uname"], true);
+			ChangeLoginLogoutDiv(MakeUserinfoUrl(jsondata['uid'], jsondata["uname"]), true);
 			alertify.success("欢迎！登陆成功！");
 			$.pjax({url: window.location.href, container: '#mainpage'});
         }
@@ -90,13 +90,13 @@ function ChangeLoginLogoutDiv(username, boolLoggedin)
 	if(boolLoggedin)
 	{
 		$('#logout_form_div').show();
-		$('#username_display').text(username);
+		$('#username_display').html(username);
 		$('#login_form_div').hide();
 	}
 	else
 	{
 		$('#logout_form_div').hide();
-		$('#username_display').text("");
+		$('#username_display').html("");
 		$('#login_form_div').show();
 	}
 }
@@ -107,10 +107,14 @@ function WhetherLoggedIn()
 		"/home/user/whether_loggedin_ajax/", 
 		function(data){
 			if(data['wrongcode'] == 999 && data['loggedin'] == true)
-				ChangeLoginLogoutDiv(data['uname'], true);
+				ChangeLoginLogoutDiv(MakeUserinfoUrl(data['uid'], data['uname']), true);
 			else
 				ChangeLoginLogoutDiv("", false);
 				
 		},
 		"json");
+}
+function MakeUserinfoUrl(uid, uname)
+{
+	return "<a data-pjax class='white_url' href='/home/user/userinfo?uid="+uid+"'>"+uname+"</a>";
 }

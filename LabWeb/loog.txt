@@ -1,35 +1,95 @@
 Array
 (
-    [wrongcode] => 999
-    [data] => Array
+    [0] => Array
         (
-            [0] => Array
-                (
-                    [id] => <a data-pjax href="/home/index/announcement?id=4">4</a>
-                    [title] => <a href="/home/admin/editannouncement?id=4">313131</a>
-                    [content] => &lt;p&gt;3131&lt;/p&gt;
-                    [available] => <a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="4">显示=>隐藏</a>
-                    [submitter] => 124611172
-                    [mender] => 
-                    [submittime] => 2014-07-27 00:31:12
-                    [updatetime] => 2014-07-27 00:36:38
-                )
-
-            [1] => Array
-                (
-                    [id] => <a data-pjax href="/home/index/announcement?id=3">3</a>
-                    [title] => <a href="/home/admin/editannouncement?id=3">3333333333</a>
-                    [content] => &lt;p&gt;333333333333333333&lt;/p&gt;
-                    [available] => <a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="3">显示=>隐藏</a>
-                    [submitter] => 124611172
-                    [mender] => 
-                    [submittime] => 2014-07-26 21:45:58
-                    [updatetime] => 2014-07-27 00:36:38
-                )
-
+            [id] => 1
+            [title] => 
+            [content] => &lt;p&gt;&lt;img src=&quot;/Public/upload/Announcement/image/201407/1406450170928754.jpg&quot; title=&quot;1406450170928754.jpg&quot; alt=&quot;1.jpg&quot;/&gt;&lt;/p&gt;
+            [submittime] => 2014-07-27 00:36:38
+            [updatetime] => 2014-07-27 16:36:12
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 124611172
+            [menduname] => 郭云镝
         )
 
-    [draw] => 1
-    [recordsTotal] => 12
-    [recordsFiltered] => 2
+    [1] => Array
+        (
+            [id] => 2
+            [title] => 1
+            [content] => 
+            [submittime] => 2014-07-27 00:36:38
+            [updatetime] => 2014-07-27 00:36:38
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 
+            [menduname] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 7
+            [title] => 414141
+            [content] => &lt;p&gt;
+		ffffffffffffffffffffffffffffffffffffffffff&lt;/p&gt;
+            [submittime] => 2014-07-27 00:35:20
+            [updatetime] => 2014-07-27 00:36:38
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 
+            [menduname] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 6
+            [title] => 414141
+            [content] => &lt;p&gt;41&lt;/p&gt;
+            [submittime] => 2014-07-27 00:31:30
+            [updatetime] => 2014-07-27 00:36:38
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 
+            [menduname] => 
+        )
+
+    [4] => Array
+        (
+            [id] => 5
+            [title] => 1414
+            [content] => &lt;p&gt;14&lt;/p&gt;
+            [submittime] => 2014-07-27 00:31:24
+            [updatetime] => 2014-07-27 00:36:38
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 
+            [menduname] => 
+        )
+
+    [5] => Array
+        (
+            [id] => 4
+            [title] => 313131
+            [content] => &lt;p&gt;3131&lt;/p&gt;
+            [submittime] => 2014-07-27 00:31:12
+            [updatetime] => 2014-07-27 00:36:38
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 
+            [menduname] => 
+        )
+
+    [6] => Array
+        (
+            [id] => 3
+            [title] => 3333333333
+            [content] => &lt;p&gt;		&lt;/p&gt;&lt;h2&gt;333&lt;span style=&quot;color: rgb(31, 73, 125);&quot;&gt;333&lt;span style=&quot;color: rgb(31, 73, 125); font-family: 楷体, 楷体_GB2312, SimKai; font-size: 20px;&quot;&gt;33&lt;/span&gt;33&lt;/span&gt;&lt;span style=&quot;background-color: rgb(229, 224, 236);&quot;&gt;&lt;span style=&quot;background-color: rgb(229, 224, 236); color: rgb(31, 73, 125);&quot;&gt;33&lt;/span&gt;33333&lt;/span&gt;3&lt;/h2&gt;&lt;h1&gt;}d&lt;strong&gt;wf&lt;/strong&gt;&lt;/h1&gt;
+            [submittime] => 2014-07-26 21:45:58
+            [updatetime] => 2014-07-27 16:43:48
+            [submituid] => 124611172
+            [submituname] => 郭云镝
+            [menduid] => 124611172
+            [menduname] => 郭云镝
+        )
+
 )

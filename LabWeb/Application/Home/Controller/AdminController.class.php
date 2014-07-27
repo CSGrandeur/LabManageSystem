@@ -174,10 +174,15 @@ class AdminController extends Controller {
 	//更改用户信息页
 	public function changeinfo()
 	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data = $this->changeinfo_data();
-		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
 		$this->assign($data);
 		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
 			$this->display('Public:alert');
@@ -272,37 +277,6 @@ class AdminController extends Controller {
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		$this->display();
 	}
-	//修改在校/离校状态
-	public function change_graduate_ajax()
-	{
-		$WRONG_CODE = C('WRONG_CODE');
-		$WRONG_MSG = C('WRONG_MSG');
-		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		
-		if(session('?lab_admin') == null)
-			$data['wrongcode'] = $WRONG_CODE['admin_not'];
-		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
-			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-		else
-		{
-			$User = M('user');
-			$usergraduate = $User->where("uid='%s'", I('param.uid'))->field('graduate')->find();
-			if($usergraduate == null)
-				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
-			else 
-			{
-				if($usergraduate['graduate'] == 61)
-					$usergraduate['graduate'] = 62;
-				else 
-					$usergraduate['graduate'] = 61;
-				$data['graduate'] = $usergraduate['graduate'];
-				if($User->where("uid='%s'", I('param.uid'))->save($usergraduate) == false)
-					$data['wrongcode'] = $WRONG_CODE['sql_error'];
-			}
-		}
-		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-		$this->ajaxReturn($data);
-	}
 	//用户列表数据json
 	public function user_list_ajax()
 	{
@@ -380,7 +354,7 @@ class AdminController extends Controller {
 				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny blue button change_graduate_button" name="'.$userlist[$i]['uid'].'">在校</a>';
 			if($userlist[$i]['graduate'] == 62)
 				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny grey button change_graduate_button" name="'.$userlist[$i]['uid'].'">离校</a>';
-			$userlist[$i]['changeinfo'] = '<a data-pjax href="/home/admin/changeinfo?uid='.$userlist[$i]['uid'].'">修改</a>';
+			$userlist[$i]['name'] = '<a data-pjax href="/home/admin/changeinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['name'].'</a>';
 			$userlist[$i]['supervisor'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['supervisorid'].'">'.$userlist[$i]['supervisor'].'</a>';
 			$userlist[$i]['teacher'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['teacherid'].'">'.$userlist[$i]['teacher'].'</a>';
 			$userlist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
@@ -390,6 +364,37 @@ class AdminController extends Controller {
 		$data['recordsTotal'] = $User->count();
 		$data['recordsFiltered'] = count($data['data']);
 		
+		$this->ajaxReturn($data);
+	}
+	//修改在校/离校状态
+	public function change_graduate_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(session('?lab_admin') == null)
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$User = M('user');
+			$usergraduate = $User->where("uid='%s'", I('param.uid'))->field('graduate')->find();
+			if($usergraduate == null)
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			else 
+			{
+				if($usergraduate['graduate'] == 61)
+					$usergraduate['graduate'] = 62;
+				else 
+					$usergraduate['graduate'] = 61;
+				$data['graduate'] = $usergraduate['graduate'];
+				if($User->where("uid='%s'", I('param.uid'))->save($usergraduate) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
 	//权限管理页
@@ -557,7 +562,7 @@ class AdminController extends Controller {
 				$data['wrongcode'] = $WRONG_CODE['not_exist'];
 			else 
 			{
-				$announcementinfo['content'] = htmlspecialchars_decode($announcementinfo['content']);
+//				$announcementinfo['content'] = htmlspecialchars_decode($announcementinfo['content']);
 				$data['announcementinfo'] = $announcementinfo;
 			}
 				
@@ -609,7 +614,6 @@ class AdminController extends Controller {
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		$this->display();
-		
 	}
 	//公告列表数据获取
 	public function announcement_list_ajax()
@@ -617,14 +621,23 @@ class AdminController extends Controller {
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		if(I('param.draw', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
 		{
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		}
+		else if(!IsAdmin())
+		{
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		}
+		else 
+		{
+
 			$reqdata = I('param.');
 			$d_draw = intval($reqdata['draw']);
 			$d_start = intval($reqdata['start']);
 			$d_length = intval($reqdata['length']);
 			if($d_length > 100) $d_length = 100;
-			
+				
 			$d_ordercol = "";
 			switch($reqdata['order'][0]['column'])
 			{
@@ -635,37 +648,32 @@ class AdminController extends Controller {
 			$d_searchvalue = $reqdata['search']['value'];
 			$d_searchregex = $reqdata['search']['regex'];
 			$map = array(
-				'title' => array('like', '%'.$d_searchvalue.'%'),
+					'title' => array('like', '%'.$d_searchvalue.'%')
 			);
-		}
-		$Announcement = M('announcement');
-		$announcementlist = $Announcement->where($map)
-										->order(array($d_ordercol=>$d_orderdir))
-										->limit($d_start, $d_length)
-										->select();
-
-//				file_put_contents("loog.txt", print_r($Announcement->_sql(), true));
-// 				$fp = fopen("loog.txt", "a+");
-// 				fwrite ($fp, $Userdetail->_sql());
-// 				fwrite ($fp, "\n");
-// 				fclose($fp);
-		if($announcementlist == false) $announcementlist = array();
-		for($i = 0; $i < count($announcementlist); $i ++)
-		{
-// 			if(strlen($announcementlist[$i]['title']) > 53)
-// 				$announcementlist[$i]['title'] = substr($announcementlist[$i]['title'], 0, 52) . "...";
-			if($announcementlist[$i]['available'] == 0)
-				$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$announcementlist[$i]['id'].'">隐藏=>显示</a>';
-			else
-				$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$announcementlist[$i]['id'].'">显示=>隐藏</a>';
-			$announcementlist[$i]['title'] = '<a href="/home/admin/editannouncement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a>';
-			$announcementlist[$i]['id'] = '<a data-pjax href="/home/index/announcement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
+			$Announcement = M('announcement');
+			$announcementlist = $Announcement->where($map)
+											->order(array($d_ordercol=>$d_orderdir))
+											->limit($d_start, $d_length)
+											->select();
 			
+			if($announcementlist == false) $announcementlist = array();
+			for($i = 0; $i < count($announcementlist); $i ++)
+			{
+				if(strlen($announcementlist[$i]['title']) == 0)
+					$announcementlist[$i]['title'] = "#";
+				if($announcementlist[$i]['available'] == 0)
+					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$announcementlist[$i]['id'].'">隐藏=>显示</a>';
+				else
+					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$announcementlist[$i]['id'].'">显示=>隐藏</a>';
+				$announcementlist[$i]['title'] = '<div class="limit_header limit_width_700"><a href="/home/admin/editannouncement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a></div>';
+				$announcementlist[$i]['id'] = '<a data-pjax href="/home/index/announcement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
+									
+			}
+			$data['data'] = $announcementlist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $Announcement->count();
+			$data['recordsFiltered'] = $Announcement->where($map)->count();
 		}
-		$data['data'] = $announcementlist;
-		$data['draw'] = $d_draw;
-		$data['recordsTotal'] = $Announcement->count();
-		$data['recordsFiltered'] = $Announcement->where($map)->count();
 		
 		$this->ajaxReturn($data);
 	}

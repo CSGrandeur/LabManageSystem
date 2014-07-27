@@ -1,49 +1,20 @@
 $(document).ready(function ()
 {
 	//initialise datatables
-	ondo_manageuser();
+	ondo_newsmore();
 	$(document).on('pjax:success', function() {
-		ondo_manageuser();
+		ondo_newsmore();
 	})
 	
 })
-function ondo_manageuser()
+function ondo_newsmore()
 {
-	if(!$.fn.dataTable.isDataTable($('#user_list')))
-		InitProblemListTable();
-//	$('#user_list').DataTable().ajax.reload();
-	
+	if(!$.fn.dataTable.isDataTable($('#newsmore_list')))
+		InitNewsListTable();
 }
-function change_graduate(obj)
+function InitNewsListTable()
 {
- 	$.get(
-		'/home/admin/change_graduate_ajax', 
-		{uid: $(obj).attr('name')},
-		function(data){
-			if(data["wrongcode"] != 999)
-				alertify.error(data["wrongmsg"]);
-			else
-			{
-				alertify.success("修改成功");
-				if(data['graduate'] == 61)
-				{
-					$(obj).removeClass('grey');
-					$(obj).addClass('blue');
-					$(obj).text('在校')
-				}
-				else if(data['graduate'] == 62)
-				{
-					$(obj).removeClass('blue');
-					$(obj).addClass('grey');
-					$(obj).text('离校')
-				}
-			}
-		},
-		"json");
-}
-function InitProblemListTable()
-{
-	 $('#user_list').unbind("dataTable").dataTable( {
+	 $('#newsmore_list').unbind("dataTable").dataTable( {
 			"processing": true,
 			"serverSide": true,
 			stateSave: true,// restore table state on page reload
@@ -55,65 +26,41 @@ function InitProblemListTable()
 				"thousands": "."
 			},
 			"ajax": {
-				"url": "/home/admin/user_list_ajax/",
+				"url": "/home/index/newsmore_list_ajax/",
 				"type": "POST",
 				pages: 5 // number of pages to cache
 			},
+		    "order": [ 2, 'desc' ],
 			"columns": [
 				{ 
-					"data": "uid",
-					"width": "100px",
-					className: "center"
-				},
-				{
-					"data": "name",
-					"width": "100px",
-					className: "center"
-				},
-				{
-					"data": "sex",
-					"width": "50px",
+					"data": "id",
+					"width": "60px",
 					className: "center",
+					"searchable": false
+				},
+				{
+					"data": "title",
+					"width": "700px",
+					"orderDataType": "dom-text",
+					"orderable": false,
+				},
+				{
+					"data": "submittime",
+					"width": "100px",
+					className: "center",
+					"orderSequence": ["desc", "asc"],
 					 "searchable": false
 				},
 				{
-					"data": "grade",
-					"width": "50px",
-					className: "center",
-				},
-				{
-					"data": "degree",
+					"data": "updatetime",
 					"width": "100px",
 					className: "center",
-					 "searchable": false
-				},
-				{
-					"data": "supervisor",
-					"width": "100px",
-					className: "center",
-				},
-				{
-					"data": "teacher",
-					"width": "100px",
-					className: "center",
-				},
-				{
-					"data": "phone",
-					className: "center",
-					 "orderable": false
-				},
-				{
-					"data": "email",
-					 "orderable": false
-				},
-				{
-					"data": "graduate",
-					 "orderable": false,
-					className: "center",
+					"orderable": false,
 					 "searchable": false
 				}
 			]
 	 } );
+	 $('#newsmore_list').DataTable().column(2).order('desc');
 }
 
 //

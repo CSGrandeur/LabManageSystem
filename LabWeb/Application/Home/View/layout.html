@@ -38,12 +38,19 @@
 							</a>
 						</label>
 						<div id="username_display">
-								<?php echo session('username'); ?>
+								<?php echo session('?lab_uname') ? session('lab_uname') : ""; ?>
 						</div>
-						<div>
-							<button id="logout_submit" type="submit" class="ui black mini submit button">
-								登出
-							</button>
+						<div class="ui two column divided grid">
+							<div class="column">
+								<button id="logout_submit" type="submit" class="ui black mini submit button">
+									登出
+								</button>
+							</div>
+							<div  class="column">
+								<a data-pjax href="/home/user/modify">
+									<div class="column ui black mini submit button">修改</div>
+								</a>
+							</div>
 						</div>
 						
 					</form>
@@ -80,20 +87,20 @@
 					<i class="volume up icon"></i>
 					信息中心
 				</div>
-				<a class="item" data-pjax href="/labserver">
+				<a class="item" data-pjax href="/home/index/newslist">
 					最新通知
 				</a>
-				<a class="item" data-pjax href="/labserver">
+				<a class="item" data-pjax href="/home/index/schoolnews">
 					学校新闻
 				</a>
 				<div class="header item">
 					<i class="calendar icon"></i>
 					考勤
 				</div>
-				<a class="item" data-pjax href="/labserver/problem_list">
+				<a class="item" data-pjax href="/home/checkingin/fingerprint">
 					打卡状态
 				</a>
-				<a class="item" data-pjax href="/labserver/problem_list">
+				<a class="item" data-pjax href="/home/checkingin/pcinfo">
 					计算机信息
 				</a>
 				<div class="header item">
@@ -112,6 +119,9 @@
 				</a>
 				<a class="item">
 					常见问题
+				</a>
+				<a class="item" href="/home/admin">
+					管理员
 				</a>
 			</block>
 		</div>

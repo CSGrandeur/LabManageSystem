@@ -1,0 +1,12 @@
+<div class='infotablediv'>
+	<div class="ui piled segment">
+	<h2 class='limit_header'>
+		<a data-pjax href='/home/index/news?id={$news["id"]}'>
+			{$newsinfo['title']|default='#'}
+		</a>
+	</h2>
+	<div>
+		{$newsinfo['content']|htmlspecialchars_decode|stripslashes}
+	</div>
+	</div>
+</div>

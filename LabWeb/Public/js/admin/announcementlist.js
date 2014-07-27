@@ -1,13 +1,13 @@
 $(document).ready(function ()
 {
 	//initialise datatables
-	ondo_manageuser();
+	ondo_announcementlist();
 	$(document).on('pjax:success', function() {
-		ondo_manageuser();
+		ondo_announcementlist();
 	})
 	
 })
-function ondo_manageuser()
+function ondo_announcementlist()
 {
 	if(!$.fn.dataTable.isDataTable($('#announcement_list')))
 		InitProblemListTable();
@@ -58,10 +58,11 @@ function InitProblemListTable()
 				"type": "POST",
 				pages: 5 // number of pages to cache
 			},
+		    "order": [ 0, 'desc' ],
 			"columns": [
 				{ 
 					"data": "id",
-					"width": "50px",
+					"width": "60px",
 					className: "center",
 					"orderSequence": ["desc", "asc"],
 					"searchable": false

@@ -1,0 +1,42 @@
+<div class='infotablediv'>
+<?php
+	foreach($newslist as $news)
+	{
+?>
+	<div class="ui piled segment">
+	<h2 class='limit_header ui big header''>
+		<a data-pjax href='/home/index/news?id={$news["id"]}'>
+			{$news['title']|default='#'}
+		</a>
+	</h2>
+	<h5 >
+		提交者:
+		<a data-pjax href='/home/user/userinfo?uid={$news["submituid"]}'>
+			{$news['submituname']}
+		</a>
+		提交时间:
+			{$news['submittime']}
+		|
+		最后修改:
+		<a data-pjax href='/home/user/userinfo?uid={$news["menduid"]}'>
+			{$news['menduname']}
+		</a>
+		修改时间:
+			{$news['updatetime']}
+	</h5>
+	<div class="ui horizontal divider">
+		<i class="attachment icon"></i>
+	</div>
+	<div class='limit_content limit_max_height_200'>
+		{$news['content']|htmlspecialchars_decode|stripslashes}
+	</div>
+	</div>
+	<div class="ui horizontal divider">
+		<i class="block layout icon"></i>
+		<i class="block layout icon"></i>
+		<i class="block layout icon"></i>
+	</div>
+<?php
+	}
+?>
+</div>
