@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-07-24 17:14:03
+-- Generation Time: 2014-07-31 08:01:35
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -19,6 +19,43 @@ SET time_zone = "+00:00";
 --
 -- Database: `labweb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `lab_announcement`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_announcement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `content` text,
+  `available` tinyint(1) DEFAULT '0',
+  `submitter` varchar(30) DEFAULT NULL COMMENT 'uid,提交该内容的管理员',
+  `mender` varchar(30) DEFAULT NULL COMMENT 'uid,提交该内容的管理员',
+  `submittime` datetime DEFAULT NULL,
+  `updatetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+
+--
+-- 转存表中的数据 `lab_announcement`
+--
+
+INSERT INTO `lab_announcement` (`id`, `title`, `content`, `available`, `submitter`, `mender`, `submittime`, `updatetime`) VALUES
+(1, '', '&lt;p&gt;&lt;img src=&quot;/Public/upload/Announcement/image/201407/1406450170928754.jpg&quot; title=&quot;1406450170928754.jpg&quot; alt=&quot;1.jpg&quot;/&gt;&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 00:36:38', '2014-07-27 16:36:12'),
+(2, '1', '', 1, '124611172', NULL, '2014-07-27 00:36:38', '2014-07-27 00:36:38'),
+(3, '3333333333', '&lt;p&gt;		&lt;/p&gt;&lt;h2&gt;333&lt;span style=&quot;color: rgb(31, 73, 125);&quot;&gt;333&lt;span style=&quot;color: rgb(31, 73, 125); font-family: 楷体, 楷体_GB2312, SimKai; font-size: 20px;&quot;&gt;33&lt;/span&gt;33&lt;/span&gt;&lt;span style=&quot;background-color: rgb(229, 224, 236);&quot;&gt;&lt;span style=&quot;background-color: rgb(229, 224, 236); color: rgb(31, 73, 125);&quot;&gt;33&lt;/span&gt;33333&lt;/span&gt;3&lt;/h2&gt;&lt;h1&gt;}d&lt;strong&gt;wf&lt;/strong&gt;&lt;/h1&gt;', 1, '124611172', '124611172', '2014-07-26 21:45:58', '2014-07-27 16:43:48'),
+(4, '313131', '&lt;p&gt;3131&lt;/p&gt;', 1, '124611172', NULL, '2014-07-27 00:31:12', '2014-07-27 00:36:38'),
+(5, '1414', '&lt;p&gt;14&lt;/p&gt;', 1, '124611172', NULL, '2014-07-27 00:31:24', '2014-07-27 00:36:38'),
+(6, '414141', '&lt;p&gt;41&lt;/p&gt;', 1, '124611172', NULL, '2014-07-27 00:31:30', '2014-07-27 00:36:38'),
+(7, '414141', '&lt;p&gt;\n		ffffffffffffffffffffffffffffffffffffffffff&lt;/p&gt;', 1, '124611172', NULL, '2014-07-27 00:35:20', '2014-07-27 00:36:38'),
+(8, '1啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊嘿嗯', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;3123123&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 01:27:13', '2014-07-27 01:29:22'),
+(9, '1', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;噶恶&lt;strong&gt;搞&lt;/strong&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;eargagaregaega&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(75, 172, 198);&quot;&gt;&lt;strong&gt;gaeaer&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', 1, '124611172', NULL, '2014-07-27 01:12:52', '2014-07-27 00:36:38'),
+(10, '阿发违法', '', 1, '124611172', '124611172', '2014-07-27 01:30:37', '2014-07-27 01:30:37'),
+(11, 'fawe福娃福娃额', '&lt;p&gt;法俄无法&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 01:30:42', '2014-07-27 01:30:42'),
+(12, '福娃额', '&lt;p&gt;分啊无法违法&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 01:30:50', '2014-07-27 01:30:50'),
+(13, '132', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;&lt;embed type=&quot;application/x-shockwave-flash&quot; class=&quot;edui-faked-music&quot; pluginspage=&quot;http://www.macromedia.com/go/getflashplayer&quot; src=&quot;http://box.baidu.com/widget/flash/bdspacesong.swf?from=tiebasongwidget&amp;url=&amp;name=%E5%A4%9C%E7%A9%BA%E4%B8%AD%E6%9C%80%E4%BA%AE%E7%9A%84%E6%98%9F&amp;artist=%E5%BC%A0%E6%81%92%E8%BF%9C&amp;extra=%E4%B8%AD%E5%9B%BD%E5%A5%BD%E5%A3%B0%E9%9F%B3%E7%AC%AC%E4%BA%8C%E5%AD%A3%20%E5%B7%85%E5%B3%B0%E4%B9%8B%E5%A4%9C&amp;autoPlay=false&amp;loop=true&quot; width=&quot;400&quot; height=&quot;95&quot; align=&quot;none&quot; wmode=&quot;transparent&quot; play=&quot;true&quot; loop=&quot;false&quot; menu=&quot;false&quot; allowscriptaccess=&quot;never&quot; allowfullscreen=&quot;true&quot;/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 11:15:28', '2014-07-27 18:17:08');
 
 -- --------------------------------------------------------
 
@@ -70,10 +107,27 @@ CREATE TABLE IF NOT EXISTS `lab_printaddition` (
   `uid` varchar(30) NOT NULL,
   `addnum` int(11) NOT NULL,
   `month` date NOT NULL,
-  `available` tinyint(1) NOT NULL,
+  `available` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0无效，1有效',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+
+--
+-- 转存表中的数据 `lab_printaddition`
+--
+
+INSERT INTO `lab_printaddition` (`id`, `uid`, `addnum`, `month`, `available`) VALUES
+(1, '124611172', 0, '1970-01-01', 1),
+(2, '124611172', 0, '1970-01-01', 1),
+(3, '124611172', 1, '1970-01-01', 1),
+(4, '124611172', 21, '1970-01-01', 1),
+(5, '124611172', 31, '1970-01-01', 1),
+(6, '124611172', 2, '2014-07-01', 1),
+(7, '124611172', 3131, '2014-07-01', 1),
+(8, '124611172', 41412, '2014-07-01', 1),
+(9, '124611172', 31, '2014-07-01', 1),
+(10, '124611172', 313, '2014-07-01', 1),
+(11, '124611172', 121, '2014-07-01', 1);
 
 -- --------------------------------------------------------
 
@@ -87,7 +141,14 @@ CREATE TABLE IF NOT EXISTS `lab_printarrange` (
   `paperlimit` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `lab_printarrange`
+--
+
+INSERT INTO `lab_printarrange` (`id`, `uid`, `paperlimit`) VALUES
+(1, '124611172', 1);
 
 -- --------------------------------------------------------
 
@@ -187,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `lab_user` (
 --
 
 INSERT INTO `lab_user` (`id`, `uid`, `passwd`, `name`, `kind`, `graduate`) VALUES
-(35, '124611172', 'e0c10f451217b93f76c2654b2b729b85', '郭云镝', 42, 62);
+(35, '124611172', '96e79218965eb72c92a549dd5a330112', '郭云镝', 41, 61);
 
 -- --------------------------------------------------------
 
@@ -222,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `lab_userdetail` (
 --
 
 INSERT INTO `lab_userdetail` (`id`, `uid`, `sex`, `phone`, `email`, `degree`, `grade`, `birthday`, `idcard`, `nation`, `political`, `institute`, `major`, `supervisor`, `teacher`, `supervisorid`, `teacherid`) VALUES
-(4, '124611172', 51, '1212', '313', 10, '2121', '0000-00-00', '123', '汉', '', 202, 402, '郭云镝', '郭云镝', '', '');
+(4, '124611172', 51, '1212', '313', 10, '551', '1985-06-13', '2', '汉', '团员', 201, 401, '郭云镝', '郭云镝', '#', '124611172');
 
 --
 -- 限制导出的表
