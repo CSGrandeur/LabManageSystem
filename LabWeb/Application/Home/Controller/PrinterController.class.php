@@ -27,7 +27,7 @@ class PrinterController extends Controller {
 					$Printaddition = M('printaddition');
 					$map = array(
 						'uid' => $info['uid'],
-						'month' => date("Y-m-1"),
+						'month' => date("Y-m-01"),
 						'available' => 1
 					);
 					$addition = $Printaddition->where($map)->select();
@@ -42,7 +42,7 @@ class PrinterController extends Controller {
 					$Printcount = M('printcount');
 					$map = array(
 						'uid' => $info['uid'],
-						'month' => date("Y-m-1"),
+						'month' => date("Y-m-01"),
 					);
 					$papercount = $Printcount->where($map)->find();
 					if($papercount == null)
@@ -104,7 +104,7 @@ class PrinterController extends Controller {
 			$d_draw = intval($reqdata['draw']);
 			$d_start = intval($reqdata['start']);
 			$d_length = intval($reqdata['length']);
-			$d_month = date("Y-m-1", strtotime(trim($reqdata['month'])));
+			$d_month = date("Y-m-01", strtotime(trim($reqdata['month'])));
 			if($d_length > 100) $d_length = 100;
 			$d_ordercol = "";
 			switch($reqdata['order'][0]['column'])
@@ -125,11 +125,6 @@ class PrinterController extends Controller {
  				'userdetail.grade' => array('like', '%'.$d_searchvalue.'%'),
 				'_logic' => 'or'
 			);
-// 			$map = array(
-// 				'_complex' => $map,
-// 				'printcount.month' => $d_month,
-// 				'printaddition.month' => $d_month,
-// 			);
 			$User = M('user');
 			$paperstatelist = $User->table('lab_user user')
 								->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
@@ -147,14 +142,10 @@ class PrinterController extends Controller {
 										SUM(printaddition.addnum) addnum
 										')
 								->where($map)
+								->group('uid')
 								->order(array($d_ordercol=>$d_orderdir))
 								->limit($d_start, $d_length)
 								->select();
-			file_put_contents("loog.txt", print_r($User->_sql(), true));
-			// 	$fp = fopen("loog.txt", "a+");
-			// 	fwrite ($fp, $Userdetail->_sql());
-			// 	fwrite ($fp, "\n");
-			// 	fclose($fp);
 			if($paperstatelist != null && $paperstatelist[0]['uid'] != null)
 			{
 				for($i = count($paperstatelist) - 1; $i >= 0; $i --)

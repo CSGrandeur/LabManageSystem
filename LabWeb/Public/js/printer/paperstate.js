@@ -29,7 +29,7 @@ function InitPaperStateTable()
 				"url": "/home/printer/paperstate_ajax/",
 				"type": "POST",
 	            "data": function(d){
-	            	d.month = $('#papaerstate_month').val();
+	            	d.month = $('#paperstate_month').val();
 	            },
 				pages: 5 // number of pages to cache
 			},
@@ -77,7 +77,7 @@ function InitPaperStateTable()
 						},
 			]
 	 } );
-	 $('#papaerstate_month').unbind('input propertychange').bind('input propertychange', function() {
+	 $('#paperstate_month').unbind('input propertychange').bind('input propertychange', function() {
 			$('#paperstate_list').DataTable().ajax.reload();
 		});
 }

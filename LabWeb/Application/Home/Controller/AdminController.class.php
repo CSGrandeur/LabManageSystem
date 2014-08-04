@@ -59,7 +59,7 @@ class AdminController extends Controller {
 				$userinfo[$useradd_i] = array();
 				for($i = 0; $i < count($singleuserinfo) && $i < count($ADDUSER_ITEM); $i ++)
 					$userinfo[$useradd_i][$ADDUSER_ITEM[$i]] = trim($singleuserinfo[$i]);
-				$userinfo[$useradd_i]['graduate'] = 0;
+				$userinfo[$useradd_i]['graduate'] = 61;//61为在校。参考ConstVal.php
 				if(count($singleuserinfo) < 2 || 
 					TestUserID($userinfo[$useradd_i]['uid']) != $WRONG_CODE['totally_right'] ||
 					strlen($userinfo[$useradd_i]['name']) > 25 ||
@@ -354,10 +354,10 @@ class AdminController extends Controller {
 				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny blue button change_graduate_button" name="'.$userlist[$i]['uid'].'">在校</a>';
 			if($userlist[$i]['graduate'] == 62)
 				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny grey button change_graduate_button" name="'.$userlist[$i]['uid'].'">离校</a>';
-			$userlist[$i]['name'] = '<a data-pjax href="/home/admin/changeinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['name'].'</a>';
-			$userlist[$i]['supervisor'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['supervisorid'].'">'.$userlist[$i]['supervisor'].'</a>';
-			$userlist[$i]['teacher'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['teacherid'].'">'.$userlist[$i]['teacher'].'</a>';
-			$userlist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
+			$userlist[$i]['name'] = '<a target="_blank" href="/home/admin/changeinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['name'].'</a>';
+			$userlist[$i]['supervisor'] = '<a target="_blank" href="/home/user/userinfo?uid='.$userlist[$i]['supervisorid'].'">'.$userlist[$i]['supervisor'].'</a>';
+			$userlist[$i]['teacher'] = '<a target="_blank" href="/home/user/userinfo?uid='.$userlist[$i]['teacherid'].'">'.$userlist[$i]['teacher'].'</a>';
+			$userlist[$i]['uid'] = '<a target="_blank" href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
 		}
 		$data['data'] = $userlist;
 		$data['draw'] = $d_draw;
@@ -665,8 +665,8 @@ class AdminController extends Controller {
 					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$announcementlist[$i]['id'].'">隐藏=>显示</a>';
 				else
 					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$announcementlist[$i]['id'].'">显示=>隐藏</a>';
-				$announcementlist[$i]['title'] = '<div class="limit_header limit_width_700"><a href="/home/admin/editannouncement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a></div>';
-				$announcementlist[$i]['id'] = '<a data-pjax href="/home/index/announcement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
+				$announcementlist[$i]['title'] = '<div class="limit_header limit_width_550"><a href="/home/admin/editannouncement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a></div>';
+				$announcementlist[$i]['id'] = '<a target="_blank" href="/home/index/news?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
 									
 			}
 			$data['data'] = $announcementlist;
@@ -718,6 +718,11 @@ class AdminController extends Controller {
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
 		$data['month'] = date('Y-m');
 		$this->assign($data);
 		$this->display();
@@ -798,7 +803,7 @@ class AdminController extends Controller {
 					$paperstatelist[$i]['sex'] = $STR_LIST[$paperstatelist[$i]['sex']];
 					$paperstatelist[$i]['degree'] = $STR_LIST[$paperstatelist[$i]['degree']];
 					$paperstatelist[$i]['paperlimit'] = '
-														<a data-pjax href="/home/admin/managepaper?uid='.$paperstatelist[$i]['uid'].'">
+														<a target="_blank" href="/home/admin/managepaper?uid='.$paperstatelist[$i]['uid'].'">
 															<button id="addprivilege_submit" class="ui blue labeled icon button">
 																<i class="setting icon"></i>'.$paperstatelist[$i]['paperlimit'].'
 															</button>
@@ -967,6 +972,228 @@ class AdminController extends Controller {
 				if($Printarrange->add($paperlimitinfo) == false)
 					$data['wrongcode'] = $WRONG_CODE['sql_error'];
 			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//统计信息表
+	public function statisticlist()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$this->display();
+	}
+	//统计信息表json数据
+	public function statisticlist_ajax()
+	{
+	
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else
+		{
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			if($d_length > 100) $d_length = 100;
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'id'; break;
+				case 1: $d_ordercol = 'title'; break;
+				case 2: $d_ordercol = 'name'; break;
+				case 3: $d_ordercol = 'submittime'; break;
+				case 4: $d_ordercol = 'starttime'; break;
+				case 5: $d_ordercol = 'endtime'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+					'statistic.title' => array('like', '%'.$d_searchvalue.'%'),
+					'user.name' => array('like', '%'.$d_searchvalue.'%'),
+					'_logic' => 'or'
+			);
+			$Statistic = M('statistic');
+				
+			$statisticlist = $Statistic->table('lab_statistic statistic')
+									->join('LEFT JOIN lab_user user ON user.uid = statistic.submitter')
+									->field('
+											user.uid uid,
+											user.name name,
+											statistic.id id,
+											statistic.title title,
+											statistic.submittime submittime,
+											statistic.starttime starttime,
+											statistic.endtime endtime,
+											statistic.available available
+											')
+									->where($map)
+									->order(array($d_ordercol=>$d_orderdir))
+									->limit($d_start, $d_length)
+									->select();
+			$nowtime = time();
+			if($statisticlist != null && $statisticlist[0]['title'] != null)
+			{
+				for($i = count($statisticlist) - 1; $i >= 0; $i --)
+				{
+					if(strlen($statisticlist[$i]['title']) == 0)
+						$statisticlist[$i]['title'] = "#";
+					if($statisticlist[$i]['available'] == 0)
+						$statisticlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$statisticlist[$i]['id'].'">隐藏=>显示</a>';
+					else
+						$statisticlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$statisticlist[$i]['id'].'">显示=>隐藏</a>';
+					$statisticlist[$i]['title'] = '<div class="limit_header"><a target="_blank" href="/home/admin/editstatistic?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['title'].'</a></div>';
+					$statisticlist[$i]['id'] = '<a target="_blank" href="/home/work/statistic_res?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['id'].'</a>';
+					
+					$statisticlist[$i]['name'] = '<a data-pjax href="/home/user/userinfo?uid='.$statisticlist[$i]['uid'].'">'.$statisticlist[$i]['name'].'</a>';
+				}
+			}
+			else
+				$statisticlist = false;
+			file_put_contents("loog.txt", print_r($statistic, true));
+			$data['data'] = $statisticlist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $Statistic->count();
+			$data['recordsFiltered'] = $Statistic->table('lab_statistic statistic')
+			->join('LEFT JOIN lab_user user ON user.uid = statistic.submitter')
+			->where($map)
+			->count();
+		
+		}
+	
+		$this->ajaxReturn($data);
+	}
+	//添加信息统计
+	public function addstatistic()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['nowtime'] = date('Y-m-d\TH:i:s');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$this->assign($data);
+		$this->display();
+	}
+	//添加信息统计逻辑处理
+	public function addstatistic_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.statistic_title', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Statistic = M('statistic');
+			//防止误操作，避免10秒内操作两次
+			$map = array(
+				'submittime' => array('egt', date('Y-m-d H:i:s',strtotime('-10 second'))),
+				'submitter' => session('lab_uid')
+			);
+			if($Statistic->where($map)->find() != null)
+				$data['wrongcode'] = $WRONG_CODE['too_frequently'];
+			else 
+			{
+				$reqdata = I('param.');
+				$addstatistictext = $reqdata['statistic_items'];
+				$addstatisticlist = preg_split("/[\\r\\n]{1,2}/", $addstatistictext);
+				$statistic_add = array(
+					'title' => trim($reqdata['statistic_title']),
+					'items' => json_encode($addstatisticlist),
+					'submitter' => session('lab_uid'),
+					'submittime' => date('Y-m-d H:i:s'),
+					'starttime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_starttime']))),
+					'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime'])))
+				);
+				if($Statistic->add($statistic_add) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//编辑信息统计
+	public function editstatistic()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['nowtime'] = date('Y-m-d\TH:i:s');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Statistic = M('statistic');
+			$statisticinfo = $Statistic->where('id='.intval(trim(I('param.id'))))->find();
+			if($statisticinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else 
+			{
+				$statisticinfo['starttime'] = date('Y-m-d\TH:i:s', strtotime($statisticinfo['starttime']));
+				$statisticinfo['endtime'] = date('Y-m-d\TH:i:s', strtotime($statisticinfo['endtime']));
+			}
+			if($statisticinfo['submitter'] != session('lab_uid') && !session('lab_super_admin'))//不是提交者也不是超级管理员
+				$data['wrongcode'] = $WRONG_CODE['admin_powerless'];
+				
+			$data['statisticinfo'] = $statisticinfo;
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	//添加信息统计逻辑处理
+	public function editstatistic_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.statistic_title', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Statistic = M('statistic');
+			$reqdata = I('param.');
+			$statistic_update = array(
+				'id' => intval(trim($reqdata['id'])),
+				'title' => trim($reqdata['statistic_title']),
+				'submittime' => date('Y-m-d H:i:s'),
+				'starttime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_starttime']))),
+				'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime'])))
+			);
+			if($Statistic->save($statistic_update) == false)
+				$data['wrongcode'] = $WRONG_CODE['sql_error'];
 		}
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);

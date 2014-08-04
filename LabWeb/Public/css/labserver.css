@@ -52,7 +52,7 @@
 	margin: 0 auto;
 }
 .infotablediv{
-	width:1000px;
+	width:1024px;
 	margin: 0 auto;
 }
 .one_page_step{
@@ -82,15 +82,23 @@ a{text-decoration:none}
 {
 	width:140px;
 }
+.td_6w
+{
+	width:160px;
+}
+.td_7w
+{
+	width:180px;
+}
 .limit_header
 {
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
 }
-.limit_width_700
+.limit_width_550
 {
-	width:700px;
+	width:550px;
 }
 .limit_content
 {

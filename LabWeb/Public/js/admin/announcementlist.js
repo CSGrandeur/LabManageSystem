@@ -69,7 +69,7 @@ function InitProblemListTable()
 				},
 				{
 					"data": "title",
-					"width": "700px",
+//					"width": "600px",
 					"orderDataType": "dom-text",
 					"orderable": false,
 				},
