@@ -5,8 +5,16 @@ $(document).ready(function ()
 	$(document).on('pjax:success', function() {
 		ondo_statisticdo();
 	})
+	$(document).on('pjax:end', function() {
+		ondo_statisticdo();
+	})
 	
 })
+var cansubmit_flag = true;
+function submit_timeout()
+{
+	cansubmit_flag = true;
+}
 function ondo_statisticdo()
 {
 	$('#statisticdo_form').unbind("ajaxForm").ajaxForm();
@@ -23,10 +31,16 @@ function ondo_statisticdo()
 			alertify.error("需要填写的信息不能全为空");
 			return false;
 		}
+		if(cansubmit_flag == false)
+		{
+			alertify.error("提交过于频繁，请5秒后再试");
+			return false;
+		}
 		StatisticdoAjaxSubmit();
+		cansubmit_flag = false;
+		setTimeout('submit_timeout()', 5000); 
 		return false;
 	});
-	$('#announcement_title').focus();
 }
 function StatisticdoAjaxSubmit()
 {

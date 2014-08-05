@@ -20,17 +20,16 @@ function InitStatistic_resTable()
 		"lengthMenu": [ 10, 25, 50, 100],
 		"dom": 'T<"clear">lfrtip',
 		"tableTools": {
-			"sSwfPath": "/Public/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls.swf",
+			"sSwfPath": "/Public/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
             "aButtons": [
-                         
                          {
                              "sExtends": "copy",
                              "sButtonText": "复制表格"
                          },
-//                         {
-//                             "sExtends": "print",
-//                             "sButtonText": "打印表格"
-//                         }
+                         {
+                             "sExtends": "print",
+                             "sButtonText": "打印表格"
+                         }
                      ]
         }
 

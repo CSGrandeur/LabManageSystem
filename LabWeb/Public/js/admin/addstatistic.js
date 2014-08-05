@@ -33,11 +33,19 @@ function ondo_addstatistic()
         	alertify.error("统计项不能为空");
         	return false;
     	}
-    	
-    	AddstatisticAjaxSubmit();
+    	var okflag = false;
+    	alertify.confirm("信息项列表提交后不可修改，确认信息项都正确？", function (e) {
+    	    if (e) 
+    	    {
+    	    	okflag = true;
+    	    }
+    	});
+    	if(okflag)
+    		AddstatisticAjaxSubmit();
     	return false;
     });
     $('#allow_anonymouse_div').checkbox();
+
 }
 function AddstatisticAjaxSubmit()
 {
