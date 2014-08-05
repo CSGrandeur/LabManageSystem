@@ -1,31 +1,24 @@
 <div class='infotablediv'>
 	<div class="ui piled segment">
-	<h2 class='limit_header'>
-			{$newsinfo['title']|default='#'}
-	</h2>
-	
-	<div class="ui two column relaxed grid">
-		<div class="column">
-			<div class="ui blue label">
-				<i class="user icon"></i>
-				提交者:
-				<a data-pjax href='/home/user/userinfo?uid={$newsinfo["submituid"]}'>
-					{$newsinfo['submituname']}
-				</a>
-				提交时间:{$newsinfo['submittime']}
-       		</div>
-       	</div>
-		<div class="column">
-			<div class="ui blue label">
-				<i class="user icon"></i>
-				最后修改:
-				<a data-pjax href='/home/user/userinfo?uid={$newsinfo["menduid"]}'>
-					{$newsinfo['menduname']}
-				</a>
-				修改时间:{$newsinfo['updatetime']}
-       		</div>
-       	</div>
-	</div>
+		<h2 class='limit_header'>
+				{$newsinfo['title']|default='#'}
+		</h2>
+		<div class="ui blue label">
+			<i class="user icon"></i>
+			提交者:
+			<a data-pjax href='/home/user/userinfo?uid={$newsinfo["submituid"]}'>
+				{$newsinfo['submituname']}
+			</a>
+			提交时间:{$newsinfo['submittime']}
+   		</div>
+		<div class="ui blue label">
+			<i class="user icon"></i>
+			最后修改:
+			<a data-pjax href='/home/user/userinfo?uid={$newsinfo["menduid"]}'>
+				{$newsinfo['menduname']}
+			</a>
+			修改时间:{$newsinfo['updatetime']}
+   		</div>
 	<div class="ui horizontal divider">
 		<i class="attachment icon"></i>
 	</div>
