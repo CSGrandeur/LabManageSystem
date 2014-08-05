@@ -18,10 +18,26 @@ function ondo_addstatistic()
     		alertify.error("结束时间不能早于开始时间");
     		return false;
     	}
+    	if($.trim($('#statistic_title').val()).length == 0)
+    	{
+        	alertify.error("标题不能为空");
+        	return false;
+    	}
+    	else if($.trim($('#statistic_title').val()).length > 80)
+    	{
+        	alertify.error("标题不能超过80个英文字符或40个汉字");
+        	return false;
+    	}
+    	if($.trim($('#statistic_items').val()).length == 0)
+    	{
+        	alertify.error("统计项不能为空");
+        	return false;
+    	}
     	
     	AddstatisticAjaxSubmit();
     	return false;
     });
+    $('#allow_anonymouse_div').checkbox();
 }
 function AddstatisticAjaxSubmit()
 {

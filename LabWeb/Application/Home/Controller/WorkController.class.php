@@ -76,16 +76,16 @@ class WorkController extends Controller {
 				{
 					if(strlen($statisticlist[$i]['title']) == 0) $statisticlist[$i]['title'] = '#';
 					$statisticlist[$i]['name'] = '<a data-pjax href="/home/user/userinfo?uid='.$statisticlist[$i]['uid'].'">'.$statisticlist[$i]['name'].'</a>';
-					$statisticlist[$i]['title'] = '<a data-pjax href="/home/work/statistic_res?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['title'].'</a>';
+					$statisticlist[$i]['title'] = '<a data-pjax href="/home/work/statisticdo?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['title'].'</a>';
 					$starttime = strtotime($statisticlist[$i]['starttime']);
 					$endtime= strtotime($statisticlist[$i]['endtime']);
 					$statisticlist[$i]['status'] = '<a data-pjax href="/home/work/statisticdo?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['title'].'</a>';
 					if($nowtime < $starttime)
 						$statisticlist[$i]['status'] = '<a data-pjax href="#" class="ui tiny red button">尚未开始</a>';
 					else if($nowtime > $endtime)
-						$statisticlist[$i]['status'] = '<a data-pjax href="#" class="ui tiny grey button">已经结束</a>';
+						$statisticlist[$i]['status'] = '<a data-pjax href="/home/work/statistic_res?id='.$statisticlist[$i]['id'].'" class="ui tiny grey button">已经结束</a>';
 					else
-						$statisticlist[$i]['status'] = '<a data-pjax href="/home/work/statisticdo?id='.$statisticlist[$i]['id'].'" class="ui tiny green button">正在进行</a>';
+						$statisticlist[$i]['status'] = '<a data-pjax href="/home/work/statistic_res?id='.$statisticlist[$i]['id'].'" class="ui tiny green button">正在进行</a>';
 				}
 			}
 			else
@@ -102,14 +102,217 @@ class WorkController extends Controller {
 		
 		$this->ajaxReturn($data);
 	}
-	public function fingerprint()
+	//填表页面
+	public function statisticdo()
 	{
 		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
-		$this->display();
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$id = intval(trim(I('param.id')));
+			$map = array(
+    			'statistic.id' => $id
+			);
+			$Statistic = M('statistic');
+			$statisticinfo = $Statistic->table('lab_statistic statistic')
+									->join('LEFT JOIN lab_user user ON user.uid = statistic.submitter')
+									->field('
+											user.uid uid,
+											user.name name,
+											statistic.id id,
+											statistic.title title,
+											statistic.des des,
+											statistic.items items,
+											statistic.available available,
+											statistic.starttime starttime,
+											statistic.endtime endtime,
+											statistic.allow_anonymous allow_anonymous
+											')
+									->where($map)
+									->find();
+			if($statisticinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else 
+			{
+				$nowtime = time();					
+				$starttime = strtotime($statisticinfo['starttime']);
+				$endtime= strtotime($statisticinfo['endtime']);
+				if($statisticinfo['allow_anonymous'] == 0 && !session('?lab_uid')
+					|| $statisticinfo['available'] == 0 && !IsAdmin())
+					$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+				else if($nowtime < $starttime && !IsAdmin())
+					$data['wrongcode'] = $WRONG_CODE['too_early'];
+				else if($nowtime > $endtime && !IsAdmin())
+					$data['wrongcode'] = $WRONG_CODE['too_late'];
+				else 
+				{
+					$data['statisticinfo'] = $statisticinfo;
+					$data['items'] = json_decode($statisticinfo['items'], true);
+					if($statisticinfo['allow_anonymous'] == 0)//如果仅允许登录用户填写，则获取已填写的信息
+					{
+						$map = array(
+							'uid' => session('lab_uid'),
+							'statisticid' => $id
+						);
+						$Statisticdo = M('statisticdo');
+						$statisticdoinfo = $Statisticdo->where($map)->find();
+						$data['statisticdoinfo'] = $statisticdoinfo;
+						$data['doitems'] = json_decode($statisticdoinfo['items'], true);
+					}
+				}
+			}
+		}
+    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+        if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+        	$this->display('Public:alert');
+        else
+        	$this->display();
 	}
-	public function pcinfo()
+	//填表信息逻辑处理
+	public function statisticdo_ajax()
+	{
+
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$reqdata = I('param.');
+			$id = intval(trim($reqdata['id']));
+			
+			$Statistic = M('statistic');
+			$statisticinfo = $Statistic->where('id='.$id)->field('id, starttime, endtime, available, allow_anonymous')->find();
+			$nowtime = time();
+			$starttime = strtotime($statisticinfo['starttime']);
+			$endtime= strtotime($statisticinfo['endtime']);
+			if($statisticinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else if($statisticinfo['allow_anonymous'] == 0 && !session('?lab_uid')
+					|| $statisticinfo['available'] == 0 && !IsAdmin())
+					$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+			else if($nowtime < $starttime && !IsAdmin())
+				$data['wrongcode'] = $WRONG_CODE['too_early'];
+			else if($nowtime > $endtime && !IsAdmin())
+				$data['wrongcode'] = $WRONG_CODE['too_late'];
+			else 
+			{	
+				$Statisticdo = M('statisticdo');
+				$addstatisticdolist = $reqdata['item_input'];
+				$statisticdo_add = array(
+					'statisticid' => $id,
+					'uid' => session('lab_uid'),
+					'items' => json_encode($addstatisticdolist)
+				);
+				$map = array(
+					'statisticid' => $id,
+					'uid' => session('lab_uid')
+				);
+				if($statisticinfo['allow_anonymous'] == 0 && $Statisticdo->where($map)->find() != null)//不允许匿名提交，则可能要update
+				{
+					if($Statisticdo->where($map)->save($statisticdo_add) == false)
+						$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+					else 
+						$data['wrongcode'] = $WRONG_CODE['update_successful'];
+				}
+				else 
+				{
+					if($Statisticdo->add($statisticdo_add) == false)
+						$data['wrongcode'] = $WRONG_CODE['sql_error'];
+					else
+						$data['wrongcode'] = $WRONG_CODE['add_successful'];
+			file_put_contents("loog.txt", print_r($Statisticdo->_sql(), true));
+				}
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//填表信息结果查询
+	public function statistic_res()
 	{
 		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
-		$this->display();
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$id = intval(trim(I('param.id')));
+			$map = array(
+    			'statistic.id' => $id
+			);
+			$Statistic = M('statistic');
+			$statisticinfo = $Statistic->table('lab_statistic statistic')
+									->join('LEFT JOIN lab_user user ON user.uid = statistic.submitter')
+									->field('
+											user.uid uid,
+											user.name name,
+											statistic.id id,
+											statistic.title title,
+											statistic.des des,
+											statistic.items items,
+											statistic.available available,
+											statistic.starttime starttime,
+											statistic.endtime endtime,
+											statistic.allow_anonymous allow_anonymous
+											')
+									->where($map)
+									->find();
+			if($statisticinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else 
+			{
+				$nowtime = time();					
+				$starttime = strtotime($statisticinfo['starttime']);
+				$endtime= strtotime($statisticinfo['endtime']);
+				if($statisticinfo['allow_anonymous'] == 0 && !session('?lab_uid')
+					|| $statisticinfo['available'] == 0 && !IsAdmin())
+					$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+				else 
+				{
+					$data['statisticinfo'] = $statisticinfo;
+					$data['items'] = json_decode($statisticinfo['items'], true);
+					$map = array(
+						'statisticdo.statisticid' => $id
+					);
+					$Statisticdo = M('statisticdo');
+					$statisticdolist = $Statisticdo->table('lab_statisticdo statisticdo')
+									->join('LEFT JOIN lab_user user ON user.uid = statisticdo.uid')
+									->where($map)
+									->field('
+											user.uid uid,
+											user.name name,
+											statisticdo.id id,
+											statisticdo.items items
+											')
+									->select();
+					for($i = count($statisticdolist) - 1; $i >= 0; $i --)
+					{
+						$statisticdolist[$i]['items'] = json_decode($statisticdolist[$i]['items'], true);
+						if($statisticdolist[$i]['name'] == null)
+							$statisticdolist[$i]['name'] = "匿名";
+						else
+							$statisticdolist[$i]['name'] = '<a target="_blank" href="/home/user/userinfo?uid='.$statisticdolist[$i]['uid'].'">'.$statisticdolist[$i]['name'].'</a>';
+					}
+					$data['statisticdolist'] = $statisticdolist;
+				}
+			}
+		}
+    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+        if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+        	$this->display('Public:alert');
+        else
+        	$this->display();
 	}
 }

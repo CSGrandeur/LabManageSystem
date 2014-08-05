@@ -1,25 +1,31 @@
 <div class='infotablediv'>
 	<div class="ui piled segment">
 	<h2 class='limit_header'>
-		<a data-pjax href='/home/index/news?id={$news["id"]}'>
 			{$newsinfo['title']|default='#'}
-		</a>
 	</h2>
-	<h5 >
-		提交者:
-		<a data-pjax href='/home/user/userinfo?uid={$news["submituid"]}'>
-			{$newsinfo['submituname']}
-		</a>
-		提交时间:
-			{$newsinfo['submittime']}
-		|
-		最后修改:
-		<a data-pjax href='/home/user/userinfo?uid={$news["menduid"]}'>
-			{$newsinfo['menduname']}
-		</a>
-		修改时间:
-			{$newsinfo['updatetime']}
-	</h5>
+	
+	<div class="ui two column relaxed grid">
+		<div class="column">
+			<div class="ui blue label">
+				<i class="user icon"></i>
+				提交者:
+				<a data-pjax href='/home/user/userinfo?uid={$newsinfo["submituid"]}'>
+					{$newsinfo['submituname']}
+				</a>
+				提交时间:{$newsinfo['submittime']}
+       		</div>
+       	</div>
+		<div class="column">
+			<div class="ui blue label">
+				<i class="user icon"></i>
+				最后修改:
+				<a data-pjax href='/home/user/userinfo?uid={$newsinfo["menduid"]}'>
+					{$newsinfo['menduname']}
+				</a>
+				修改时间:{$newsinfo['updatetime']}
+       		</div>
+       	</div>
+	</div>
 	<div class="ui horizontal divider">
 		<i class="attachment icon"></i>
 	</div>

@@ -121,3 +121,7 @@ a{text-decoration:none}
 {
 	width: 500px;
 }
+.over_roll
+{
+	overflow-x:scroll;
+}

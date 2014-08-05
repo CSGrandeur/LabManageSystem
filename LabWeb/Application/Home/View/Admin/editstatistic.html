@@ -1,17 +1,29 @@
 <div class="infotablediv">
 	<div class="ui info message">
-		<div class="header">添加信息统计</div>
-		本系统采用关系型数据库，数据项个数固定，信息统计项为Json存储，随意改变会与统计到的信息无法对应，故只能修改title和时间
+		<div class="header">修改信息统计</div>
+		本系统采用关系型数据库，数据项个数固定，随意改变会与统计到的信息无法对应，故不能修改统计信息项。
 	</div>
 	<form id="editstatistic_form" action="/home/admin/editstatistic_ajax" method="post">
 		<div class='ui form'>
 			<div class="field">
-				<input id='statistic_title' name="statistic_title" type="text" placeholder="标题..." value="{$statisticinfo['title']}"/>
+				<div><input id='statistic_title' name="statistic_title" type="text" placeholder="标题..." value="{$statisticinfo['title']}"/></div>
+				<br/>
+				<div>
 				<input id="statistic_starttime" name="statistic_starttime" type="datetime-local" value="{$statisticinfo['starttime']}"/>
 				<input id="statistic_endtime" name="statistic_endtime" type="datetime-local" value="{$statisticinfo['endtime']}"/>
+				</div>
+				<br/>
+				<div id="allow_anonymouse_div" class="ui toggle checkbox">
+					<input type="checkbox" name="allow_anonymous">
+					<script type="text/javascript">allow_anonymous={$statisticinfo['allow_anonymous']}</script>
+					<label>允许未登录用户匿名填表？</label>
+				</div>
 			</div>
+			<div>补充描述：</div>
+			<?php $ueditor_fill_in_content = $statisticinfo['des']; ?>
+			<include file="Public/ueditor" /> 
 		</div>
-			<input name="id" type="hidden" value="{$statisticinfo['id']}"/>
+		<input name="id" type="hidden" value="{$statisticinfo['id']}"/>
 		<button id="editstatistic_submit"  type="submit" class="ui blue labeled icon button">
 			<i class="user icon"></i>提交
 		</button>

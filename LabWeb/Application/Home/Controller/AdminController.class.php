@@ -662,9 +662,9 @@ class AdminController extends Controller {
 				if(strlen($announcementlist[$i]['title']) == 0)
 					$announcementlist[$i]['title'] = "#";
 				if($announcementlist[$i]['available'] == 0)
-					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$announcementlist[$i]['id'].'">隐藏=>显示</a>';
+					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button" name="'.$announcementlist[$i]['id'].'">隐藏=>显示</a>';
 				else
-					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$announcementlist[$i]['id'].'">显示=>隐藏</a>';
+					$announcementlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button" name="'.$announcementlist[$i]['id'].'">显示=>隐藏</a>';
 				$announcementlist[$i]['title'] = '<div class="limit_header limit_width_550"><a href="/home/admin/editannouncement?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['title'].'</a></div>';
 				$announcementlist[$i]['id'] = '<a target="_blank" href="/home/index/news?id='.$announcementlist[$i]['id'].'">'.$announcementlist[$i]['id'].'</a>';
 									
@@ -696,7 +696,7 @@ class AdminController extends Controller {
 			);
 			$announcement_available = $Announcement->where($map)->field('available')->find();
 			if($announcement_available == null)
-				$data['wrongcode'] = $WRONG_CODE['announcementid_notexist'];
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
 			else
 			{
 				if($announcement_available['available'] == 0)
@@ -1045,17 +1045,16 @@ class AdminController extends Controller {
 									->order(array($d_ordercol=>$d_orderdir))
 									->limit($d_start, $d_length)
 									->select();
-			$nowtime = time();
-			if($statisticlist != null && $statisticlist[0]['title'] != null)
+			if($statisticlist != null && $statisticlist[0]['id'] != null)
 			{
 				for($i = count($statisticlist) - 1; $i >= 0; $i --)
 				{
 					if(strlen($statisticlist[$i]['title']) == 0)
 						$statisticlist[$i]['title'] = "#";
 					if($statisticlist[$i]['available'] == 0)
-						$statisticlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny grey button change_graduate_button" name="'.$statisticlist[$i]['id'].'">隐藏=>显示</a>';
+						$statisticlist[$i]['available'] = '<a onclick="change_statistic_available(this)" class="ui tiny grey button" name="'.$statisticlist[$i]['id'].'">隐藏=>显示</a>';
 					else
-						$statisticlist[$i]['available'] = '<a onclick="change_available(this)" class="ui tiny blue button change_graduate_button" name="'.$statisticlist[$i]['id'].'">显示=>隐藏</a>';
+						$statisticlist[$i]['available'] = '<a onclick="change_statistic_available(this)" class="ui tiny blue button" name="'.$statisticlist[$i]['id'].'">显示=>隐藏</a>';
 					$statisticlist[$i]['title'] = '<div class="limit_header"><a target="_blank" href="/home/admin/editstatistic?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['title'].'</a></div>';
 					$statisticlist[$i]['id'] = '<a target="_blank" href="/home/work/statistic_res?id='.$statisticlist[$i]['id'].'">'.$statisticlist[$i]['id'].'</a>';
 					
@@ -1064,7 +1063,6 @@ class AdminController extends Controller {
 			}
 			else
 				$statisticlist = false;
-			file_put_contents("loog.txt", print_r($statistic, true));
 			$data['data'] = $statisticlist;
 			$data['draw'] = $d_draw;
 			$data['recordsTotal'] = $Statistic->count();
@@ -1075,6 +1073,41 @@ class AdminController extends Controller {
 		
 		}
 	
+		$this->ajaxReturn($data);
+	}
+	//更改statistic显示/隐藏状态
+	public function change_statistic_available_ajax()
+	{
+
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Statistic = M('statistic');
+			$map = array(
+				'id' => intval(I('param.id'))
+			);
+			$statistic_available = $Statistic->where($map)->field('available')->find();
+			if($statistic_available == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else
+			{
+				if($statistic_available['available'] == 0)
+					$statistic_available['available'] = 1;
+				else
+					$statistic_available['available'] = 0;
+				$data['available'] = $statistic_available['available'];
+				if($Statistic->where($map)->save($statistic_available) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
 	//添加信息统计
@@ -1120,11 +1153,13 @@ class AdminController extends Controller {
 				$addstatisticlist = preg_split("/[\\r\\n]{1,2}/", $addstatistictext);
 				$statistic_add = array(
 					'title' => trim($reqdata['statistic_title']),
+					'des' => trim($reqdata['content']),
 					'items' => json_encode($addstatisticlist),
 					'submitter' => session('lab_uid'),
 					'submittime' => date('Y-m-d H:i:s'),
 					'starttime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_starttime']))),
-					'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime'])))
+					'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime']))),
+					'allow_anonymous' => $reqdata['allow_anonymous'] == 'on'
 				);
 				if($Statistic->add($statistic_add) == false)
 					$data['wrongcode'] = $WRONG_CODE['sql_error'];
@@ -1188,12 +1223,39 @@ class AdminController extends Controller {
 			$statistic_update = array(
 				'id' => intval(trim($reqdata['id'])),
 				'title' => trim($reqdata['statistic_title']),
+				'des' => trim($reqdata['content']),
 				'submittime' => date('Y-m-d H:i:s'),
 				'starttime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_starttime']))),
-				'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime'])))
+				'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime']))),
+				'allow_anonymous' => $reqdata['allow_anonymous'] == 'on' ? 1 : 0
 			);
 			if($Statistic->save($statistic_update) == false)
 				$data['wrongcode'] = $WRONG_CODE['sql_error'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//删除已统计的单个条目
+	public function del_statisticdo_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Statisticdo = M('statisticdo');
+			$map = array(
+				'id' => intval(trim(I('param.id')))
+			);
+			if($Statisticdo->where($map)->delete() == false)
+				$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			else
+				$data['wrongcode'] = $WRONG_CODE['del_successful'];
+				
 		}
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);

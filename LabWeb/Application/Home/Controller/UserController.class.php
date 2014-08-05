@@ -51,7 +51,6 @@ class UserController extends Controller {
     		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
     	}
     	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-//     	$this->ajaxReturn($data);
         $this->assign($data);
         if($data['wrongcode'] != $WRONG_CODE['totally_right'])
         	$this->display('Public:alert');

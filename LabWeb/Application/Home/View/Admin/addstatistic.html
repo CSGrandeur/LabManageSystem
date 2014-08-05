@@ -9,13 +9,24 @@
 	<form id="addstatistic_form" action="/home/admin/addstatistic_ajax" method="post">
 		<div class='ui form'>
 			<div class="field">
-				<input id='statistic_title' name="statistic_title" type="text" placeholder="标题..."/>
-				<input id="statistic_starttime" name="statistic_starttime" type="datetime-local" value="{$nowtime}"/>
-				<input id="statistic_endtime" name="statistic_endtime" type="datetime-local" value="{$nowtime}"/>
+				<div><input id='statistic_title' name="statistic_title" type="text" placeholder="标题..."/></div>
+				<br/>
+				<div>
+					开始时间：<input id="statistic_starttime" name="statistic_starttime" type="datetime-local" value="{$nowtime}"/>
+					结束时间：<input id="statistic_endtime" name="statistic_endtime" type="datetime-local" value="{$nowtime}"/>
+				</div>
+				<br/>
+				<div id="allow_anonymouse_div" class="ui toggle checkbox">
+					<input type="checkbox" name="allow_anonymous">
+					<label>允许未登录用户匿名填表？</label>
+				</div>
 			</div>
+			<div>信息项列表：</div>
 			<div class="field">
-				<textarea name='statistic_items' ></textarea>
+				<textarea id="statistic_items" name='statistic_items' ></textarea>
 			</div>
+			<div>补充描述：</div>
+			<include file="Public/ueditor" /> 
 		</div>
 		<button id="addstatistic_submit"  type="submit" class="ui blue labeled icon button">
 			<i class="user icon"></i>提交

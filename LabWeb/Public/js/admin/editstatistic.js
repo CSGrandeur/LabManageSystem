@@ -22,6 +22,11 @@ function ondo_editstatistic()
     	EditstatisticAjaxSubmit();
     	return false;
     });
+    if(allow_anonymous != 0)
+        $('#allow_anonymouse_div').checkbox('enable');
+    else
+        $('#allow_anonymouse_div').checkbox('disable');
+    	
 }
 function EditstatisticAjaxSubmit()
 {

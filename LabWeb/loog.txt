@@ -1,0 +1,1 @@
+INSERT INTO `lab_statisticdo` (`statisticid`,`uid`,`items`) VALUES (15,'124611172','[\"4141\",\"414\"]')

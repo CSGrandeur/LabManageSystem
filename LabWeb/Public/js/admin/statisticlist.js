@@ -12,6 +12,33 @@ function ondo_statisticlist()
 	if(!$.fn.dataTable.isDataTable($('#statisticlist_list')))
 		InitStatisticlistTable();
 }
+function change_statistic_available(obj)
+{
+ 	$.get(
+		'/home/admin/change_statistic_available_ajax', 
+		{id: $(obj).attr('name')},
+		function(data){
+			if(data["wrongcode"] != 999)
+				alertify.error(data["wrongmsg"]);
+			else
+			{
+				alertify.success("修改成功");
+				if(data['available'] == 0)
+				{
+					$(obj).removeClass('blue');
+					$(obj).addClass('grey');
+					$(obj).text('隐藏=>显示')
+				}
+				else
+				{
+					$(obj).removeClass('grey');
+					$(obj).addClass('blue');
+					$(obj).text('显示=>隐藏')
+				}
+			}
+		},
+		"json");
+}
 function InitStatisticlistTable()
 {
 	 $('#statisticlist_list').unbind("dataTable").dataTable( {
@@ -48,33 +75,30 @@ function InitStatisticlistTable()
 						},
 						{
 							"data": "submittime",
-							"width": "150px",
+							"width": "100px",
 							className: "center",
 							 "searchable": false
 						},
 						{
 							"data": "starttime",
-							"width": "150px",
+							"width": "100px",
 							className: "center",
 							 "searchable": false
 						},
 						{
 							"data": "endtime",
-							"width": "150px",
+							"width": "100px",
 							className: "center",
 							 "searchable": false
 						},
 						{
 							"data": "available",
-							"width": "100px",
+							"width": "150px",
 							className: "center",
 							 "searchable": false
 						}
 			]
 	 } );
-	 $('#papaerstate_month').unbind('input propertychange').bind('input propertychange', function() {
-			$('#statisticlist_list').DataTable().ajax.reload();
-		});
 }
 
 //

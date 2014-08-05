@@ -66,9 +66,6 @@ function InitStatisticTable()
 						}
 			]
 	 } );
-	 $('#papaerstate_month').unbind('input propertychange').bind('input propertychange', function() {
-			$('#statistic_list').DataTable().ajax.reload();
-		});
 }
 
 //

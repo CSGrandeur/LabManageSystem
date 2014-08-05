@@ -1,0 +1,94 @@
+<div class='infotablediv'>
+	<div class="ui two column relaxed grid basic segment">
+		<div class="column">
+				<div class="ui info message">
+				<div class="header">
+					<?php 
+						if($statisticinfo['allow_anonymous'] == 0)
+						{
+					?>
+					禁止未登录用户匿名填表
+					<?php 
+						}
+						else
+						{
+					?>
+					允许未登录用户匿名填表
+					<?php 
+						}
+					?>
+				</div>
+				<?php 
+					if($statisticinfo['allow_anonymous'] == 0)
+					{
+				?>
+					如果已填写信息，重新提交会更新旧的信息
+				<?php 
+					}
+				?>
+				</div>
+			<div class="ui form segment">
+				<form id="statisticdo_form" action="/home/work/statisticdo_ajax" method="post">
+				<?php
+					$itemcount = count($items);
+					for($i = 0; $i < $itemcount; $i ++)
+					{
+				?>
+			 		 <div class="field">	
+						<label>{$items[$i]}</label>
+						<div class="ui left labeled icon input">
+							<input name="item_input[]" class="item_input" type="text" placeholder="{$items[$i]}" value="{$doitems[$i]}" />
+							<i class="bookmark empty icon"></i>
+						</div>
+					</div>
+				<?php
+					}
+				?>
+					<input name="id" type="hidden" value="{$statisticinfo[id]}"/>
+					<div class="ui buttons">
+		 					<button id="statistic_submit"  type="submit" class="ui blue button">
+							提交
+							</button>
+							<div class="or"></div>
+							<a data-pjax href="/home/work/statistic_res?id={$statisticinfo['id']}">
+								<button class="ui green button">
+									查看结果
+								</button>
+							</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="ui vertical divider">
+			<i class="info icon"></i>
+		</div>
+		<div class="column">
+			<div class="ui piled segment">
+				<h2 class='limit_header'>
+					{$statisticinfo['title']|default='#'}
+				</h2>
+				<div class="ui blue label">
+					提交者:
+					<br/>
+					<a data-pjax href='/home/user/userinfo?uid={$statisticinfo["uid"]}'>
+					{$statisticinfo['name']}
+					</a>
+				</div>
+				<div class="ui green label">
+  					<i class="time icon"></i>
+					统计开始时间:{$statisticinfo['starttime']}
+					<br/>
+  					<i class="time icon"></i>
+					统计结束时间:{$statisticinfo['endtime']}
+				</div>
+				<div class="ui horizontal divider">
+					<i class="attachment icon"></i>
+				</div>
+				<div>
+					{$statisticinfo['des']|htmlspecialchars_decode|stripslashes}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/js/work/statisticdo.js" type="text/javascript"></script>

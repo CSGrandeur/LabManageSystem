@@ -1,0 +1,79 @@
+<div class='infotablediv'>
+<div class="ui piled segment">
+	<h2 class='limit_header'>
+		{$statisticinfo['title']|default='#'}
+	</h2>
+	<div class="ui blue label">
+		发起者:
+		<br/>
+		<a data-pjax href='/home/user/userinfo?uid={$statisticinfo["uid"]}'>
+		{$statisticinfo['name']}
+		</a>
+	</div>
+	<div class="ui green label">
+				<i class="time icon"></i>
+		统计开始时间:{$statisticinfo['starttime']}
+		<br/>
+				<i class="time icon"></i>
+		统计结束时间:{$statisticinfo['endtime']}
+	</div>
+</div>
+</div>
+<div class="ui segment">
+<table id="statistic_res_table" class="display cell-border" >
+	<thead>
+	<tr>
+		<?php
+			if(IsAdmin())
+			{
+		?>
+			<th class="center">管理</th>
+		<?php
+			}
+		?>
+			<th class="center">序号</th>
+			<th class="center">提交用户</th>
+		<?php
+			$itemcount = count($items);
+			for($i = 0; $i < $itemcount; $i ++)
+			{
+		?>
+			<th class="center">{$items[$i]}</th>
+		<?php
+			}
+		?>
+	</tr>
+	</thead>
+	<tbody>
+		<?php 
+			$docount = count($statisticdolist);
+			for($i = 0; $i < $docount; $i ++)
+			{
+		?>
+		<tr>
+			<?php
+				if(IsAdmin())
+				{
+			?>
+				<td class="center"><a onclick="del_statisticdo(this)" class="ui tiny red button" name="{$statisticdolist[$i]['id']}">删除</a></td>
+			<?php
+				}
+			?>
+				<td class="center">{$i}</td>
+				<td class="center">{$statisticdolist[$i]['name']}</td>
+			<?php 
+				for($j = 0; $j < $itemcount; $j ++)
+				{
+			?>
+				<td>{$statisticdolist[$i]['items'][$j]}</td>
+			<?php
+				}
+			?>
+		</tr>
+		<?php
+		}
+		?>
+	</tbody>
+</table>
+</div>
+<script src="__PUBLIC__/js/work/statistic_res.js" type="text/javascript"></script>
