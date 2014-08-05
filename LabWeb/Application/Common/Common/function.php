@@ -189,3 +189,47 @@ function ContentFind($item1, $field1, $field2, $table, $consider_del)
 		return "#";
 	return $content[$field2];
 }
+//得到用户完整信息
+function GetUserinfo($uid)
+{
+	$STR_LIST = C('STR_LIST');
+	$map = array(
+		'user.uid' => $uid
+	);
+	$User = M('user');
+	$userinfo = $User->table('lab_user user')
+					->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
+					->field('
+							user.uid uid,
+							user.name name,
+							user.kind kind,
+							user.graduate graduate,
+							userdetail.sex sex,
+							userdetail.phone phone,
+							userdetail.email email,
+							userdetail.degree degree,
+							userdetail.grade grade,
+							userdetail.birthday birthday,
+							userdetail.idcard idcard,
+							userdetail.nation nation,
+							userdetail.political political,
+							userdetail.institute institute,
+							userdetail.major major,
+							userdetail.supervisor supervisor,
+							userdetail.teacher teacher,
+							userdetail.supervisorid supervisorid,
+							userdetail.teacherid teacherid
+							')
+					->where($map)
+					->find();
+	if($userinfo == null)
+		return null;
+	else
+	{
+		$userinfo['graduate'] = $STR_LIST[$userinfo['graduate']];
+		$userinfo['kind'] = $STR_LIST[$userinfo['kind']];
+		$userinfo['degree'] = $STR_LIST[$userinfo['degree']];
+		$userinfo['sex'] = $STR_LIST[$userinfo['sex']];
+		return $userinfo;
+	}
+}

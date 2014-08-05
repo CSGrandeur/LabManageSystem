@@ -1,0 +1,33 @@
+<div class='infotablediv'>
+<form id="report_add_form" action="/home/work/report_add_ajax" method="post">
+	
+	<div class="ui fluid input">
+		<input id='report_title' name="title" type="text" placeholder="标题..." />
+	</div>
+	<br/>
+	<div>
+	<include file="Public/ueditor" /> 
+	</div>
+	<br/>
+	<div>
+		<button id="report_add_submit"  type="submit" class="ui blue button">
+			提交
+		</button> 
+		报告类型：
+		<div id="select_report_kind" class="ui mini selection dropdown">
+			<input type="hidden" name="kind" value="71">
+			<div class="default text">科研进展</div>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+				<div class="item" data-value="71">科研进展</div>
+				<div class="item" data-value="72">文献阅读</div>
+				<div class="item" data-value="73">项目开发</div>
+				<div class="item" data-value="74">知识学习</div>
+				<div class="item" data-value="75">综合报告</div>
+				<div class="item" data-value="76">其他</div>		
+			</div>
+		</div>
+	</div>
+</form>
+</div>
+<script src="__PUBLIC__/js/work/report_add.js" type="text/javascript"></script>

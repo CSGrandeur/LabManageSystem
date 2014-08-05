@@ -1,11 +1,15 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_paperstate();
-	$(document).on('pjax:success', function() {
-		ondo_paperstate();
+	$(document).on('pjax:popstate', function() {
+		location.reload();
 	})
-	
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
+		ondo_paperstate();
+		pjaxflag = true;
+	})
+	if(!pjaxflag)
+		ondo_paperstate();
 })
 function ondo_paperstate()
 {

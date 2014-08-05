@@ -1,0 +1,35 @@
+<div class='infotablediv'>
+<form id="report_edit_form" action="/home/work/report_edit_ajax" method="post">
+	
+	<div class="ui fluid input">
+		<input id='report_title' name="title" type="text" placeholder="标题..." value="{$reportinfo['title']}">
+	</div>
+	<br/>
+	<div>
+	<?php $ueditor_fill_in_content = $reportinfo['content']; ?>
+	<include file="Public/ueditor" /> 
+	<input type="hidden" name="id" value="{$reportinfo['id']}"/>
+	</div>
+	<br/>
+	<div>
+		<button id="report_edit_submit"  type="submit" class="ui blue button">
+			提交
+		</button> 
+		报告类型：
+		<div id="select_report_kind" class="ui mini selection dropdown">
+			<input type="hidden" name="kind" value="{$reportinfo['kind']}">
+			<div class="default text">{$strlist[$reportinfo['kind']]}</div>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+				<div class="item" data-value="71">科研进展</div>
+				<div class="item" data-value="72">文献阅读</div>
+				<div class="item" data-value="73">项目开发</div>
+				<div class="item" data-value="74">知识学习</div>
+				<div class="item" data-value="75">综合报告</div>
+				<div class="item" data-value="76">其他</div>		
+			</div>
+		</div>
+	</div>
+</form>
+</div>
+<script src="__PUBLIC__/js/work/report_edit.js" type="text/javascript"></script>

@@ -1,1 +1,1 @@
-INSERT INTO `lab_statisticdo` (`statisticid`,`uid`,`items`) VALUES (15,'124611172','[\"\",\"\"]')
+UPDATE `lab_report` SET `title`='1233131',`kind`=71,`content`='&lt;p&gt;		&lt;/p&gt;&lt;p&gt;gerg&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;gs&lt;span style=&quot;font-size: 24px;&quot;&gt;&lt;strong&gt;er&lt;/strong&gt;&lt;/span&gt;gre&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;',`updatetime`='2014-08-06 00:25:45' WHERE ( id=1 )

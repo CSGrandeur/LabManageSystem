@@ -1,10 +1,12 @@
 $(document).ready(function ()
 {
-	ondo_statistic_res();
-	$(document).on('pjax:success', function() {
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
 		ondo_statistic_res();
+		pjaxflag = true;
 	})
-	
+	if(!pjaxflag)
+		ondo_statistic_res();
 })
 function ondo_statistic_res()
 {

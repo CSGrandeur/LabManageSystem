@@ -1,10 +1,12 @@
 $(document).ready(function ()
 {
-	ondo_addprivilege();
-	$(document).on('pjax:success', function() {
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
 		ondo_addprivilege();
+		pjaxflag = true;
 	})
-	
+	if(!pjaxflag)
+		ondo_addprivilege();
 })
 function ondo_addprivilege()
 {

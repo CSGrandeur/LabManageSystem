@@ -1,11 +1,15 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_manageuser();
-	$(document).on('pjax:success', function() {
-		ondo_manageuser();
+	$(document).on('pjax:popstate', function() {
+		location.reload();
 	})
-	
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
+		ondo_manageuser();
+		pjaxflag = true;
+	})
+	if(!pjaxflag)
+		ondo_manageuser();
 })
 function ondo_manageuser()
 {
@@ -29,13 +33,13 @@ function change_graduate(obj)
 				{
 					$(obj).removeClass('grey');
 					$(obj).addClass('blue');
-					$(obj).text('在校')
+					$(obj).text('在校');
 				}
 				else if(data['graduate'] == 62)
 				{
 					$(obj).removeClass('blue');
 					$(obj).addClass('grey');
-					$(obj).text('离校')
+					$(obj).text('离校');
 				}
 			}
 		},

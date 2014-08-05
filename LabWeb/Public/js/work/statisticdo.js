@@ -1,14 +1,12 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_statisticdo();
-	$(document).on('pjax:success', function() {
-		ondo_statisticdo();
-	})
+	var pjaxflag = false;
 	$(document).on('pjax:end', function() {
 		ondo_statisticdo();
+		pjaxflag = true;
 	})
-	
+	if(!pjaxflag)
+		ondo_statisticdo();
 })
 var cansubmit_flag = true;
 function submit_timeout()

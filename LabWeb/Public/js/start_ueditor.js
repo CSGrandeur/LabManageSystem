@@ -2,7 +2,7 @@ $(document).ready(function ()
 {
 	//initialise datatables
 	ondo_ueditor();
-	$(document).on('pjax:success', function() {
+	$(document).on('pjax:end', function() {
 		ondo_ueditor();
 	})
 	

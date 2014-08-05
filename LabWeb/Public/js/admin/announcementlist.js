@@ -1,46 +1,23 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_announcementlist();
-	$(document).on('pjax:success', function() {
-		ondo_announcementlist();
+	$(document).on('pjax:popstate', function() {
+		location.reload();
 	})
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
+		ondo_announcementlist();
+		pjaxflag = true;
+	})
+	if(!pjaxflag)
+		ondo_announcementlist();
 	
 })
 function ondo_announcementlist()
 {
 	if(!$.fn.dataTable.isDataTable($('#announcement_list')))
-		InitProblemListTable();
-	
+		InitAnnouncementListTable();
 }
-function change_available(obj)
-{
- 	$.get(
-		'/home/admin/change_announcementavailable_ajax', 
-		{id: $(obj).attr('name')},
-		function(data){
-			if(data["wrongcode"] != 999)
-				alertify.error(data["wrongmsg"]);
-			else
-			{
-				alertify.success("修改成功");
-				if(data['available'] == 0)
-				{
-					$(obj).removeClass('blue');
-					$(obj).addClass('grey');
-					$(obj).text('隐藏=>显示')
-				}
-				else
-				{
-					$(obj).removeClass('grey');
-					$(obj).addClass('blue');
-					$(obj).text('显示=>隐藏')
-				}
-			}
-		},
-		"json");
-}
-function InitProblemListTable()
+function InitAnnouncementListTable()
 {
 	 $('#announcement_list').unbind("dataTable").dataTable( {
 			"processing": true,
@@ -96,6 +73,33 @@ function InitProblemListTable()
 				}
 			]
 	 } );
+}
+function change_available(obj)
+{
+ 	$.get(
+		'/home/admin/change_announcementavailable_ajax', 
+		{id: $(obj).attr('name')},
+		function(data){
+			if(data["wrongcode"] != 999)
+				alertify.error(data["wrongmsg"]);
+			else
+			{
+				alertify.success("修改成功");
+				if(data['available'] == 0)
+				{
+					$(obj).removeClass('blue');
+					$(obj).addClass('grey');
+					$(obj).text('隐藏=>显示')
+				}
+				else
+				{
+					$(obj).removeClass('grey');
+					$(obj).addClass('blue');
+					$(obj).text('显示=>隐藏')
+				}
+			}
+		},
+		"json");
 }
 
 //

@@ -1,10 +1,12 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_changeinfo();
-	$(document).on('pjax:success', function() {
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
 		ondo_changeinfo();
+		pjaxflag = true;
 	})
+	if(!pjaxflag)
+		ondo_changeinfo();
 	
 })
 function ondo_changeinfo()

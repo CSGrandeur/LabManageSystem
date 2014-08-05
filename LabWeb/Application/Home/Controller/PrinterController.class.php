@@ -169,6 +169,7 @@ class PrinterController extends Controller {
 											->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
 											->join('LEFT JOIN lab_printaddition printaddition ON printaddition.uid = user.uid')
 											->where($map)
+				//							->group('user.uid')
 											->count();
 			
 		}

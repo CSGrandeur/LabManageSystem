@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-07-31 08:01:35
+-- Generation Time: 2014-08-05 18:46:09
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -54,7 +54,7 @@ INSERT INTO `lab_announcement` (`id`, `title`, `content`, `available`, `submitte
 (9, '1', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;噶恶&lt;strong&gt;搞&lt;/strong&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;eargagaregaega&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(75, 172, 198);&quot;&gt;&lt;strong&gt;gaeaer&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;br/&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', 1, '124611172', NULL, '2014-07-27 01:12:52', '2014-07-27 00:36:38'),
 (10, '阿发违法', '', 1, '124611172', '124611172', '2014-07-27 01:30:37', '2014-07-27 01:30:37'),
 (11, 'fawe福娃福娃额', '&lt;p&gt;法俄无法&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 01:30:42', '2014-07-27 01:30:42'),
-(12, '福娃额', '&lt;p&gt;分啊无法违法&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 01:30:50', '2014-07-27 01:30:50'),
+(12, '福娃额', '&lt;p&gt;		&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;测试&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 01:30:50', '2014-08-04 16:56:26'),
 (13, '132', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;&lt;embed type=&quot;application/x-shockwave-flash&quot; class=&quot;edui-faked-music&quot; pluginspage=&quot;http://www.macromedia.com/go/getflashplayer&quot; src=&quot;http://box.baidu.com/widget/flash/bdspacesong.swf?from=tiebasongwidget&amp;url=&amp;name=%E5%A4%9C%E7%A9%BA%E4%B8%AD%E6%9C%80%E4%BA%AE%E7%9A%84%E6%98%9F&amp;artist=%E5%BC%A0%E6%81%92%E8%BF%9C&amp;extra=%E4%B8%AD%E5%9B%BD%E5%A5%BD%E5%A3%B0%E9%9F%B3%E7%AC%AC%E4%BA%8C%E5%AD%A3%20%E5%B7%85%E5%B3%B0%E4%B9%8B%E5%A4%9C&amp;autoPlay=false&amp;loop=true&quot; width=&quot;400&quot; height=&quot;95&quot; align=&quot;none&quot; wmode=&quot;transparent&quot; play=&quot;true&quot; loop=&quot;false&quot; menu=&quot;false&quot; allowscriptaccess=&quot;never&quot; allowfullscreen=&quot;true&quot;/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', 1, '124611172', '124611172', '2014-07-27 11:15:28', '2014-07-27 18:17:08');
 
 -- --------------------------------------------------------
@@ -110,24 +110,14 @@ CREATE TABLE IF NOT EXISTS `lab_printaddition` (
   `available` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0无效，1有效',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- 转存表中的数据 `lab_printaddition`
 --
 
 INSERT INTO `lab_printaddition` (`id`, `uid`, `addnum`, `month`, `available`) VALUES
-(1, '124611172', 0, '1970-01-01', 1),
-(2, '124611172', 0, '1970-01-01', 1),
-(3, '124611172', 1, '1970-01-01', 1),
-(4, '124611172', 21, '1970-01-01', 1),
-(5, '124611172', 31, '1970-01-01', 1),
-(6, '124611172', 2, '2014-07-01', 1),
-(7, '124611172', 3131, '2014-07-01', 1),
-(8, '124611172', 41412, '2014-07-01', 1),
-(9, '124611172', 31, '2014-07-01', 1),
-(10, '124611172', 313, '2014-07-01', 1),
-(11, '124611172', 121, '2014-07-01', 1);
+(1, '134612274', 12, '2014-08-01', 1);
 
 -- --------------------------------------------------------
 
@@ -148,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `lab_printarrange` (
 --
 
 INSERT INTO `lab_printarrange` (`id`, `uid`, `paperlimit`) VALUES
-(1, '124611172', 1);
+(1, '134612274', 5);
 
 -- --------------------------------------------------------
 
@@ -162,14 +152,7 @@ CREATE TABLE IF NOT EXISTS `lab_printcount` (
   `papersum` int(11) NOT NULL DEFAULT '0',
   `month` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
---
--- 转存表中的数据 `lab_printcount`
---
-
-INSERT INTO `lab_printcount` (`id`, `uid`, `papersum`, `month`) VALUES
-(4, 'CSGrandeur', 1, '2014-07-01');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -188,22 +171,7 @@ CREATE TABLE IF NOT EXISTS `lab_printrecord` (
   `infohash` varchar(50) NOT NULL,
   `result` tinyint(1) DEFAULT '0' COMMENT '该打印记录返回的内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
-
---
--- 转存表中的数据 `lab_printrecord`
---
-
-INSERT INTO `lab_printrecord` (`id`, `uid`, `papernum`, `jobname`, `identifier`, `submittime`, `updatetime`, `infohash`, `result`) VALUES
-(9, 'CSGrandeur', 0, 'Print System Document', 3, '2014-07-22 01:26:09', '2014-07-22 09:26:09', '9b33a2866d33857ba2b6a1fa78a26e15', NULL),
-(10, 'CSGrandeur', 1, 'Print System Document', 4, '2014-07-22 01:26:16', '2014-07-22 09:26:16', '460c8f4f2b31c752b15cde40d5b28267', NULL),
-(11, 'CSGrandeur', 0, 'Print System Document', 5, '2014-07-22 01:26:20', '2014-07-22 09:26:20', 'e11666807711801b43bb83ff7c45e575', NULL),
-(12, 'CSGrandeur', 1, 'Print System Document', 6, '2014-07-22 01:26:26', '2014-07-22 09:26:26', 'c93667f27e6a3cd54a8084c4caa3b292', NULL),
-(13, 'CSGrandeur', 1, 'Print System Document', 7, '2014-07-22 01:26:31', '2014-07-22 09:26:31', '56303c1f95702076abb87583a365a680', NULL),
-(14, 'CSGrandeur', 1, 'Print System Document', 14, '2014-07-22 01:35:51', '2014-07-22 09:35:51', '3cc134f06a815297b4829f1dd0b5b102', 0),
-(15, 'CSGrandeur', 1, 'Print System Document', 15, '2014-07-22 01:36:10', '2014-07-22 09:36:10', 'eb59937429e1f2f3d4e9b4cfb7edba36', 0),
-(16, 'CSGrandeur', 1, 'Print System Document', 16, '2014-07-22 01:36:22', '2014-07-22 09:36:23', '0e24a5a85f0c4ec39dadd0aec3eb6c8e', 1),
-(17, 'CSGrandeur', 1, 'Print System Document', 17, '2014-07-22 01:37:34', '2014-07-22 09:37:34', '22b3b1e647b6244f302e5ad91c85a29d', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -229,6 +197,116 @@ INSERT INTO `lab_privilege` (`id`, `uid`, `privi`, `kind`) VALUES
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `lab_report`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_report` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(30) NOT NULL COMMENT '学号/编号/帐号',
+  `kind` tinyint(1) DEFAULT '71' COMMENT '71科研进展，72文献阅读，73项目开发，74知识学习，75综合报告，76其他',
+  `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `content` text,
+  `submittime` datetime DEFAULT NULL,
+  `updatetime` datetime DEFAULT NULL,
+  `available` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id`,`uid`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- 转存表中的数据 `lab_report`
+--
+
+INSERT INTO `lab_report` (`id`, `uid`, `kind`, `title`, `content`, `submittime`, `updatetime`, `available`) VALUES
+(1, '124611172', 71, '1233131', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;gerg&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;gs&lt;span style=&quot;font-size: 24px;&quot;&gt;&lt;strong&gt;er&lt;/strong&gt;&lt;/span&gt;gre&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', '2014-08-14 22:22:44', '2014-08-06 00:25:45', 1),
+(2, '124611172', 71, '1', '&lt;p&gt;131&lt;/p&gt;', '2014-08-06 00:36:28', '2014-08-06 00:36:28', 1),
+(3, '124611172', 71, '1', '&lt;p&gt;131&lt;/p&gt;', '2014-08-06 00:36:41', '2014-08-06 00:36:41', 1),
+(4, '124611172', 71, '1', '&lt;p&gt;131&lt;/p&gt;', '2014-08-06 00:37:18', '2014-08-06 00:37:18', 1),
+(5, '124611172', 71, '313', '&lt;p&gt;131&lt;/p&gt;', '2014-08-06 00:37:27', '2014-08-06 00:37:27', 1),
+(6, '124611172', 71, '3131', '&lt;p&gt;31&lt;/p&gt;', '2014-08-06 00:37:51', '2014-08-06 00:37:51', 1),
+(7, '124611172', 72, '31', '&lt;p&gt;rwer&lt;/p&gt;', '2014-08-06 00:40:22', '2014-08-06 00:45:05', 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `lab_report_discuss`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_report_discuss` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(30) NOT NULL COMMENT '学号/编号/帐号',
+  `content` text,
+  `submittime` datetime DEFAULT NULL,
+  `reportid` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`uid`),
+  KEY `reportid` (`reportid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `lab_statistic`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_statistic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `des` text,
+  `items` text COMMENT 'json格式的内容',
+  `available` tinyint(1) DEFAULT '0',
+  `submitter` varchar(30) DEFAULT NULL COMMENT 'uid,提交该内容的管理员',
+  `submittime` datetime DEFAULT NULL,
+  `starttime` datetime DEFAULT NULL,
+  `endtime` datetime DEFAULT NULL,
+  `allow_anonymous` tinyint(1) DEFAULT '0' COMMENT '为0只有登录系统才能填表，为1允许任何游客填表',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+
+--
+-- 转存表中的数据 `lab_statistic`
+--
+
+INSERT INTO `lab_statistic` (`id`, `title`, `des`, `items`, `available`, `submitter`, `submittime`, `starttime`, `endtime`, `allow_anonymous`) VALUES
+(1, 'test', NULL, '[""]', 0, '124611172', '2014-08-04 22:12:36', '2014-08-04 22:12:32', '2014-08-04 22:12:32', 0),
+(2, 'test', NULL, '[""]', 0, '124611172', '2014-08-04 22:12:53', '2014-08-04 22:12:32', '2014-08-04 22:12:32', 0),
+(3, 'test', NULL, '["123"]', 0, '124611172', '2014-08-04 22:13:36', '2014-08-04 22:13:33', '2014-08-04 22:13:33', 0),
+(4, 'test', NULL, '["123","456","777"]', 0, '124611172', '2014-08-04 22:13:45', '2014-08-04 22:13:33', '2014-08-04 22:13:33', 0),
+(5, 'test', NULL, '["121","3131","1313","13","13"]', 0, '124611172', '2014-08-04 22:22:06', '2014-08-04 22:21:59', '2014-08-04 22:21:59', 0),
+(6, 'test213', NULL, '["121","3131","1313","13","13"]', 0, '124611172', '2014-08-04 22:51:00', '2014-08-04 22:21:59', '2014-08-04 22:21:59', 0),
+(7, '123', NULL, '["121","3131","1313","13","13"]', 0, '124611172', '2014-08-04 22:54:42', '2015-02-06 08:12:00', '2018-01-01 08:00:00', 0),
+(8, '', NULL, '[""]', 0, '124611172', '2014-08-04 22:55:20', '2014-08-04 22:55:08', '2015-08-04 22:55:08', 0),
+(9, '123', '&lt;p&gt;		&lt;/p&gt;&lt;h1&gt;223131&lt;/h1&gt;&lt;p&gt;13131313&lt;br/&gt;&lt;/p&gt;&lt;h1&gt;&lt;span style=&quot;font-family: 隶书, SimLi;&quot;&gt;21&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;	&lt;/p&gt;', '["123"]', 0, '124611172', '2014-08-05 10:19:13', '2014-08-05 10:13:13', '2014-08-05 10:13:13', 0),
+(10, '', '', '[""]', 0, '124611172', '2014-08-05 10:50:04', '2014-08-05 10:46:20', '2014-08-05 10:46:20', 0),
+(11, '', '', '[""]', 0, '124611172', '2014-08-05 10:50:39', '2014-08-05 10:50:37', '2014-08-05 10:50:37', 0),
+(12, '', '&lt;p&gt;1313&lt;/p&gt;', '["1313"]', 0, '124611172', '2014-08-05 10:50:55', '2014-08-05 10:50:37', '2014-08-05 10:50:37', 0),
+(13, '', '&lt;p&gt;1313&lt;/p&gt;', '["1313"]', 0, '124611172', '2014-08-05 10:51:09', '2014-08-05 10:50:37', '2014-08-05 10:50:37', 0),
+(14, '3131', '', '["3131"]', 0, '124611172', '2014-08-05 11:07:51', '2001-08-05 10:57:16', '2015-08-05 10:57:16', 0),
+(15, '学号姓名统计', '&lt;p&gt;		&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;本系统用于实验室日常工作，目前有实验室通知，打印机纸张管理，进展报告提交与批示评论，计算机运行状况实时监测等功能，以后还会加入更多方便大家学习和工作的功能，有好的意见和建议也可以提出来。&lt;br/&gt;&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p style=&quot;white-space: normal;&quot;&gt;为合理使用本系统，需要给大家每人一个可登录的帐号。用学号登录是最合适的了，这里统计一下大家的学号和姓名，方便批量导入系统。&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;	&lt;/p&gt;', '["\\u5b66\\u53f7","\\u59d3\\u540d"]', 1, '124611172', '2014-08-05 13:51:16', '2014-08-05 11:23:31', '2014-08-20 11:23:31', 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `lab_statisticdo`
+--
+
+CREATE TABLE IF NOT EXISTS `lab_statisticdo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `statisticid` int(11) DEFAULT NULL,
+  `uid` varchar(30) DEFAULT '' COMMENT '学号/编号/帐号',
+  `items` text COMMENT 'json格式的内容',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
+
+--
+-- 转存表中的数据 `lab_statisticdo`
+--
+
+INSERT INTO `lab_statisticdo` (`id`, `statisticid`, `uid`, `items`) VALUES
+(41, 15, NULL, '["124612265","\\u5434\\u5c1a"]');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `lab_user`
 --
 
@@ -241,14 +319,15 @@ CREATE TABLE IF NOT EXISTS `lab_user` (
   `graduate` tinyint(1) DEFAULT '61' COMMENT '是否毕业离校。61在校，62离校',
   PRIMARY KEY (`id`,`uid`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
 
 --
 -- 转存表中的数据 `lab_user`
 --
 
 INSERT INTO `lab_user` (`id`, `uid`, `passwd`, `name`, `kind`, `graduate`) VALUES
-(35, '124611172', '96e79218965eb72c92a549dd5a330112', '郭云镝', 41, 61);
+(35, '124611172', '96e79218965eb72c92a549dd5a330112', '郭云镝', 41, 61),
+(36, '134612274', 'beb30d3aa02fa666608ae97a82d055d0', '谢娜', 41, 61);
 
 -- --------------------------------------------------------
 
@@ -276,14 +355,15 @@ CREATE TABLE IF NOT EXISTS `lab_userdetail` (
   `teacherid` varchar(20) NOT NULL COMMENT '小导师',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `lab_userdetail`
 --
 
 INSERT INTO `lab_userdetail` (`id`, `uid`, `sex`, `phone`, `email`, `degree`, `grade`, `birthday`, `idcard`, `nation`, `political`, `institute`, `major`, `supervisor`, `teacher`, `supervisorid`, `teacherid`) VALUES
-(4, '124611172', 51, '1212', '313', 10, '551', '1985-06-13', '2', '汉', '团员', 201, 401, '郭云镝', '郭云镝', '#', '124611172');
+(4, '124611172', 51, '1212', '313', 21, '551', '1985-06-13', '2', '汉', '团员', 201, 401, 'test', 'test', '#', '#'),
+(5, '134612274', 52, '', '', 11, '120', '0000-00-00', '123', '', '', 201, 401, '', '', '', '');
 
 --
 -- 限制导出的表
@@ -312,6 +392,12 @@ ALTER TABLE `lab_printaddition`
 --
 ALTER TABLE `lab_printarrange`
   ADD CONSTRAINT `lab_printarrange_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `lab_user` (`uid`) ON DELETE CASCADE;
+
+--
+-- 限制表 `lab_report_discuss`
+--
+ALTER TABLE `lab_report_discuss`
+  ADD CONSTRAINT `lab_report_discuss_ibfk_1` FOREIGN KEY (`reportid`) REFERENCES `lab_report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 限制表 `lab_userdetail`

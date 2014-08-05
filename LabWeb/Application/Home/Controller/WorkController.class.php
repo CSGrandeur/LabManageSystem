@@ -13,7 +13,6 @@ class WorkController extends Controller {
 	}
 	public function statistic_ajax()
 	{
-
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$STR_LIST = C('STR_LIST');
@@ -228,7 +227,6 @@ class WorkController extends Controller {
 						$data['wrongcode'] = $WRONG_CODE['sql_error'];
 					else
 						$data['wrongcode'] = $WRONG_CODE['add_successful'];
-			file_put_contents("loog.txt", print_r($Statisticdo->_sql(), true));
 				}
 			}
 		}
@@ -314,5 +312,426 @@ class WorkController extends Controller {
         	$this->display('Public:alert');
         else
         	$this->display();
+	}
+	//查看报告时间和数量的用户列表
+	public function reports()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(session('?lab_uid'))
+		{
+			$data['uid'] = session('lab_uid');
+			$data['loggedin'] = true;
+		}
+		else
+			$data['loggedin'] = false;
+		$this->assign($data);
+		$this->display();
+	}
+	public function reports_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			if($d_length > 100) $d_length = 100;
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'uid'; break;
+				case 1: $d_ordercol = 'name'; break;
+				case 2: $d_ordercol = 'kind'; break;
+				case 3: $d_ordercol = 'latest'; break;
+				case 4: $d_ordercol = 'twoweek'; break;
+				case 5: $d_ordercol = 'onemonth'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+					'user.uid' => array('like', '%'.$d_searchvalue.'%'),
+					'user.name' => array('like', '%'.$d_searchvalue.'%'),
+					'_logic' => 'or'
+			);
+			$map = array(
+				'_complex' => $map,
+    			'user.graduate' => 61//只查看在校学生
+			);
+			$User = M('user');
+					
+			$userlist = $User->table('lab_user user')
+							->join('LEFT JOIN lab_report latesttime ON user.uid = latesttime.uid')
+							->join('LEFT JOIN lab_report twoweeksum ON user.uid = twoweeksum.uid AND twoweeksum.submittime > \''.date("Y-m-d H:i:s",strtotime("-2 week")).'\'')
+							->join('LEFT JOIN lab_report onemonthsum ON user.uid = onemonthsum.uid AND onemonthsum.submittime > \''.date("Y-m-d H:i:s",strtotime("-1 month")).'\'')
+							->field('
+									user.uid uid,
+									user.name name,
+									user.kind kind,
+									MAX(latesttime.submittime) latest,
+									COUNT(twoweeksum.id) twoweek,
+									COUNT(onemonthsum.id) onemonth
+									')
+							->where($map)
+							->group('uid')
+							->order(array($d_ordercol=>$d_orderdir))
+							->limit($d_start, $d_length)
+							->select();
+			if($userlist != null && $userlist[0]['uid'] != null)
+			{
+				for($i = count($userlist) - 1; $i >= 0; $i --)
+				{
+					$userlist[$i]['name'] = '<a data-pjax href="/home/work/reportlist?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['name'].'</a>';
+					$userlist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
+					$userlist[$i]['kind'] = $STR_LIST[$userlist[$i]['kind']];
+					if($userlist[$i]['twoweek'] > 0) 
+						$userlist[$i]['twoweek'] = '<a class="ui red circular label">'.$userlist[$i]['twoweek'].'</a>';
+					if($userlist[$i]['onemonth'] > 0) 
+						$userlist[$i]['onemonth'] = '<a class="ui red circular label">'.$userlist[$i]['onemonth'].'</a>';
+				}
+			}
+			else
+				$userlist = false;
+			$data['data'] = $userlist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $User->count();
+			$data['recordsFiltered'] = $User->table('lab_user user')
+											->join('LEFT JOIN lab_report latesttime ON user.uid = latesttime.uid')
+											->join('LEFT JOIN lab_report twoweeksum ON user.uid = twoweeksum.uid AND twoweeksum.submittime > \''.date("Y-m-d H:i:s",strtotime("-2 week")).'\'')
+											->join('LEFT JOIN lab_report onemonthsum ON user.uid = onemonthsum.uid AND onemonthsum.submittime > \''.date("Y-m-d H:i:s",strtotime("-1 month")).'\'')
+											->where($map)
+						//					->group('user.uid')
+											->count();	
+		}
+		
+		$this->ajaxReturn($data);
+	}
+	
+
+	//某用户的报告列表
+	public function reportlist()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$data['uid'] = trim(I('param.uid'));
+		if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else 
+		{
+			$uid = trim(I('param.uid'));
+			$userinfo = GetUserinfo($uid);
+			if($userinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			else 
+				$data['userinfo'] = $userinfo;
+		}
+
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	public function reportlist_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$reqdata = I('param.');
+			$uid = trim($reqdata['uid']);
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			if($d_length > 100) $d_length = 100;
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'id'; break;
+				case 1: $d_ordercol = 'kind'; break;
+				case 2: $d_ordercol = 'title'; break;
+				case 3: $d_ordercol = 'submittime'; break;
+				case 4: $d_ordercol = 'updatetime'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+				'title' => array('like', '%'.$d_searchvalue.'%'),
+				'uid' => $uid
+			);
+			if(session('lab_uid') != $uid && !IsAdmin())//不是管理员，也不是用户本人，则不现实用户自己隐藏的报告
+			{
+				$map = array(
+					'_complex' => $map,
+					'available' => array('neq', 0)
+				);
+			}
+			$Report = M('report');
+			$reportlist = $Report->where($map)
+								->order(array($d_ordercol=>$d_orderdir))
+								->limit($d_start, $d_length)
+								->select();
+			if($reportlist != null && $reportlist[0]['id'] != null)
+			{
+				for($i = count($reportlist) - 1; $i >= 0; $i --)
+				{
+					if(strlen($reportlist[$i]['title']) == 0) $reportlist[$i]['title'] = '#';
+					$reportlist[$i]['title'] = '<a data-pjax href="/home/work/report?id='.$reportlist[$i]['id'].'">'.$reportlist[$i]['title'].'</a>';
+					$reportlist[$i]['kind'] = $STR_LIST[$reportlist[$i]['kind']];
+				}
+			}
+			else
+				$reportlist = false;
+				$data['data'] = $reportlist;
+				$data['draw'] = $d_draw;
+				$data['recordsTotal'] = $Report->count();
+				$data['recordsFiltered'] = $Report->where($map)->count();
+	
+		}
+		$this->ajaxReturn($data);
+	}
+	//报告内容及评论
+	private function report_data()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$id = intval(trim(I('param.id')));
+			$Report = M('report');
+			$reportinfo = $Report->where('id='.$id)->find();
+			if($reportinfo == null)
+			{
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+				return $data;
+			}
+			if($reportinfo['available'] == 0 && !IsAdmin() && session('lab_uid') != $reportinfo['uid'])
+			{
+				$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+				return $data;
+			}
+			$data['user_self'] = session('lab_uid') == $reportinfo['uid'];
+			$data['reportinfo'] = $reportinfo;
+			$userinfo = GetUserinfo($reportinfo['uid']);
+			if($userinfo == null)
+			{
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+				return $data;
+			}
+			$data['userinfo'] = $userinfo;
+			$Report_discuss = M('report_discuss');
+			$report_discusslist = $Report_discuss->where('reportid='.$id)
+												->order(array('submittime' => 'desc'))
+												->select();
+			$data['report_discusslist'] = $report_discusslist;
+		}
+		return $data;
+	}
+	//报告显示页
+	public function report()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data = $this->report_data();
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	//报告是否可见处理逻辑，只有报告提交者本人有权限处理
+	public function change_report_available_ajax()
+	{
+
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Report = M('report');
+			$map = array(
+				'id' => intval(I('param.id'))
+			);
+			$reportinfo = $Report->where($map)->field('uid, available')->find();
+			if($reportinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else
+			{
+				if($reportinfo['uid'] != session('lab_uid'))
+					$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+				else 
+				{
+					if($reportinfo['available'] == 0)
+						$reportinfo['available'] = 1;
+					else
+						$reportinfo['available'] = 0;
+					$data['available'] = $reportinfo['available'];
+					if($Report->where($map)->save($reportinfo) == false)
+						$data['wrongcode'] = $WRONG_CODE['sql_error'];
+				}
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+
+	//预填写已有的报告内容方便编辑
+	private function report_edit_data()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$id = intval(trim(I('param.id')));
+			$Report = M('report');
+			$reportinfo = $Report->where('id='.$id)->find();
+			if($reportinfo == null)
+			{
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+				return $data;
+			}
+			if(session('lab_uid') != $reportinfo['uid'])
+			{
+				$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+				return $data;
+			}
+			$data['user_self'] = session('lab_uid') == $reportinfo['uid'];
+			$data['reportinfo'] = $reportinfo;
+			$data['strlist'] = $STR_LIST;
+		}
+		return $data;
+	}
+	//报告编辑页
+	public function report_edit()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data = $this->report_edit_data();
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	public function report_edit_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+
+		if(I('param.title', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Report = M('report');
+			$id = intval(trim(I('param.id')));
+			$reportinfo = $Report->where('id='.$id)->find();
+			if($reportinfo == null)
+			{
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			}
+			else if(session('lab_uid') != $reportinfo['uid'])
+			{
+				$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+			}
+			else 
+			{
+				$report_update = array(
+					'title' => trim(I('param.title')),
+					'kind' => intval(trim(I('param.kind'))),
+					'content' => trim(I('param.content')),
+					'updatetime' => date('Y-m-d H:i:s')
+				);
+				if($Report->where('id='.$id)->save($report_update) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+				else
+					$data['wrongcode'] = $WRONG_CODE['update_successful'];
+				$data['id'] = $id;
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	
+	
+
+	//报告编辑页
+	public function report_add()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	public function report_add_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!session('?lab_uid'))
+			$data['wrongcode'] = $WRONG_CODE['user_notloggin'];
+		else if(I('param.title', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$Report = M('report');
+			$report_add = array(
+					'uid' => session('lab_uid'),
+					'title' => trim(I('param.title')),
+					'kind' => intval(trim(I('param.kind'))),
+					'content' => trim(I('param.content')),
+					'submittime' => date('Y-m-d H:i:s'),
+					'updatetime' => date('Y-m-d H:i:s')
+			);
+			$newid = $Report->add($report_add);
+			if($newid == false)
+				$data['wrongcode'] = $WRONG_CODE['sql_error'];
+			else
+			{
+				$data['newid'] = $newid;
+				$data['wrongcode'] = $WRONG_CODE['add_successful'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
 	}
 }

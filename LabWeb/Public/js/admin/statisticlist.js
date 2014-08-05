@@ -1,11 +1,15 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_statisticlist();
-	$(document).on('pjax:success', function() {
-		ondo_statisticlist();
+	$(document).on('pjax:popstate', function() {
+		location.reload();
 	})
-	
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
+		ondo_statisticlist();
+		pjaxflag = true;
+	})
+	if(!pjaxflag)
+		ondo_statisticlist();
 })
 function ondo_statisticlist()
 {

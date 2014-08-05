@@ -5,20 +5,20 @@ $(document).ready(function ()
 	})
 	var pjaxflag = false;
 	$(document).on('pjax:end', function() {
-		ondo_admin_paperstate();
+		ondo_reportlist();
 		pjaxflag = true;
 	})
 	if(!pjaxflag)
-		ondo_admin_paperstate();
+		ondo_reportlist();
 })
-function ondo_admin_paperstate()
+function ondo_reportlist()
 {
-	if(!$.fn.dataTable.isDataTable($('#admin_paperstate_list')))
-		InitPaperStateTable();
+	if(!$.fn.dataTable.isDataTable($('#reportlist_list')))
+		InitReportlistTable();
 }
-function InitPaperStateTable()
+function InitReportlistTable()
 {
-	 $('#admin_paperstate_list').unbind("dataTable").dataTable( {
+	 $('#reportlist_list').unbind("dataTable").dataTable( {
 			"processing": true,
 			"serverSide": true,
 			stateSave: true,// restore table state on page reload
@@ -30,60 +30,44 @@ function InitPaperStateTable()
 				"thousands": "."
 			},
 			"ajax": {
-				"url": "/home/admin/paperstate_ajax/",
+				"url": "/home/work/reportlist_ajax/",
 				"type": "POST",
+				pages: 5, // number of pages to cache
 	            "data": function(d){
-	            	d.month = $('#admin_papaerstate_month').val();
+	            	d.uid = $('#reportlist_uid').val();
 	            },
-				pages: 5 // number of pages to cache
 			},
-		    "order": [ 0, 'asc' ],
+		    "order": [ 0, 'desc' ],
 			"columns": [
 						{ 
-							"data": "uid",
-							"width": "100px",
-							className: "center"
-						},
-						{
-							"data": "name",
-							"width": "100px",
-							className: "center"
-						},
-						{
-							"data": "sex",
+							"data": "id",
 							"width": "50px",
 							className: "center",
-							 "searchable": false
+							"searchable": false
 						},
 						{
-							"data": "grade",
-							"width": "50px",
+							"data": "kind",
+							"width": "100px",
 							className: "center",
+							"searchable": false
 						},
 						{
-							"data": "degree",
+							"data": "title",
+						},
+						{ 
+							"data": "submittime",
 							"width": "100px",
 							className: "center",
 							 "searchable": false
 						},
 						{
-							"data": "papersum",
+							"data": "updatetime",
 							"width": "100px",
 							className: "center",
 							 "searchable": false
-						},
-						{
-							"data": "paperlimit",
-							"width": "100px",
-							className: "center",
-							 "orderable": false,
-							 "searchable": false
-						},
+						}
 			]
 	 } );
-	 $('#admin_papaerstate_month').unbind('input propertychange').bind('input propertychange', function() {
-			$('#admin_paperstate_list').DataTable().ajax.reload();
-		});
 }
 
 //

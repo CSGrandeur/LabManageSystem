@@ -1,10 +1,12 @@
 $(document).ready(function ()
 {
-	ondo_managepaper();
-	$(document).on('pjax:success', function() {
+	var pjaxflag = false;
+	$(document).on('pjax:end', function() {
 		ondo_managepaper();
+		pjaxflag = true;
 	})
-	
+	if(!pjaxflag)
+		ondo_managepaper();
 })
 function ondo_managepaper()
 {
@@ -57,13 +59,13 @@ function change_paperadd_available(obj)
 				{
 					$(obj).removeClass('grey');
 					$(obj).addClass('blue');
-					$(obj).text('有效')
+					$(obj).text('有效');
 				}
 				else
 				{
 					$(obj).removeClass('blue');
 					$(obj).addClass('grey');
-					$(obj).text('无效')
+					$(obj).text('无效');
 				}
 			}
 		},

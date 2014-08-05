@@ -788,6 +788,7 @@ class AdminController extends Controller {
 										SUM(printaddition.addnum) addnum
 										')
 								->where($map)
+								->group('uid')
 								->order(array($d_ordercol=>$d_orderdir))
 								->limit($d_start, $d_length)
 								->select();
@@ -822,6 +823,7 @@ class AdminController extends Controller {
 											->join('LEFT JOIN lab_printarrange printarrange ON printarrange.uid = user.uid')
 											->join('LEFT JOIN lab_printaddition printaddition ON printaddition.uid = user.uid')
 											->where($map)
+							//				->group('user.uid')
 											->count();
 			
 		}
