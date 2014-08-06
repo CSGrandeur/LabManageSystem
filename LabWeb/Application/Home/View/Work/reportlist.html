@@ -1,3 +1,4 @@
+<div>
 <table class="ui celled table segment">
 	<thead>
 	<tr>
@@ -24,6 +25,22 @@
 		</tr>
 	</tbody>
 </table>
+</div>
+<?php
+	if($user_self)
+	{
+?>
+<br/>
+<div>
+	<a data-pjax href="/home/work/report_add">
+		<div class="ui medium green button">写一篇新的进展报告</div>
+	</a>
+</div>
+<br/>
+<?php
+	}
+?>
+<div>
 <input id='reportlist_uid' type='hidden' value='{$uid}'/>
 <table id="reportlist_list" class="display" cellspacing="0" width="100%">
 	<thead>
@@ -46,5 +63,5 @@
 		</tr>
 	</tfoot>
 </table>
-
+</div>
 <script src="__PUBLIC__/js/work/reportlist.js" type="text/javascript"></script>

@@ -2,12 +2,15 @@
 	if($loggedin)
 	{
 ?>
+<div>
 	<a data-pjax href="/home/work/report_add">
-		<div class="ui big green button">写一篇新的进展报告</div>
+		<div class="ui medium green button">写一篇新的进展报告</div>
 	</a>
 	<a data-pjax href="/home/work/reportlist?uid={$uid}">
-		<div class="ui big blue button">查看我的进展报告</div>
+		<div class="ui medium blue button">查看我的进展报告</div>
 	</a>
+</div>
+<br/>
 <?php
 	}
 ?>

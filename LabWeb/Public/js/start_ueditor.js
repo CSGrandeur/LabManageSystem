@@ -1,11 +1,12 @@
 $(document).ready(function ()
 {
-	//initialise datatables
-	ondo_ueditor();
+	var pjaxflag = false;
 	$(document).on('pjax:end', function() {
-		ondo_ueditor();
+		location.reload();
+		pjaxflag = true;
 	})
-	
+	if(!pjaxflag)
+		ondo_ueditor();
 })
 function ondo_ueditor()
 {

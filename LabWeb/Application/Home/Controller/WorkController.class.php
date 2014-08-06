@@ -371,8 +371,11 @@ class WorkController extends Controller {
 					
 			$userlist = $User->table('lab_user user')
 							->join('LEFT JOIN lab_report latesttime ON user.uid = latesttime.uid')
+							->group('uid')
 							->join('LEFT JOIN lab_report twoweeksum ON user.uid = twoweeksum.uid AND twoweeksum.submittime > \''.date("Y-m-d H:i:s",strtotime("-2 week")).'\'')
+							->group('uid')
 							->join('LEFT JOIN lab_report onemonthsum ON user.uid = onemonthsum.uid AND onemonthsum.submittime > \''.date("Y-m-d H:i:s",strtotime("-1 month")).'\'')
+							->group('uid')
 							->field('
 									user.uid uid,
 									user.name name,
@@ -382,10 +385,10 @@ class WorkController extends Controller {
 									COUNT(onemonthsum.id) onemonth
 									')
 							->where($map)
-							->group('uid')
 							->order(array($d_ordercol=>$d_orderdir))
 							->limit($d_start, $d_length)
 							->select();
+	file_put_contents("loog.txt", print_r($User->_sql(), true));
 			if($userlist != null && $userlist[0]['uid'] != null)
 			{
 				for($i = count($userlist) - 1; $i >= 0; $i --)
@@ -436,8 +439,8 @@ class WorkController extends Controller {
 				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
 			else 
 				$data['userinfo'] = $userinfo;
+			$data['user_self'] = session('lab_uid') == $uid;
 		}
-
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->assign($data);
 		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
@@ -695,6 +698,8 @@ class WorkController extends Controller {
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsLoggedin())
+			$data['wrongcode'] = $WRONG_CODE['user_notloggin'];
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->assign($data);
 		if($data['wrongcode'] != $WRONG_CODE['totally_right'])

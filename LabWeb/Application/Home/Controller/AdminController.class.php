@@ -282,6 +282,7 @@ class AdminController extends Controller {
 	{
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		if(I('param.draw', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
 		{
@@ -350,6 +351,7 @@ class AdminController extends Controller {
 		if($userlist == false) $userlist = array();
 		for($i = 0; $i < count($userlist); $i ++)
 		{
+			$userlist[$i]['sex'] = $STR_LIST[$userlist[$i]['sex']];
 			if($userlist[$i]['graduate'] == 61)
 				$userlist[$i]['graduate'] = '<a onclick="change_graduate(this)" class="ui tiny blue button change_graduate_button" name="'.$userlist[$i]['uid'].'">在校</a>';
 			if($userlist[$i]['graduate'] == 62)
