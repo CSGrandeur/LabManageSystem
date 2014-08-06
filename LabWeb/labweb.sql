@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2014-08-05 18:46:09
+-- Generation Time: 2014-08-06 13:26:39
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.11
 
@@ -295,14 +295,16 @@ CREATE TABLE IF NOT EXISTS `lab_statisticdo` (
   `uid` varchar(30) DEFAULT '' COMMENT '学号/编号/帐号',
   `items` text COMMENT 'json格式的内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
 
 --
 -- 转存表中的数据 `lab_statisticdo`
 --
 
 INSERT INTO `lab_statisticdo` (`id`, `statisticid`, `uid`, `items`) VALUES
-(41, 15, NULL, '["124612265","\\u5434\\u5c1a"]');
+(41, 15, NULL, '["124612265","\\u5434\\u5c1a"]'),
+(57, 15, NULL, '["134611130","\\u90d1\\u665a\\u79cb"]'),
+(58, 15, NULL, '["134612253","\\u5468\\u5176\\u4e9a"]');
 
 -- --------------------------------------------------------
 
@@ -319,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `lab_user` (
   `graduate` tinyint(1) DEFAULT '61' COMMENT '是否毕业离校。61在校，62离校',
   PRIMARY KEY (`id`,`uid`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
 
 --
 -- 转存表中的数据 `lab_user`
@@ -327,7 +329,10 @@ CREATE TABLE IF NOT EXISTS `lab_user` (
 
 INSERT INTO `lab_user` (`id`, `uid`, `passwd`, `name`, `kind`, `graduate`) VALUES
 (35, '124611172', '96e79218965eb72c92a549dd5a330112', '郭云镝', 41, 61),
-(36, '134612274', 'beb30d3aa02fa666608ae97a82d055d0', '谢娜', 41, 61);
+(36, '134612274', 'beb30d3aa02fa666608ae97a82d055d0', '谢娜', 41, 61),
+(37, '124612265', '24d85bd9d80e4ae8c5f07ccc02edae5b', '吴尚', 41, 61),
+(38, '134611130', 'd6566e905dfcc11798eda777aa586803', '郑晚秋', 41, 61),
+(39, '134612253', '91e4d3fe89f043a2d0b4d887709c5f04', '周其亚', 41, 61);
 
 -- --------------------------------------------------------
 
