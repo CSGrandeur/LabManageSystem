@@ -363,10 +363,16 @@ class WorkController extends Controller {
 					'user.name' => array('like', '%'.$d_searchvalue.'%'),
 					'_logic' => 'or'
 			);
-			$map = array(
-				'_complex' => $map,
-    			'user.graduate' => 61//只查看在校学生
-			);
+			if(!IsAdmin())//如果不是管理员，则不统计被隐藏的报告
+			{
+				$map = array(
+					'_complex' => $map,
+	//    			'user.graduate' => 61//只查看在校学生
+					'latesttime.available' => array('neq', 0),
+					'twoweeksum.available' => array('neq', 0),
+					'onemonthsum.available' => array('neq', 0),
+				);
+			}
 			$User = M('user');
 					
 			$userlist = $User->table('lab_user user')
@@ -388,7 +394,6 @@ class WorkController extends Controller {
 							->order(array($d_ordercol=>$d_orderdir))
 							->limit($d_start, $d_length)
 							->select();
-	file_put_contents("loog.txt", print_r($User->_sql(), true));
 			if($userlist != null && $userlist[0]['uid'] != null)
 			{
 				for($i = count($userlist) - 1; $i >= 0; $i --)
