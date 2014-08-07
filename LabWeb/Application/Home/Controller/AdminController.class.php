@@ -1264,4 +1264,118 @@ class AdminController extends Controller {
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
+	public function checkingin_register()
+	{
+		if(!IsPjax()) layout('Layout/adminlayout');//判断pjax确定是否加载layout
+		if(!IsAdmin())
+		{
+			$this->display('Admin:notadmin');
+			return;
+		}
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$this->display();
+	}
+	//公告列表数据获取
+	public function checkingin_register_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+		{
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		}
+		else if(!IsAdmin())
+		{
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		}
+		else 
+		{
+
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			if($d_length > 100) $d_length = 100;
+				
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'id'; break;
+				case 2: $d_ordercol = 'clientIP'; break;
+				case 3: $d_ordercol = 'uid'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+				'clientIP' => array('like', '%'.$d_searchvalue.'%'),
+				'uid' => array('like', '%'.$d_searchvalue.'%')
+			);
+			$Name2onlyname = M('name2onlyname');
+			$name2onlynamelist = $Name2onlyname->where($map)
+											->order(array($d_ordercol=>$d_orderdir))
+											->limit($d_start, $d_length)
+											->select();
+			
+			if($name2onlynamelist != false)
+			{
+				for($i = count($name2onlynamelist) - 1; $i >= 0; $i --)
+				{
+					$name2onlynamelist[$i]["uid"] = "<div class='ui input focus'><input type='text' placeholder='用户ID，#表空白...' id='checkinginuser_".$name2onlynamelist[$i]["id"]."' name='".$name2onlynamelist[$i]["id"]."' value='".$name2onlynamelist[$i]["uid"]."'/></div>";
+					$name2onlynamelist[$i]['setbtn'] = "<a onclick='SetCheckinginUid(this)' class='ui tiny blue button' name='".$name2onlynamelist[$i]["id"]."'>设定</a>";
+				}
+			}
+			else 
+				$name2onlynamelist = null;
+			$data['data'] = $name2onlynamelist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $Name2onlyname->count();
+			$data['recordsFiltered'] = $Name2onlyname->where($map)->count();
+		}
+		
+		$this->ajaxReturn($data);
+	}
+	//设定CheckingIn对应onlyname的uid处理逻辑
+	public function change_checkingin_uid_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$User = M('user');
+			$id = intval(trim(I('param.id')));
+			$uid = trim(I('param.uid'));
+			if($uid != '#')
+			{
+				$map = array(
+					'uid' => $uid
+				);
+				$userinfo = $User->where($map)->find();
+				if($userinfo == null)
+					$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			}
+			if($data['wrongcode'] == $WRONG_CODE['totally_right'])
+			{
+				$Name2onlyname = M('name2onlyname');
+				$uid_update = array(
+					'uid' => $uid
+				);
+				if($Name2onlyname->where('id='.$id)->save($uid_update) == false)
+					$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+				else 
+					$data['wrongcode'] = $WRONG_CODE['update_successful'];
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
 }

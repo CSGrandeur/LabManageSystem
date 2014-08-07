@@ -16,7 +16,7 @@ namespace CheckingInClient
 {
     public partial class CheckingInSystem : Form
     {
-        HTTPSend httpsend = new HTTPSend();//数据发送模块
+        HttpSend httpsend = new HttpSend();//数据发送模块
         private static Mutex mousemut = new Mutex();//访问共享资源互斥锁,鼠标参数
         private static Mutex keymut = new Mutex();//访问共享资源互斥锁,键盘参数
         Encrypt encrypt = new Encrypt();//加密类
@@ -187,10 +187,10 @@ namespace CheckingInClient
                 getinfo = httpsend.HttpGet(ConstVal.send_url, "info=" + encrypt.Base64Encode(info.ToHttpGetStr()));
 
 
-                //using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:\\log.txt", true))
-                //{
-                //    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\n") + getinfo + "\n");
-                //}
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:\\log.txt", true))
+                {
+                    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\n") + encrypt.Base64Encode(info.ToHttpGetStr()) + "\n");
+                }
             }
             //throw new NotImplementedException();
         }

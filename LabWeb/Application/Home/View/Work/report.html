@@ -39,7 +39,7 @@
 	 			if($user_self)
 			{
 	 		?>
-		 		<a data-pjax href="/home/work/report_edit?id={$reportinfo[id]}">
+		 		<a href="/home/work/report_edit?id={$reportinfo[id]}">
 			<div class="ui tiny green button" name="{$reportinfo[id]}">修改</div>
 			</a>
 			<?php
@@ -109,7 +109,7 @@
 				<div class="comment">
 					<div class="content ui dimmable dimmed">
 					<div class="ui simple dimmer" <?php if($report_discusslist[$i]['available'] != 0){ ?> style="display: none;" <?php } ?> ></div>
-						<a href="/home/user/userinfo?uid='{$report_discusslist[$i]['uid']}' class="author">{$report_discusslist[$i]['uid']}</a> -
+						<a target="_blank" href="/home/user/userinfo?uid={$report_discusslist[$i]['uid']}" class="author">{$report_discusslist[$i]['uid']}</a> -
 						<a class="author">{$report_discusslist[$i]['name']}</a>
 						<div class="metadata">
 							<span class="date">{$report_discusslist[$i]['submittime']}</span>

@@ -810,7 +810,7 @@ class WorkController extends Controller {
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
-	//修改评论是否显示
+	//修改评论的显示状态
 	public function change_discuss_available_ajax()
 	{
 		$WRONG_CODE = C('WRONG_CODE');

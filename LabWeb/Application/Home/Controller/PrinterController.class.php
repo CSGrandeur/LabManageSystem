@@ -2,7 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 class PrinterController extends Controller {
-	function receive_return()
+	private function receive_return()
 	{//返回非0，表示允许打印。只有准确判断纸张数超出规定时候返回0，禁止打印。
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
@@ -15,7 +15,10 @@ class PrinterController extends Controller {
 			{
 				$info['infohash'] = md5(I('param.info'));
 				$Printrecord = M('printrecord');
-				$printrecordinfo = $Printrecord->where('infohash='.$info['infohash'])->find();
+				$map = array(
+					'infohash' => $info['infohash']
+				);
+				$printrecordinfo = $Printrecord->where($map)->find();
 				if($printrecordinfo != null)
 					return $printrecordinfo['result'];
 				else 

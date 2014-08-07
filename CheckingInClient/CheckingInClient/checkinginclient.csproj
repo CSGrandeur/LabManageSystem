@@ -75,7 +75,7 @@
       <DependentUpon>CheckingInSystem.cs</DependentUpon>
     </Compile>
     <Compile Include="ConstVal.cs" />
-    <Compile Include="HTTPSend.cs" />
+    <Compile Include="HttpSend.cs" />
     <Compile Include="InfoToSend.cs" />
     <Compile Include="KeyBoardHook.cs" />
     <Compile Include="MemoryInfo.cs">
