@@ -125,3 +125,15 @@ a{text-decoration:none}
 {
 	overflow-x:scroll;
 }
+.report_div
+{
+	width:1000px;
+	display:block;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+.y_scroll
+{
+	height:600px;
+	overflow-y:scroll;
+}

@@ -342,8 +342,8 @@ class WorkController extends Controller {
 		{
 			$reqdata = I('param.');
 			$d_draw = intval($reqdata['draw']);
-			$d_start = intval($reqdata['start']);
-			$d_length = intval($reqdata['length']);
+			$d_start = mysql_real_escape_string(intval($reqdata['start']));
+			$d_length = mysql_real_escape_string(intval($reqdata['length']));
 			if($d_length > 100) $d_length = 100;
 			$d_ordercol = "";
 			switch($reqdata['order'][0]['column'])
@@ -355,42 +355,34 @@ class WorkController extends Controller {
 				case 4: $d_ordercol = 'twoweek'; break;
 				case 5: $d_ordercol = 'onemonth'; break;
 			}
-			$d_orderdir = $reqdata['order'][0]['dir'];
-			$d_searchvalue = $reqdata['search']['value'];
+			$d_ordercol = mysql_real_escape_string($d_ordercol);
+			$d_orderdir = mysql_real_escape_string($reqdata['order'][0]['dir']);
+			$d_searchvalue = mysql_real_escape_string($reqdata['search']['value']);
 			$d_searchregex = $reqdata['search']['regex'];
 			$map = array(
 					'user.uid' => array('like', '%'.$d_searchvalue.'%'),
 					'user.name' => array('like', '%'.$d_searchvalue.'%'),
 					'_logic' => 'or'
 			);
-			if(!IsAdmin())//如果不是管理员，则不统计被隐藏的报告
-			{
-				$map = array(
-					'_complex' => $map,
-	//    			'user.graduate' => 61//只查看在校学生
-					'latesttime.available' => array('neq', 0),
-					'twoweeksum.available' => array('neq', 0),
-					'onemonthsum.available' => array('neq', 0),
-				);
-			}
+			$map = array(
+				'_complex' => $map,
+    			'user.graduate' => 61,//只查看在校的
+				'latesttime.available' => array('neq', 0),
+				'twoweeksum.available' => array('neq', 0),
+				'onemonthsum.available' => array('neq', 0),
+			);
 			$User = M('user');
 					
-			$userlist = $User->table('lab_user user')
-							->join('LEFT JOIN lab_report latesttime ON user.uid = latesttime.uid')
-							->join('LEFT JOIN lab_report twoweeksum ON user.uid = twoweeksum.uid AND twoweeksum.submittime > \''.date("Y-m-d H:i:s",strtotime("-2 week")).'\'')
-							->join('LEFT JOIN lab_report onemonthsum ON user.uid = onemonthsum.uid AND onemonthsum.submittime > \''.date("Y-m-d H:i:s",strtotime("-1 month")).'\'')
-							->field('
-									user.uid uid,
-									user.name name,
-									user.kind kind,
-									MAX(latesttime.submittime) latest,
-									COUNT(twoweeksum.id) twoweek,
-									COUNT(onemonthsum.id) onemonth
-									')
-							->where($map)
-							->order(array($d_ordercol=>$d_orderdir))
-							->limit($d_start, $d_length)
-							->select();
+			$userlist = $User->query("
+									SELECT user.uid uid,user.name name,user.kind kind, latesttable.latest latest, twoweektable.twoweek twoweek, onmonthtable.onemonth onemonth 
+									FROM `lab_user` AS user
+									LEFT JOIN (SELECT MAX(`submittime`) AS latest, `uid` AS latestuid FROM `lab_report` GROUP BY `uid`) AS latesttable ON user.uid=latestuid
+									LEFT JOIN (SELECT COUNT(*) AS twoweek, `uid` AS twoweekuid FROM `lab_report` WHERE `submittime` > '".date("Y-m-d H:i:s",strtotime("-2 week"))."' GROUP BY `uid`) AS twoweektable ON user.uid=twoweekuid
+									LEFT JOIN (SELECT COUNT(*) AS onemonth, `uid` AS onemonthuid FROM `lab_report` WHERE `submittime` > '".date("Y-m-d H:i:s",strtotime("-1 month"))."' GROUP BY `uid`) AS onmonthtable ON user.uid=onemonthuid
+									WHERE (  user.uid LIKE '%".$d_searchvalue."%' OR user.name LIKE '%".$d_searchvalue."%' ) AND user.graduate = 61 
+									ORDER BY `".$d_ordercol."` ".$d_orderdir."
+									LIMIT ".$d_start.",".$d_length."
+									");
 			if($userlist != null && $userlist[0]['uid'] != null)
 			{
 				for($i = count($userlist) - 1; $i >= 0; $i --)
@@ -400,8 +392,12 @@ class WorkController extends Controller {
 					$userlist[$i]['kind'] = $STR_LIST[$userlist[$i]['kind']];
 					if($userlist[$i]['twoweek'] > 0) 
 						$userlist[$i]['twoweek'] = '<a class="ui red circular label">'.$userlist[$i]['twoweek'].'</a>';
+					else
+						$userlist[$i]['twoweek'] = 0;
 					if($userlist[$i]['onemonth'] > 0) 
 						$userlist[$i]['onemonth'] = '<a class="ui red circular label">'.$userlist[$i]['onemonth'].'</a>';
+					else
+						$userlist[$i]['onemonth'] = 0;;
 				}
 			}
 			else
@@ -414,7 +410,6 @@ class WorkController extends Controller {
 											->join('LEFT JOIN lab_report twoweeksum ON user.uid = twoweeksum.uid AND twoweeksum.submittime > \''.date("Y-m-d H:i:s",strtotime("-2 week")).'\'')
 											->join('LEFT JOIN lab_report onemonthsum ON user.uid = onemonthsum.uid AND onemonthsum.submittime > \''.date("Y-m-d H:i:s",strtotime("-1 month")).'\'')
 											->where($map)
-						//					->group('user.uid')
 											->count();	
 		}
 		
