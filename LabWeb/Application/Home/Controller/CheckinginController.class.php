@@ -47,7 +47,7 @@ class CheckinginController extends Controller {
 				{
 					$name2onlyname_add = array(
 						'onlyname' => $info['onlyname'],
-						'clientIP' => get_client_ip()
+						'clientIP' => get_client_ip()//ThinkPHP获取客户端IP的方法
 					);
 					$Name2onlyname->add($name2onlyname_add);
 					return 2;
