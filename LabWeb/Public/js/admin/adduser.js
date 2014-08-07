@@ -21,7 +21,7 @@ function AdduserAjaxSubmit()
 {
     $('#adduser_form').ajaxSubmit(function(data){
     	jsondata = data;
-    	if(jsondata["wrongcode"] != 999)
+    	if(jsondata["wrongcode"] < 900)
         	alertify.error(jsondata["wrongmsg"]);
         else
         {

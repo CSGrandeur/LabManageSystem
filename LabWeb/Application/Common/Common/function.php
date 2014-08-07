@@ -240,3 +240,10 @@ function GetUserinfo($uid)
 		return $userinfo;
 	}
 }
+/************************************************************/
+//中英混合字符串长度
+/************************************************************/
+function strLength($str)
+{
+    return (strlen($str) + mb_strlen($str,'UTF8')) >> 1;
+}

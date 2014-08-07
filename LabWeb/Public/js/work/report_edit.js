@@ -34,8 +34,8 @@ function Report_editAjaxSubmit()
         	alertify.error(jsondata["wrongmsg"]);
         else
         {
-        	alertify.success( "修改成功!");
 			$.pjax({url: "/home/work/report?id="+jsondata["id"], container: '#mainpage'});
+        	alertify.success( "修改成功!");
         }
         return false;
     });

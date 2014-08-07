@@ -31,15 +31,15 @@
 		</h2>
 		<div class="ui blue label">
 			提交时间:{$reportinfo['submittime']}
-   		</div>
+	 		</div>
 		<div class="ui blue label">
 			最后修改:{$reportinfo['updatetime']}
-   		</div>
-   		<?php
-   			if($user_self)
+	 		</div>
+	 		<?php
+	 			if($user_self)
 			{
-   		?>
-	   		<a data-pjax href="/home/work/report_edit?id={$reportinfo[id]}">
+	 		?>
+		 		<a data-pjax href="/home/work/report_edit?id={$reportinfo[id]}">
 			<div class="ui tiny green button" name="{$reportinfo[id]}">修改</div>
 			</a>
 			<?php
@@ -61,15 +61,86 @@
 				}
 			}
 			?>
-		
-		
-		
-	<div class="ui horizontal divider">
-		<i class="attachment icon"></i>
+		<div class="ui horizontal divider">
+			<i class="attachment icon"></i>
+		</div>
+		<div class='report_div y_scroll'>
+			{$reportinfo['content']|htmlspecialchars_decode|stripslashes}
+		</div>
 	</div>
-	<div class='report_div y_scroll'>
-		{$reportinfo['content']|htmlspecialchars_decode|stripslashes}
+	
+			<?php
+				if($loggedin)
+				{
+			?>
+				<form id="add_discuss_form" class="ui reply form" action="/home/work/add_discuss_ajax" method="post">
+					<div class='ui form'>
+						<div class="field">
+							<textarea id='add_discuss_text' name='add_discuss_text' class='limit_max_height_200' placeholder="输入想要评论的内容..."></textarea>
+							<input name='reportid' type='hidden' value="{$reportinfo['id']}"/>
+						</div>
+					</div>
+					<div>
+						<button id="add_discuss_submit"	type="submit" class="ui blue labeled submit icon button">>
+							<i class="icon edit"></i>提交评论
+						</button>
+						<div class="ui label">
+							<span id="num_of_words">0</span>
+							<div class="detail">/1000</div>
+							字节
+						</div>
+					</div>
+				</form>
+			<?php
+				}
+			?>
+	<br/>
+	<div class="column">
+		<div class="ui piled blue segment">
+			<h2 class="ui header">
+				<i class="icon inverted circular blue comment"></i> 评论
+			</h2>
+			<div id="reply_list" class="ui comments">
+			<?php
+				$report_discuss_count = count($report_discusslist);
+				for($i = 0; $i < $report_discuss_count; $i ++)
+				{
+			?>
+				<div class="comment">
+					<div class="content ui dimmable dimmed">
+					<div class="ui simple dimmer" <?php if($report_discusslist[$i]['available'] != 0){ ?> style="display: none;" <?php } ?> ></div>
+						<a href="/home/user/userinfo?uid='{$report_discusslist[$i]['uid']}' class="author">{$report_discusslist[$i]['uid']}</a> -
+						<a class="author">{$report_discusslist[$i]['name']}</a>
+						<div class="metadata">
+							<span class="date">{$report_discusslist[$i]['submittime']}</span>
+						</div>
+						<div class="text">
+							{$report_discusslist[$i]['content']}
+						</div>
+					</div>
+					<div class="actions">
+						<?php if($loggedin){ ?>
+						<a class="reply" onclick="SetReplyTo(this)" reply_str="@{$report_discusslist[$i]['uid']}({$report_discusslist[$i]['name']}):">回复</a>
+						<?php } ?>
+						<?php if(IsAdmin()){ ?>
+						<a class="delete" onclick="ChangeReplyDisplay(this)" name="{$report_discusslist[$i]['id']}">
+							<?php if($report_discusslist[$i]['available'] != 0){ ?>
+							删除
+							<?php }else{ ?>
+							恢复显示
+							<?php } ?>
+						</a>
+						<?php } ?>
+					</div>
+				</div>
+				<div class="ui horizontal divider">
+					~
+				</div>
+			<?php 
+				}
+			?>
+		</div>
 	</div>
-	</div>
+			
 </div>
 <script src="__PUBLIC__/js/work/report.js" type="text/javascript"></script>

@@ -405,12 +405,14 @@ class WorkController extends Controller {
 			$data['data'] = $userlist;
 			$data['draw'] = $d_draw;
 			$data['recordsTotal'] = $User->count();
-			$data['recordsFiltered'] = $User->table('lab_user user')
-											->join('LEFT JOIN lab_report latesttime ON user.uid = latesttime.uid')
-											->join('LEFT JOIN lab_report twoweeksum ON user.uid = twoweeksum.uid AND twoweeksum.submittime > \''.date("Y-m-d H:i:s",strtotime("-2 week")).'\'')
-											->join('LEFT JOIN lab_report onemonthsum ON user.uid = onemonthsum.uid AND onemonthsum.submittime > \''.date("Y-m-d H:i:s",strtotime("-1 month")).'\'')
-											->where($map)
-											->count();	
+			$data['recordsFiltered'] = count($User->query("
+											SELECT user.uid uid,user.name name,user.kind kind, latesttable.latest latest, twoweektable.twoweek twoweek, onmonthtable.onemonth onemonth 
+											FROM `lab_user` AS user
+											LEFT JOIN (SELECT MAX(`submittime`) AS latest, `uid` AS latestuid FROM `lab_report` GROUP BY `uid`) AS latesttable ON user.uid=latestuid
+											LEFT JOIN (SELECT COUNT(*) AS twoweek, `uid` AS twoweekuid FROM `lab_report` WHERE `submittime` > '".date("Y-m-d H:i:s",strtotime("-2 week"))."' GROUP BY `uid`) AS twoweektable ON user.uid=twoweekuid
+											LEFT JOIN (SELECT COUNT(*) AS onemonth, `uid` AS onemonthuid FROM `lab_report` WHERE `submittime` > '".date("Y-m-d H:i:s",strtotime("-1 month"))."' GROUP BY `uid`) AS onmonthtable ON user.uid=onemonthuid
+											WHERE (  user.uid LIKE '%".$d_searchvalue."%' OR user.name LIKE '%".$d_searchvalue."%' ) AND user.graduate = 61
+											"));	
 		}
 		
 		$this->ajaxReturn($data);
@@ -542,11 +544,32 @@ class WorkController extends Controller {
 			}
 			$data['userinfo'] = $userinfo;
 			$Report_discuss = M('report_discuss');
-			$report_discusslist = $Report_discuss->where('reportid='.$id)
-												->order(array('submittime' => 'desc'))
+			$map = array(
+				'reportid' => $id,
+			);
+			if(!IsAdmin())
+			{
+				$map = array(
+						'_complex' => $map,
+						'available' => array('neq', 0)
+				);
+			}
+			$report_discusslist = $Report_discuss->table('lab_report_discuss report_discuss')
+												->join('LEFT JOIN lab_user user ON user.uid = report_discuss.uid')
+												->field('
+														user.uid uid,
+														user.name name,
+														report_discuss.id id,
+														report_discuss.content content,
+														report_discuss.submittime submittime,
+														report_discuss.available available
+														')
+												->where($map)
+												->order(array('id'=>'desc'))
 												->select();
 			$data['report_discusslist'] = $report_discusslist;
 		}
+		$data['loggedin'] = IsLoggedin();
 		return $data;
 	}
 	//报告显示页
@@ -557,6 +580,7 @@ class WorkController extends Controller {
 		$WRONG_MSG = C('WRONG_MSG');
 		$data = $this->report_data();
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		
 		$this->assign($data);
 		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
 			$this->display('Public:alert');
@@ -732,6 +756,90 @@ class WorkController extends Controller {
 				$data['newid'] = $newid;
 				$data['wrongcode'] = $WRONG_CODE['add_successful'];
 			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//添加评论处理逻辑
+	public function add_discuss_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsLoggedin())
+			$data['wrongcode'] = $WRONG_CODE['user_notloggin'];
+		else if(I('param.add_discuss_text', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$discuss = trim(I('param.add_discuss_text'));
+			$reportid = intval(trim(I('param.reportid')));
+			if(strLength($discuss) > 1000)
+				$data['wrongcode'] = $WRONG_CODE['content_toolong'];
+			else if(strLength($discuss) < 2)
+				$data['wrongcode'] = $WRONG_CODE['content_tooshort'];
+			else 
+			{
+				$Report = M('report');
+				$reportinfo = $Report->field('available, uid')->where('id='.$reportid)->find();
+				if($reportinfo == null)
+					$data['wrongcode'] = $WRONG_CODE['not_exist'];
+				else if($reportinfo['available'] == 0 && !IsAdmin && session('lab_uid') != $reportinfo['uid'])
+					$data['wrongcode'] = $WRONG_CODE['user_powerless'];
+				else 
+				{
+					$discuss_add = array(
+						'uid' => session('lab_uid'),
+						'content' => $discuss,
+						'submittime' => date('Y-m-d H:i:s'),
+						'reportid' => $reportid
+					);
+					$Report_discuss = M('report_discuss');
+					$data['discussinfo'] = $discuss_add;
+					$newid = $Report_discuss->add($discuss_add);
+					if($newid == false)
+						$data['wrongcode'] = $WRONG_CODE['sql_notadd'];
+					else
+					{
+						$data['wrongcode'] = $WRONG_CODE['add_successful'];
+						$data['discussinfo']['id'] = $newid;
+					}
+				}
+			}
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	//修改评论是否显示
+	public function change_discuss_available_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		
+		if(!IsAdmin())
+			$data['wrongcode'] = $WRONG_CODE['admin_not'];
+		else if(I('param.id', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$id = intval(trim(I('param.id')));
+			$Report_discuss = M('report_discuss');
+			$report_discussinfo = $Report_discuss->field('available')->where('id='.$id)->find();
+			if($report_discussinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else 
+			{
+				if($report_discussinfo['available'] == 0)
+					$report_discussinfo['available'] = 1;
+				else 
+					$report_discussinfo['available'] = 0;
+				$data['available'] = $report_discussinfo['available'];
+				if($Report_discuss->where('id='.$id)->save($report_discussinfo) == false)
+				{
+					$data['wrongcode'] = $WRONG_CODE['sql_error'];
+				}
+			}	
 		}
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
