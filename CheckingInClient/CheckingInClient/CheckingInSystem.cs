@@ -189,7 +189,7 @@ namespace CheckingInClient
 
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:\\log.txt", true))
                 {
-                    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\n") + encrypt.Base64Encode(info.ToHttpGetStr()) + "\n");
+                    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\n") + getinfo + "\n");
                 }
             }
             //throw new NotImplementedException();

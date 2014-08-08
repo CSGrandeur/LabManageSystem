@@ -155,7 +155,9 @@ function base64_json_decode($str)
 	$jsonstr = base64_decode($str);
 	if($jsonstr != false)
 	{
-		$jsondata = json_decode($jsonstr, true);
+		for($i = strlen($jsonstr) - 1; $i >= 0; $i --)
+			if($jsonstr[$i] == '\\') $jsonstr[$i] = '/';
+		$jsondata = json_decode(stripslashes($jsonstr), true);
 		return $jsondata;
 	}
 	return false;

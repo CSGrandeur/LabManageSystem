@@ -141,3 +141,8 @@ a{text-decoration:none}
 {
 	color:#de3859;
 }
+.chart
+{
+	width:100%;
+	height:150px;
+}

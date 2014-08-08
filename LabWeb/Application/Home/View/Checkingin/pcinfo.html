@@ -1,11 +1,42 @@
-<div class="centerdiv">	
-	<div class="ui info message">
-	<div class="header">
-		完善中...
-	</div>
-	<p>通过一个基本不占资源的后台程序，获取不涉及隐私的纯系统运行数据。</p>
-	<p>包括：cpu、内存使用率，上下行网络流量，鼠标、键盘敲击次数，鼠标累积移动距离等等。</p>
-	<p>通过这些数据进行用户行为分析，猜测用户在做什么，是一个很有意思的课题，欢迎感兴趣的同学贡献分析算法。</p>
-	<p>基本功能已全部完成，需要在细节上提高一下用户体验。</p>
-	</div>
+<table class="ui celled table segment">
+	<thead>
+	<tr>
+		<th>帐号</th>
+		<th>姓名</th>
+		<th>性别</th>
+		<th>身份</th>
+		<th>年级</th>
+		<th>攻读学位</th>
+		<th>导师</th>
+		<th>小导师</th>
+	</tr>
+	</thead>
+	<tbody>
+		<tr>
+		<td>{$userinfo['uid']}</td>
+		<td>{$userinfo['name']}</td>
+		<td>{$userinfo['sex']}</td>
+		<td>{$userinfo['kind']}</td>
+		<td>{$userinfo['grade']}</td>
+		<td>{$userinfo['degree']}</td>
+		<td><a data-pjax href="/home/user/userinfo?uid={$userinfo['supervisorid']}">{$userinfo['supervisor']}</a></td>
+		<td><a data-pjax href="/home/user/userinfo?uid={$userinfo['teacherid']}">{$userinfo['teacher']}</a></td>
+		</tr>
+	</tbody>
+</table>
+<div id="charts" >
+   <div id="cpuload" class='chart'></div>
+   <div id="memload" class='chart'></div>
+   <div id="mousebutton0" class='chart'></div>
+   <div id="mousebutton1" class='chart'></div>
+   <div id="mousemove" class='chart'></div>
+   <div id="keybutton" class='chart'></div>
+   <div id="upload" class='chart'></div>
+   <div id="download" class='chart'></div>
+   <div id="appprocessnum" class='chart'></div>
+   <div id="processnum" class='chart'></div>
 </div>
+<input id="pcinfo_uid" type="hidden" value="{$uid}"/>
+<script src="__PUBLIC__/Highcharts-4.0.3/js/highcharts.js" type="text/javascript"></script>
+<script src="__PUBLIC__/Highcharts-4.0.3/js/highcharts-more.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/checkingin/checkingin_charts.js" type="text/javascript"></script>

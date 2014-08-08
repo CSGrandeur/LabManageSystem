@@ -1354,7 +1354,7 @@ class AdminController extends Controller {
 			$User = M('user');
 			$id = intval(trim(I('param.id')));
 			$uid = trim(I('param.uid'));
-			if($uid != '#')
+			if($uid != '#' && strlen($uid) > 0)
 			{
 				$map = array(
 					'uid' => $uid
@@ -1365,6 +1365,7 @@ class AdminController extends Controller {
 			}
 			if($data['wrongcode'] == $WRONG_CODE['totally_right'])
 			{
+				if(strlen($uid) <= 0) $uid = '#';
 				$Name2onlyname = M('name2onlyname');
 				$uid_update = array(
 					'uid' => $uid

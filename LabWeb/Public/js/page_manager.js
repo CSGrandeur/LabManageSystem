@@ -118,3 +118,8 @@ function MakeUserinfoUrl(uid, uname)
 {
 	return "<a data-pjax class='red_url' href='/home/user/userinfo?uid="+uid+"'>"+uname+"</a>";
 }
+//设置标题
+function SetTitle(title)
+{
+	$('#page_title').text(title);
+}

@@ -57,7 +57,7 @@ namespace PrinterManager
 
         public static string HttpGet(string Url, string postDataStr)
         {
-            string tagUrl = Url + "?info=" + postDataStr;
+            string tagUrl = Url + "?" + postDataStr;
             string responsestr = CreateGetHttpResponse(tagUrl);
             return responsestr;
         }

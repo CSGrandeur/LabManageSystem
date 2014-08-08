@@ -7,7 +7,7 @@ class PrinterController extends Controller {
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-		 
+
 		if(I('param.info', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
 		{
 			$info = base64_json_decode(I('param.info'));//函数在Common/function.php中
@@ -67,8 +67,8 @@ class PrinterController extends Controller {
 					$Printrecord = M('printrecord');
 					$printrecord_add['result'] = $alreadyused >= $paperlimit ? 0 : 1;
 					$Printrecord->add($printrecord_add);
-					
-					$papercount['papersum'] += intval($info['papernum']);
+					if($printrecord_add['result'] != 0)
+						$papercount['papersum'] += intval($info['papernum']);
 					$Printcount->save($papercount);
 					
 					return $printrecord_add['result'];
@@ -159,9 +159,11 @@ class PrinterController extends Controller {
 					$paperstatelist[$i]['papersum'] = $paperstatelist[$i]['papersum'] ? $paperstatelist[$i]['papersum'] : 0;
 					$paperstatelist[$i]['sex'] = $STR_LIST[$paperstatelist[$i]['sex']];
 					$paperstatelist[$i]['degree'] = $STR_LIST[$paperstatelist[$i]['degree']];
+					$paperstatelist[$i]['name'] = '<a data-pjax href="/home/printer/paperuseinfo?uid='.$paperstatelist[$i]['uid'].'">'.$paperstatelist[$i]['name'].'</a>';
+					$paperstatelist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$paperstatelist[$i]['uid'].'">'.$paperstatelist[$i]['uid'].'</a>';	
 				}
 			}
-			else 
+			else
 				$paperstatelist = false;
 			$data['data'] = $paperstatelist;
 			$data['draw'] = $d_draw;
@@ -177,6 +179,113 @@ class PrinterController extends Controller {
 			
 		}
 
+		$this->ajaxReturn($data);
+	}
+	
+
+	//个人打印记录
+	public function paperuseinfo()
+	{
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!session('lab_uid'))
+			$data['wrongcode'] = $WRONG_CODE['user_notloggin'];
+		else if(I('param.uid', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$uid = trim(I('param.uid'));
+			$userinfo = GetUserinfo($uid);
+			if($userinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['not_exist'];
+			else 
+				$data['userinfo'] = $userinfo;
+			$data['uid'] = $uid;
+			$data['month'] = date('Y-m');
+		}
+    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+        if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+        	$this->display('Public:alert');
+        else
+        	$this->display();
+	}
+	//个人打印记录表数据
+	public function paperuseinfo_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$STR_LIST = C('STR_LIST');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('param.draw', $WRONG_CODE['not_exist']) == $WRONG_CODE['not_exist'])
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		else
+		{
+			$reqdata = I('param.');
+			$d_draw = intval($reqdata['draw']);
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
+			$d_month = date("Y-m-01", strtotime(trim($reqdata['month'])));
+			$d_next_month = date("Y-m-01", strtotime("$d_month +1 month"));
+			$uid = trim($reqdata['uid']);
+			if($d_length > 100) $d_length = 100;
+			$d_ordercol = "";
+			switch($reqdata['order'][0]['column'])
+			{
+				case 0: $d_ordercol = 'id'; break;
+				case 1: $d_ordercol = 'identifier'; break;
+				case 2: $d_ordercol = 'papernum'; break;
+				case 3: $d_ordercol = 'jobname'; break;
+				case 4: $d_ordercol = 'submittime'; break;
+				case 5: $d_ordercol = 'result'; break;
+			}
+			$d_orderdir = $reqdata['order'][0]['dir'];
+			$d_searchvalue = $reqdata['search']['value'];
+			$d_searchregex = $reqdata['search']['regex'];
+			$map = array(
+					'id' => array('like', '%'.$d_searchvalue.'%'),
+					'identifier' => array('like', '%'.$d_searchvalue.'%'),
+					'_logic' => 'or'
+			);
+			if(session('lab_uid') == $uid)//登录者是其本人才可以搜索jobname
+			{
+				$map = array(
+						'_complex' => $map,
+						'jobname' => array('like', '%'.$d_searchvalue.'%'),
+						'_logic' => 'or'
+				);
+			}
+			$map = array(
+					'_complex' => $map,
+					'uid' => $uid,
+					'updatetime' => array('between', "$d_month, $d_next_month")
+			);
+			$Printrecord = M('printrecord');
+			$paperuseinfolist = $Printrecord->where($map)
+											->order(array($d_ordercol=>$d_orderdir))
+											->limit($d_start, $d_length)
+											->select();
+			if($paperuseinfolist != null && $paperuseinfolist[0]['id'] != null)
+			{
+				for($i = count($paperuseinfolist) - 1; $i >= 0; $i --)
+				{
+					if((session('lab_uid') != $uid && !IsAdmin()) || strlen($paperuseinfolist[$i]['jobname']) <= 0)
+						$paperuseinfolist[$i]['jobname'] = '#';
+					if($paperuseinfolist[$i]['result'] == 0)
+						$paperuseinfolist[$i]['result'] = '否';
+					else
+						$paperuseinfolist[$i]['result'] = '是';
+				}
+			}
+			else 
+				$paperuseinfolist = false;
+			$data['data'] = $paperuseinfolist;
+			$data['draw'] = $d_draw;
+			$data['recordsTotal'] = $Printrecord->count();
+			$data['recordsFiltered'] = $Printrecord->where($map)->count();
+		}
 		$this->ajaxReturn($data);
 	}
 }

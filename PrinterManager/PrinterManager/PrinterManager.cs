@@ -45,6 +45,7 @@ namespace PrinterManager
             PrintQueueCollection myPrintQueues = myPrintServer.GetPrintQueues();
             mut.WaitOne();
             int nmaxidentifier = maxidentifier;
+            int omaxidentifier = maxidentifier;
             mut.ReleaseMutex();
             InfoToSend its = new InfoToSend();
             List<PrintSystemJobInfo> joblist = new List<PrintSystemJobInfo>();
@@ -65,7 +66,6 @@ namespace PrinterManager
                     if(Job.JobIdentifier > maxidentifier)
                     {
                         Job.Pause();
-                        joblist.Add(Job);
                         if(Job.JobIdentifier > nmaxidentifier)
                             nmaxidentifier = Job.JobIdentifier;
                     }
@@ -74,23 +74,45 @@ namespace PrinterManager
                 maxidentifier = nmaxidentifier;
                 mut.ReleaseMutex();
             }
+
+            Thread.Sleep(2000);//太快的话读不到正确页码
+
+            foreach (PrintQueue pq in myPrintQueues)
+            {
+                pq.Refresh();
+                //排除非打印机的打印任务，暂时没找到更好的识别真实打印机的方法
+                //if (pq.Name == "发送至 OneNote 2013" ||
+                //    pq.Name == "Microsoft XPS Document Writer" ||
+                //    pq.Name == "Foxit Reader PDF Printer" ||
+                //    pq.Name == "Fax"
+                //    )
+                //    continue;
+                var Jobs = pq.GetPrintJobInfoCollection();
+                foreach (PrintSystemJobInfo Job in Jobs)
+                {
+                    if (Job.JobIdentifier > omaxidentifier && Job.JobIdentifier <= nmaxidentifier)
+                    {
+                        joblist.Add(Job);
+                    }
+                }
+            }
             for (int i = 0; i < joblist.Count; i++)
             {
                 its.submitter = joblist[i].Submitter;
                 its.pagenum = joblist[i].NumberOfPages;
-                its.jobname = joblist[i].JobName;
+                its.jobname = joblist[i].Name;
                 its.identifier = joblist[i].JobIdentifier;
                 its.jobtime = joblist[i].TimeJobSubmitted + "";
                 sendstr = its.ToHttpGetStr();
 
-                string retstr = HttpSend.HttpGet(ConstVal.send_url, Encrypt.Base64Encode(sendstr));
+                string retstr = HttpSend.HttpGet(ConstVal.send_url, "info=" + Encrypt.Base64Encode(sendstr));
                 if (retstr != "0")
                     joblist[i].Resume();
-                else
-                    joblist[i].Cancel();
+                //else
+                //    joblist[i].Cancel();
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
                 {
-                    sw.WriteLine("response:" + retstr + "\t\r\n");
+                    sw.WriteLine("response:" + "\r\n" + sendstr + "\r\n" + retstr + "\r\n");
                 }
             }
             //Thread thread = new Thread(new ThreadStart(st.SendInfo));

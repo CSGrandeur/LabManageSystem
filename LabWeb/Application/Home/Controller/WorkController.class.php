@@ -63,11 +63,6 @@ class WorkController extends Controller {
 									->order(array($d_ordercol=>$d_orderdir))
 									->limit($d_start, $d_length)
 									->select();
-			//file_put_contents("loog.txt", print_r($Statistic->_sql(), true));
-			// 	$fp = fopen("loog.txt", "a+");
-			// 	fwrite ($fp, $Userdetail->_sql());
-			// 	fwrite ($fp, "\n");
-			// 	fclose($fp);
 			$nowtime = time();
 			if($statisticlist != null && $statisticlist[0]['uid'] != null)
 			{
@@ -359,18 +354,6 @@ class WorkController extends Controller {
 			$d_orderdir = mysql_real_escape_string($reqdata['order'][0]['dir']);
 			$d_searchvalue = mysql_real_escape_string($reqdata['search']['value']);
 			$d_searchregex = $reqdata['search']['regex'];
-			$map = array(
-					'user.uid' => array('like', '%'.$d_searchvalue.'%'),
-					'user.name' => array('like', '%'.$d_searchvalue.'%'),
-					'_logic' => 'or'
-			);
-			$map = array(
-				'_complex' => $map,
-    			'user.graduate' => 61,//只查看在校的
-				'latesttime.available' => array('neq', 0),
-				'twoweeksum.available' => array('neq', 0),
-				'onemonthsum.available' => array('neq', 0),
-			);
 			$User = M('user');
 					
 			$userlist = $User->query("
