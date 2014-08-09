@@ -121,6 +121,7 @@ class CheckinginController extends Controller {
 					'receivetime' => array('egt', $dtstart)
 				);
 				$rows = $Checkingin->where($map)->order(array('id' => 'asc'))->select();
+				$rows = array();
 			}
 			else
 			{
@@ -131,7 +132,6 @@ class CheckinginController extends Controller {
 				$rows = $Checkingin->where($map)
 								->order(array('id' => desc))
 								->find();
-	file_put_contents("loog.txt", print_r($Checkingin->_sql(), true));
 			}
 			$data['data'] = $rows;
 		}
@@ -211,6 +211,10 @@ class CheckinginController extends Controller {
 					$userlist[$i]['kind'] = $STR_LIST[$userlist[$i]['kind']];
 					$userlist[$i]['name'] = '<a data-pjax href="/home/checkingin/pcinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['name'].'</a>';
 					$userlist[$i]['uid'] = '<a data-pjax href="/home/user/userinfo?uid='.$userlist[$i]['uid'].'">'.$userlist[$i]['uid'].'</a>';
+					if($userlist[$i]['cpuload'] == null) $userlist[$i]['cpuload'] = 0;
+					$userlist[$i]['cpuload'] = $userlist[$i]['cpuload']."%";
+					if($userlist[$i]['mousemove'] == null) $userlist[$i]['mousemove'] = 0;
+					if($userlist[$i]['keybutton'] == null) $userlist[$i]['keybutton'] = 0;
 				}
 			}
 			else
