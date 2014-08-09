@@ -26,13 +26,17 @@ function ondo_report()
     	return false;
     });
     CountWordNum();
-	$('#add_discuss_text').focus();
+    ReplySetFocus();
+}
+function ReplySetFocus()
+{
+	$('#add_discuss_text').focusEnd();
 }
 function SetReplyTo(obj)
 {
 	$('#add_discuss_text').val($(obj).attr('reply_str') + "\n");
 	SetWordNum();
-	$('#add_discuss_text').focus();
+	ReplySetFocus();
 	$("body,html").animate(
 		{ 
 			scrollTop: $('#add_discuss_text').offset().top - 100
@@ -124,4 +128,32 @@ function change_report_available(obj)
 			}
 		},
 		"json");
+}
+
+//将光标置于文本结尾
+$.fn.setCursorPosition = function(position){
+    if(this.lengh == 0) return this;
+    return $(this).setSelection(position, position);
+}
+
+$.fn.setSelection = function(selectionStart, selectionEnd) {
+    if(this.lengh == 0) return this;
+    input = this[0];
+
+    if (input.createTextRange) {
+        var range = input.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', selectionEnd);
+        range.moveStart('character', selectionStart);
+        range.select();
+    } else if (input.setSelectionRange) {
+        input.focus();
+        input.setSelectionRange(selectionStart, selectionEnd);
+    }
+
+    return this;
+}
+
+$.fn.focusEnd = function(){
+    this.setCursorPosition(this.val().length);
 }
