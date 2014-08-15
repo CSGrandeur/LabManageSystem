@@ -14,3 +14,6 @@ D:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterMana
 D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.csprojResolveAssemblyReference.cache
 D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.ProjectInstaller.resources
 D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.csproj.GenerateResource.Cache
+E:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Debug\PrinterManager.exe.config
+E:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.exe
+E:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Debug\PrinterManager.pdb
