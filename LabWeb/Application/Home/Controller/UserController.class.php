@@ -210,7 +210,7 @@ class UserController extends Controller {
 		{
 			$User = M('user');
 			$param = I('param.');
-			$userinfo = $User->where('uid='.$param['uid'])->find();
+			$userinfo = $User->where('uid="%s"', $param['uid'])->find();
 			if($userinfo == null)
 				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
 			else
