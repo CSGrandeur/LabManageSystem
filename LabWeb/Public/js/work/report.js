@@ -8,6 +8,7 @@ $(document).ready(function ()
 	if(!pjaxflag)
 		ondo_report();
 })
+//添加focusEnd方法，将光标放到文字末尾
 $.fn.focusEnd = function(){
     this.setCursorPosition(this.val().length);
 }
@@ -31,6 +32,7 @@ function ondo_report()
     CountWordNum();
     ReplySetFocus();
 }
+//光标放到回复框末尾
 function ReplySetFocus()
 {
 	$('#add_discuss_text').focusEnd();
