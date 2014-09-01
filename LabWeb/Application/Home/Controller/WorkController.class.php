@@ -337,8 +337,8 @@ class WorkController extends Controller {
 		{
 			$reqdata = I('param.');
 			$d_draw = intval($reqdata['draw']);
-			$d_start = mysql_real_escape_string(intval($reqdata['start']));
-			$d_length = mysql_real_escape_string(intval($reqdata['length']));
+			$d_start = intval($reqdata['start']);
+			$d_length = intval($reqdata['length']);
 			if($d_length > 100) $d_length = 100;
 			$d_ordercol = "";
 			switch($reqdata['order'][0]['column'])
@@ -366,7 +366,7 @@ class WorkController extends Controller {
 									ORDER BY `".$d_ordercol."` ".$d_orderdir."
 									LIMIT ".$d_start.",".$d_length."
 									");
-		file_put_contents("/var/www/loog.txt", print_r(
+		file_put_contents("E:/loog.txt", print_r(
 							"num1:".$d_start.
 							"\tnum2:".mysql_real_escape_string(intval($reqdata['start'])).
 							"\tnum3:".$d_length.
