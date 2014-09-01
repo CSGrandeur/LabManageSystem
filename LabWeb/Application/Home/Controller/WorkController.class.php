@@ -755,7 +755,7 @@ class WorkController extends Controller {
 			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
 		else
 		{
-			$discuss = trim(I('param.add_discuss_text'));
+			$discuss = I('param.add_discuss_text');
 			$reportid = intval(trim(I('param.reportid')));
 			if(strLength($discuss) > 1000)
 				$data['wrongcode'] = $WRONG_CODE['content_toolong'];

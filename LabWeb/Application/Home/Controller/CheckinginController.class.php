@@ -165,6 +165,8 @@ class CheckinginController extends Controller {
 			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
 		else
 		{
+			$User = M('user');//在mysql_real_escape_string前连接数据库
+			
 			$reqdata = I('param.');
 			$d_draw = intval($reqdata['draw']);
 			$d_start = mysql_real_escape_string(intval($reqdata['start']));
@@ -193,7 +195,6 @@ class CheckinginController extends Controller {
 				'_complex' => $map,
     			'user.graduate' => 61,//只查看在校的
 			);
-			$User = M('user');
 					
 			$userlist = $User->query("
 									SELECT user.uid uid, user.name name, user.kind kind, checkingin.cpuload cpuload, checkingin.mousemove mousemove, checkingin.keybutton keybutton
