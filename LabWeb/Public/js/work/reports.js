@@ -31,7 +31,7 @@ function InitReportsTable()
 			},
 			"ajax": {
 				"url": "/home/work/reports_ajax/",
-				"type": "POST",
+				"type": "get",
 				pages: 5 // number of pages to cache
 			},
 		    "order": [ 4, 'desc' ],
