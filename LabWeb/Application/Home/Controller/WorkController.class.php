@@ -369,7 +369,7 @@ class WorkController extends Controller {
 		file_put_contents("/var/www/loog.txt", print_r("
 									LIMIT ".$d_start.",".$d_length."
 									", true)."\n", FILE_APPEND);
-		file_put_contents("/var/www/loog.txt", print_r($d_start."\t".$d_length, true)."\n", FILE_APPEND);
+		file_put_contents("/var/www/loog.txt", print_r(mysql_real_escape_string(intval($reqdata['start']))."\t".$d_length, true)."\n", FILE_APPEND);
 		file_put_contents("/var/www/loog.txt", print_r($User->_sql(), true)."\n", FILE_APPEND);
 			if($userlist != null && $userlist[0]['uid'] != null)
 			{
