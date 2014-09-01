@@ -8,6 +8,9 @@ $(document).ready(function ()
 	if(!pjaxflag)
 		ondo_report();
 })
+$.fn.focusEnd = function(){
+    this.setCursorPosition(this.val().length);
+}
 function ondo_report()
 {
 	$('#add_discuss_form').unbind("ajaxForm").ajaxForm();
@@ -154,6 +157,3 @@ $.fn.setSelection = function(selectionStart, selectionEnd) {
     return this;
 }
 
-$.fn.focusEnd = function(){
-    this.setCursorPosition(this.val().length);
-}
