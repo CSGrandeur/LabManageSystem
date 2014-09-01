@@ -366,7 +366,7 @@ class WorkController extends Controller {
 									ORDER BY `".$d_ordercol."` ".$d_orderdir."
 									LIMIT ".$d_start.",".$d_length."
 									");
-		file_put_contents("/var/www/loog.txt", print_r($reqdata, true)."\n", FILE_APPEND);
+		file_put_contents("/var/www/loog.txt", print_r($reqdata['start'], true)."\n", FILE_APPEND);
 		file_put_contents("/var/www/loog.txt", print_r($User->_sql(), true)."\n", FILE_APPEND);
 			if($userlist != null && $userlist[0]['uid'] != null)
 			{
