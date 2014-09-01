@@ -335,6 +335,7 @@ class WorkController extends Controller {
 			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
 		else
 		{
+			$User = M('user');
 			$reqdata = I('param.');
 			$d_draw = intval($reqdata['draw']);
 			$d_start = intval($reqdata['start']);
@@ -354,7 +355,6 @@ class WorkController extends Controller {
 			$d_orderdir = mysql_real_escape_string($reqdata['order'][0]['dir']);
 			$d_searchvalue = mysql_real_escape_string($reqdata['search']['value']);
 			$d_searchregex = $reqdata['search']['regex'];
-			$User = M('user');
 					
 			$userlist = $User->query("
 									SELECT user.uid uid,user.name name,user.kind kind, latesttable.latest latest, twoweektable.twoweek twoweek, onmonthtable.onemonth onemonth 
