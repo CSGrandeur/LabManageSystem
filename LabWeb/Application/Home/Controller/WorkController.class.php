@@ -367,15 +367,9 @@ class WorkController extends Controller {
 									LIMIT ".$d_start.",".$d_length."
 									");
 		file_put_contents("/var/www/loog.txt", print_r("
-									SELECT user.uid uid,user.name name,user.kind kind, latesttable.latest latest, twoweektable.twoweek twoweek, onmonthtable.onemonth onemonth 
-									FROM `lab_user` AS user
-									LEFT JOIN (SELECT MAX(`submittime`) AS latest, `uid` AS latestuid FROM `lab_report` GROUP BY `uid`) AS latesttable ON user.uid=latestuid
-									LEFT JOIN (SELECT COUNT(*) AS twoweek, `uid` AS twoweekuid FROM `lab_report` WHERE `submittime` > '".date("Y-m-d H:i:s",strtotime("-2 week"))."' GROUP BY `uid`) AS twoweektable ON user.uid=twoweekuid
-									LEFT JOIN (SELECT COUNT(*) AS onemonth, `uid` AS onemonthuid FROM `lab_report` WHERE `submittime` > '".date("Y-m-d H:i:s",strtotime("-1 month"))."' GROUP BY `uid`) AS onmonthtable ON user.uid=onemonthuid
-									WHERE (  user.uid LIKE '%".$d_searchvalue."%' OR user.name LIKE '%".$d_searchvalue."%' ) AND user.graduate = 61 
-									ORDER BY `".$d_ordercol."` ".$d_orderdir."
 									LIMIT ".$d_start.",".$d_length."
 									", true)."\n", FILE_APPEND);
+		file_put_contents("/var/www/loog.txt", print_r($d_start."\t".$d_length, true)."\n", FILE_APPEND);
 		file_put_contents("/var/www/loog.txt", print_r($User->_sql(), true)."\n", FILE_APPEND);
 			if($userlist != null && $userlist[0]['uid'] != null)
 			{
