@@ -41,6 +41,11 @@ class CheckinginController extends Controller {
 						$Checkingin->add($checkingin_add);
 						return 1;
 					}
+					else if($name2onlynameinfo['clientIP'] != get_client_ip())
+					{
+						$name2onlynameinfo['clientIP'] = get_client_ip();
+						$Checkingin->save($name2onlynameinfo);
+					}
 					else return 5;
 				}
 				else 

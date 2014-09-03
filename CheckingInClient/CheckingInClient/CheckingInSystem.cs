@@ -155,7 +155,8 @@ namespace CheckingInClient
                 GetProcessInformations();
                 GetNetInformations();
                 //CPU
-                info.cpuload = cpuload / sampcnt; 
+                while (cpuload > 100) cpuload *= 0.5;
+                info.cpuload = cpuload / sampcnt;
                 cpuload = 0;
                 //内存
                 info.memload = memload / sampcnt; 
