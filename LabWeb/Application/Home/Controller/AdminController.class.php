@@ -1125,7 +1125,7 @@ class AdminController extends Controller {
 		}
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
-		$data['nowtime'] = date('Y-m-d\TH:i:s');
+		$data['nowtime'] = date('Y-m-d\TH:i');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		$this->assign($data);
 		$this->display();

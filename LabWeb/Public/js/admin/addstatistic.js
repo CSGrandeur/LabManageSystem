@@ -36,14 +36,19 @@ function ondo_addstatistic()
         	return false;
     	}
     	var okflag = false;
-    	alertify.confirm("信息项列表提交后不可修改，确认信息项都正确？", function (e) {
-    	    if (e) 
-    	    {
-    	    	okflag = true;
-    	    }
-    	});
-    	if(okflag)
-    		AddstatisticAjaxSubmit();
+
+        alertify.confirm("信息项列表提交后不可修改，确认信息项都正确？", function (e) {
+            if (e) {
+            	AddstatisticAjaxSubmit();
+            } 
+        });
+//    	setTimeout(function () {
+//            alertify.confirm("信息项列表提交后不可修改，确认信息项都正确？", function (e) {
+//                if (e) {
+//                	AddstatisticAjaxSubmit();
+//                } 
+//            });
+//        }, 500);
     	return false;
     });
     $('#allow_anonymouse_div').checkbox();
