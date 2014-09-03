@@ -4,8 +4,8 @@ return array(
 	'URL_MODEL'	=> 2,
 	'DB_TYPE'  	=> 'mysql',
 	'DB_USER'  	=> 'root',
-	'DB_PWD'   	=> '111aaa',
-	'DB_HOST'  	=> '127.0.0.1',
+	'DB_PWD'   	=> 'phd410admin',
+	'DB_HOST'  	=> '192.168.2.12',
 
 	'DB_PORT'  	=> '3306',
 	'DB_NAME'  	=> 'labweb',

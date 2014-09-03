@@ -100,17 +100,17 @@ function ChartDatas(uid)
 }
 function JudgeDoing(jdatas)
 {
-	j = 0;
-	for(i = 0; i < jdatas['memload'].length; i ++)
-	{
-		if(jdatas['memload'][i].x > jdatas['memload'][j].x) 
-			j = i;
-	}
-	if(jdatas['memload'][j].y < 1) $('#whatdoing').text('未连接');
-	else if(jdatas['memload'][j].y < 30) $('#whatdoing').text('什么都没干');
-	else if(jdatas['memload'][j].y > 60 && jdatas['keybutton'][j].y > 10) $('#whatdoing').text('写代码');
-	else if(jdatas['appprocessnum'][j].y > 10) $('#whatdoing').text('检查代码');
-	else $('#whatdoing').text('逛淘宝 XD');
+//	j = 0;
+//	for(i = 0; i < jdatas['memload'].length; i ++)
+//	{
+//		if(jdatas['memload'][i].x > jdatas['memload'][j].x) 
+//			j = i;
+//	}
+//	if(jdatas['memload'][j].y < 1) $('#whatdoing').text('未连接');
+//	else if(jdatas['memload'][j].y < 30) $('#whatdoing').text('什么都没干');
+//	else if(jdatas['memload'][j].y > 60 && jdatas['keybutton'][j].y > 10) $('#whatdoing').text('写代码');
+//	else if(jdatas['appprocessnum'][j].y > 10) $('#whatdoing').text('检查代码');
+//	else $('#whatdoing').text('逛淘宝 XD');
 }
 //判断在干什么
 function WhatIsSomeoneDoing()
@@ -122,7 +122,8 @@ function WhatIsSomeoneDoing()
 	JudgeDoing(jdatas);
 
 }
-function MakeCharts(chartname, datas){
+function MakeCharts(chartname, datas)
+{
 	
 	Highcharts.setOptions({ 
         global: {           

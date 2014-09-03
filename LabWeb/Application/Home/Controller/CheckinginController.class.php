@@ -121,7 +121,8 @@ class CheckinginController extends Controller {
 					'receivetime' => array('egt', $dtstart)
 				);
 				$rows = $Checkingin->where($map)->order(array('id' => 'asc'))->select();
-				$rows = array();
+				if($rows == null)
+					$rows = array();
 			}
 			else
 			{
