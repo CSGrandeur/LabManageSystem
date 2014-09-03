@@ -215,6 +215,7 @@ class CheckinginController extends Controller {
 					if($userlist[$i]['cpuload'] == null) $userlist[$i]['cpuload'] = 0;
 					$userlist[$i]['cpuload'] = $userlist[$i]['cpuload']."%";
 					if($userlist[$i]['mousemove'] == null) $userlist[$i]['mousemove'] = 0;
+					$userlist[$i]['mousemove'] /= 1000;//让鼠标移动的数据看上去不是那么大，缩小1000倍
 					if($userlist[$i]['keybutton'] == null) $userlist[$i]['keybutton'] = 0;
 				}
 			}
