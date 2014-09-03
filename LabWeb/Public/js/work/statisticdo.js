@@ -31,12 +31,12 @@ function ondo_statisticdo()
 		}
 		if(cansubmit_flag == false)
 		{
-			alertify.error("提交过于频繁，请5秒后再试");
+			alertify.error("提交过于频繁，请10秒后再试");
 			return false;
 		}
 		StatisticdoAjaxSubmit();
 		cansubmit_flag = false;
-		setTimeout('submit_timeout()', 5000); 
+		setTimeout('submit_timeout()', 10000); 
 		return false;
 	});
 }
