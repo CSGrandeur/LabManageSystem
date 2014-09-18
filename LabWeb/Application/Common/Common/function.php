@@ -174,6 +174,33 @@ function unicode2utf8($str){
 	}
 	return $str;
 }
+function unicode_decode($name)
+{
+	//转换编码，将Unicode编码转换成可以浏览的utf-8编码
+	$pattern = '/([\w]+)|(\\\u([\w]{4}))/i';
+	preg_match_all($pattern, $name, $matches);
+	if (!empty($matches))
+	{
+		$name = '';
+		for ($j = 0; $j < count($matches[0]); $j++)
+		{
+			$str = $matches[0][$j];
+			if (strpos($str, '\\u') === 0)
+			{
+				$code = base_convert(substr($str, 2, 2), 16, 10);
+				$code2 = base_convert(substr($str, 4), 16, 10);
+				$c = chr($code).chr($code2);
+				$c = iconv('UCS-2', 'UTF-8', $c);
+				$name .= $c;
+			}
+			else
+			{
+				$name .= $str;
+			}
+		}
+	}
+	return $name;
+}
 /************************************************************/
 //将base64加密过的json字符串转换为php关联数组返回
 /************************************************************/
@@ -182,7 +209,7 @@ function base64_json_decode($str, $content)
 	$jsonstr = base64_decode($str);
 	//$jsonstr = char2utf8(base64_decode($str));//转utf8
 	if($content == 'printer')
-		$jsonstr = unicode2utf8($jsonstr);
+		$jsonstr = unicode_decode($jsonstr);
 	$jsonstr = strtr($jsonstr, "\t", ' ');
 	if($jsonstr != false)
 	{
