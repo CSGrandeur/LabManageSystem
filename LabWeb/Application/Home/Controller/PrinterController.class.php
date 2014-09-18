@@ -49,7 +49,7 @@ class PrinterController extends Controller {
 					$papercount = $Printcount->where($map)->find();
 					if($papercount == null)
 					{
-						$papercount = $map + array('papersum' => $info['papernum']);
+						$papercount = $map + array('papersum' => 0);
 						$Printcount->add($papercount);
 					}
 					$alreadyused = $papercount['papersum'];
