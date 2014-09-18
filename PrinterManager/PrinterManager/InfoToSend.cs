@@ -17,6 +17,7 @@ namespace PrinterManager
 
         public string ToHttpGetStr()
         {
+            jobname = Encrypt.Base64Encode(jobname);
             string res = "{";
             res += "\"uid\":\"" + submitter + "\",";
             res += "\"papernum\":\"" + pagenum + "\",";
@@ -25,7 +26,7 @@ namespace PrinterManager
             res += "\"submittime\":\"" + jobtime + "\"";//最后一行不要逗号安全些
             res += "}";
 
-            return CodeChange.StringToUnicode(res);
+            return res;
         }
     }
 }

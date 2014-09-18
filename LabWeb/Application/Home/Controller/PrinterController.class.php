@@ -9,9 +9,11 @@ class PrinterController extends Controller {
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
 		if(I('param.info', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
 		{
-			$info = base64_json_decode(I('param.info'), 'printer');//函数在Common/function.php中
+			$info = base64_json_decode(I('param.info'));//函数在Common/function.php中
 			if(array_key_exists("uid", $info))//info数组中有uid
 			{
+				$info['jobname'] = base64_decode($info['jobname']);
+file_put_contents("/var/www/abc.txt", print_r($info, true)."\n", FILE_APPEND);
 				$info['infohash'] = md5(I('param.info'));
 				$Printrecord = M('printrecord');
 				$map = array(

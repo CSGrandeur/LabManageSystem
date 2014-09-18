@@ -204,12 +204,9 @@ function unicode_decode($name)
 /************************************************************/
 //将base64加密过的json字符串转换为php关联数组返回
 /************************************************************/
-function base64_json_decode($str, $content)
+function base64_json_decode($str)
 {
 	$jsonstr = base64_decode($str);
-	//$jsonstr = char2utf8(base64_decode($str));//转utf8
-	if($content == 'printer')
-		$jsonstr = unicode_decode($jsonstr);
 	$jsonstr = strtr($jsonstr, "\t", ' ');
 	if($jsonstr != false)
 	{
