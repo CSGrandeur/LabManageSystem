@@ -7,7 +7,6 @@ class PrinterController extends Controller {
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
-
 		if(I('param.info', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
 		{
 			$info = base64_json_decode(I('param.info'));//函数在Common/function.php中

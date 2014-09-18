@@ -148,11 +148,24 @@ function IsLoggedin()
 	return session('?lab_uid') ? true : false;
 }
 /************************************************************/
+//识别编码并转utf-8
+/************************************************************/
+function char2utf8($data){
+	if( !empty($data) )
+	{
+		$fileType = mb_detect_encoding($data , array('UTF-8','GBK','LATIN1','BIG5')) ;
+		if( $fileType != 'UTF-8'){
+			$data = mb_convert_encoding($data ,'utf-8' , $fileType);
+		}
+	}
+	return $data;
+}
+/************************************************************/
 //将base64加密过的json字符串转换为php关联数组返回
 /************************************************************/
 function base64_json_decode($str)
 {
-	$jsonstr = base64_decode($str);
+	$jsonstr = char2utf8(base64_decode($str));//转utf8否则中文会出问题造成json无法转换
 	if($jsonstr != false)
 	{
 		for($i = strlen($jsonstr) - 1; $i >= 0; $i --)

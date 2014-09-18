@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeChange.cs" />
     <Compile Include="ConstVal.cs" />
     <Compile Include="Encrypt.cs" />
     <Compile Include="HttpSend.cs" />
