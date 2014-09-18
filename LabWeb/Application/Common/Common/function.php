@@ -165,7 +165,7 @@ function char2utf8($data){
 /************************************************************/
 function base64_json_decode($str)
 {
-	$jsonstr = char2utf8(base64_decode($str));//转utf8否则中文会出问题造成json无法转换
+	$jsonstr = char2utf8(base64_decode($str));//转utf8
 	if($jsonstr != false)
 	{
 		for($i = strlen($jsonstr) - 1; $i >= 0; $i --)
