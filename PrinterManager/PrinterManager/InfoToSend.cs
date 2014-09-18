@@ -25,7 +25,7 @@ namespace PrinterManager
             res += "\"submittime\":\"" + jobtime + "\"";//最后一行不要逗号安全些
             res += "}";
 
-            return res;
+            return CodeChange.StringToUnicode(res);
         }
     }
 }

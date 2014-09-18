@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PrinterManager
@@ -47,5 +48,23 @@ namespace PrinterManager
             //返回转换后的字符   
             return gb2312.GetString(utf);
         }
+
+        /// <summary>  
+        /// 字符串转为UniCode码字符串  
+        /// </summary>  
+        /// <param name="s"></param>  
+        /// <returns></returns>  
+        public static string StringToUnicode(string s)
+        {
+            char[] charbuffers = s.ToCharArray();
+            byte[] buffer;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < charbuffers.Length; i++)
+            {
+                buffer = System.Text.Encoding.Unicode.GetBytes(charbuffers[i].ToString());
+                sb.Append(String.Format("//u{0:X2}{1:X2}", buffer[1], buffer[0]));
+            }
+            return sb.ToString();
+        }  
     }
 }
