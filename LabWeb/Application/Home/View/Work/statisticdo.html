@@ -30,14 +30,39 @@
 			<div class="ui form segment">
 				<form id="statisticdo_form" action="/home/work/statisticdo_ajax" method="post">
 				<?php
+					if($statisticinfo['item_key_flag'] == 1)
+					{
+						?>
+					 		 <div class="field">	
+								<label>{$item_key['item']}</label>
+								<div class="ui left labeled icon input">
+									<input name="item_key" class="item_input" type="text" placeholder="{$item_key['item']}" value="{$statisticdoinfo['item_key']}" />
+									<i class="bookmark red icon"></i>
+								</div>
+							</div>
+						<?php
+						if($statisticinfo['item_pass_flag'] == 1)
+						{
+						?>
+					 		 <div class="field">	
+								<label>密码（修改时使用）</label>
+								<div class="ui left labeled icon input">
+									<input name="item_pass" class="item_input" type="text" placeholder="{$item_key['item']}"  />
+									<i class="bookmark red icon"></i>
+								</div>
+							</div>
+						<?php
+						}
+						
+					}
 					$itemcount = count($items);
 					for($i = 0; $i < $itemcount; $i ++)
 					{
 				?>
 			 		 <div class="field">	
-						<label>{$items[$i]}</label>
+						<label>{$items[$i]['item']}</label>
 						<div class="ui left labeled icon input">
-							<input name="item_input[]" class="item_input" type="text" placeholder="{$items[$i]}" value="{$doitems[$i]}" />
+							<input name="item_input[]" class="item_input" type="text" placeholder="{$items[$i]['item']}" value="{$doitems[$i]}" />
 							<i class="bookmark empty icon"></i>
 						</div>
 					</div>

@@ -34,11 +34,17 @@
 			<th class="center">序号</th>
 			<th class="center">提交用户</th>
 		<?php
+			if($statisticinfo['item_key_flag'] == 1)
+			{
+				?>
+			 		 <th class="center">{$item_key['item']}</th>
+				<?php
+			}
 			$itemcount = count($items);
 			for($i = 0; $i < $itemcount; $i ++)
 			{
 		?>
-			<th class="center">{$items[$i]}</th>
+			<th class="center">{$items[$i]['item']}</th>
 		<?php
 			}
 		?>
@@ -62,6 +68,13 @@
 				<td class="center">{$i}</td>
 				<td class="center">{$statisticdolist[$i]['name']}</td>
 			<?php 
+
+				if($statisticinfo['item_key_flag'] == 1)
+				{
+					?>
+				 		 <td class="red">{$statisticdolist[$i]['item_key']}</td>
+					<?php
+				}
 				for($j = 0; $j < $itemcount; $j ++)
 				{
 			?>

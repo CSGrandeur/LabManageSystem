@@ -141,6 +141,17 @@ function IsAdmin()
 	return session('?lab_admin') && session('lab_admin') == true;
 }
 /************************************************************/
+//信息统计完整查看权限判断
+/************************************************************/
+function IsWatcher()
+{
+	return IsAdmin() || session('?info_watcher') && session('info_watcher') == true;
+}
+function StrToStar($str)
+{
+	return preg_replace("/./", "*", $str); 
+}
+/************************************************************/
 //登录判断
 /************************************************************/
 function IsLoggedin()

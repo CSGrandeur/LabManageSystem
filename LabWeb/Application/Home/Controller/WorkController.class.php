@@ -125,7 +125,10 @@ class WorkController extends Controller {
 											statistic.available available,
 											statistic.starttime starttime,
 											statistic.endtime endtime,
-											statistic.allow_anonymous allow_anonymous
+											statistic.allow_anonymous allow_anonymous,
+											statistic.item_key item_key,
+											statistic.item_key_flag item_key_flag,
+											statistic.item_pass_flag item_pass_flag
 											')
 									->where($map)
 									->find();
@@ -147,6 +150,7 @@ class WorkController extends Controller {
 				{
 					$data['statisticinfo'] = $statisticinfo;
 					$data['items'] = json_decode($statisticinfo['items'], true);
+					$data['item_key'] = json_decode($statisticinfo['item_key'], true);
 					if($statisticinfo['allow_anonymous'] == 0)//如果仅允许登录用户填写，则获取已填写的信息
 					{
 						$map = array(
@@ -183,7 +187,7 @@ class WorkController extends Controller {
 			$id = intval(trim($reqdata['id']));
 			
 			$Statistic = M('statistic');
-			$statisticinfo = $Statistic->where('id='.$id)->field('id, starttime, endtime, available, allow_anonymous')->find();
+			$statisticinfo = $Statistic->where('id='.$id)->find();
 			$nowtime = time();
 			$starttime = strtotime($statisticinfo['starttime']);
 			$endtime= strtotime($statisticinfo['endtime']);
@@ -197,7 +201,8 @@ class WorkController extends Controller {
 			else if($nowtime > $endtime && !IsAdmin())
 				$data['wrongcode'] = $WRONG_CODE['too_late'];
 			else 
-			{	
+			{
+				$sqlflag = false;
 				$Statisticdo = M('statisticdo');
 				$addstatisticdolist = $reqdata['item_input'];
 				$statisticdo_add = array(
@@ -209,14 +214,47 @@ class WorkController extends Controller {
 					'statisticid' => $id,
 					'uid' => session('lab_uid')
 				);
-				if($statisticinfo['allow_anonymous'] == 0 && $Statisticdo->where($map)->find() != null)//不允许匿名提交，则可能要update
+				if($statisticinfo['allow_anonymous'] == 0)//不允许匿名提交，则可能要update
 				{
-					if($Statisticdo->where($map)->save($statisticdo_add) == false)
-						$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
-					else 
-						$data['wrongcode'] = $WRONG_CODE['update_successful'];
+					if($Statisticdo->where($map)->find() != null)
+					{
+						if($Statisticdo->where($map)->save($statisticdo_add) == false)
+							$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+						else 
+							$data['wrongcode'] = $WRONG_CODE['update_successful'];
+						$sqlflag = true;
+					}
 				}
 				else 
+				{
+					if($statisticinfo['item_key_flag'] == 1)
+					{
+						$statisticdo_add['item_key'] = trim($reqdata['item_key']);
+						if($statisticinfo['item_pass_flag'] == 1)
+							$statisticdo_add['item_pass'] = trim($reqdata['item_pass']);
+						$map = array(
+							'statisticid' => $id,
+							'item_key' => $statisticdo_add['item_key']
+						);
+						$exist_items = $Statisticdo->where($map)->find();
+						if($exist_items != null)
+						{
+							if($statisticinfo['item_pass_flag'] == 1 && $exist_items['item_pass'] != $statisticdo_add['item_pass'])
+							{
+								$data['wrongcode'] = $WRONG_CODE['passwd_error'];
+							}
+							else
+							{
+								if($Statisticdo->where($map)->save($statisticdo_add) == false)
+									$data['wrongcode'] = $WRONG_CODE['sql_notupdate'];
+								else
+									$data['wrongcode'] = $WRONG_CODE['update_successful'];
+							}
+							$sqlflag = true;
+						}
+					}
+				}
+				if($sqlflag == false)
 				{
 					if($Statisticdo->add($statisticdo_add) == false)
 						$data['wrongcode'] = $WRONG_CODE['sql_error'];
@@ -257,7 +295,10 @@ class WorkController extends Controller {
 											statistic.available available,
 											statistic.starttime starttime,
 											statistic.endtime endtime,
-											statistic.allow_anonymous allow_anonymous
+											statistic.allow_anonymous allow_anonymous,
+											statistic.item_key item_key,
+											statistic.item_key_flag item_key_flag,
+											statistic.item_pass_flag item_pass_flag
 											')
 									->where($map)
 									->find();
@@ -274,6 +315,7 @@ class WorkController extends Controller {
 				else 
 				{
 					$data['statisticinfo'] = $statisticinfo;
+					$data['item_key'] = json_decode($statisticinfo['item_key'], true);
 					$data['items'] = json_decode($statisticinfo['items'], true);
 					$map = array(
 						'statisticdo.statisticid' => $id
@@ -286,9 +328,12 @@ class WorkController extends Controller {
 											user.uid uid,
 											user.name name,
 											statisticdo.id id,
-											statisticdo.items items
+											statisticdo.items items,
+											statisticdo.item_key item_key,
+											statisticdo.item_pass item_pass
 											')
 									->select();
+					$itemcount = count($data['items']);
 					for($i = count($statisticdolist) - 1; $i >= 0; $i --)
 					{
 						$statisticdolist[$i]['items'] = json_decode($statisticdolist[$i]['items'], true);
@@ -296,6 +341,16 @@ class WorkController extends Controller {
 							$statisticdolist[$i]['name'] = "匿名";
 						else
 							$statisticdolist[$i]['name'] = '<a target="_blank" href="/home/user/userinfo?uid='.$statisticdolist[$i]['uid'].'">'.$statisticdolist[$i]['name'].'</a>';
+						if(!IsWatcher())
+						{
+							if($statisticinfo['item_key_flag'] == 1 && $data['item_key']['cover'] == 1)
+								$statisticdolist[$i]['item_key'] = StrToStar($statisticdolist[$i]['item_key']);
+							for($j = 0; $j < $itemcount; $j ++)
+							{
+								if($data['items'][$j]['cover'] == 1)
+									$statisticdolist[$i]['items'][$j] = StrToStar($statisticdolist[$i]['items'][$j]);
+							}
+						}
 					}
 					$data['statisticdolist'] = $statisticdolist;
 				}

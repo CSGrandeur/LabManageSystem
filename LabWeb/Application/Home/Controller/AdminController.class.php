@@ -1131,6 +1131,26 @@ class AdminController extends Controller {
 		$this->display();
 	}
 	//添加信息统计逻辑处理
+	private function make_cover($item)//处理结尾带'$'的字段
+	{
+		$item = trim($item);
+		if(strlen($item) == 0) return null;
+		if($item[strlen($item) - 1] == '$')
+		{
+			$item = array(
+					'item' => rtrim($item, '$'),
+					'cover' => 1
+			);
+		}
+		else
+		{
+			$item = array(
+					'item' => $item,
+					'cover' => 0
+			);
+		}
+		return $item;
+	}
 	public function addstatistic_ajax()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
@@ -1154,7 +1174,11 @@ class AdminController extends Controller {
 			{
 				$reqdata = I('param.');
 				$addstatistictext = $reqdata['statistic_items'];
-				$addstatisticlist = preg_split("/[\\r\\n]{1,2}/", $addstatistictext);
+				$addstatisticlist = preg_split("/[\\r\\n]+/", trim($addstatistictext));
+				for($i = count($addstatisticlist) - 1; $i >= 0; $i --)//做内容保护标记
+				{
+					$addstatisticlist[$i] = $this->make_cover($addstatisticlist[$i]);
+				}
 				$statistic_add = array(
 					'title' => trim($reqdata['statistic_title']),
 					'des' => trim($reqdata['content']),
@@ -1163,8 +1187,14 @@ class AdminController extends Controller {
 					'submittime' => date('Y-m-d H:i:s'),
 					'starttime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_starttime']))),
 					'endtime' => date('Y-m-d H:i:s', strtotime(trim($reqdata['statistic_endtime']))),
-					'allow_anonymous' => $reqdata['allow_anonymous'] == 'on'
+					'allow_anonymous' => $reqdata['allow_anonymous'] == 'on',
+					'item_pass_flag' => $reqdata['item_pass_flag'] == 'on'
 				);
+				if(strlen(trim($reqdata['item_key'])) != 0)
+				{
+					$statistic_add['item_key_flag'] = 1;
+					$statistic_add['item_key'] = json_encode($this->make_cover($reqdata['item_key']));
+				}
 				if($Statistic->add($statistic_add) == false)
 					$data['wrongcode'] = $WRONG_CODE['sql_error'];
 			}

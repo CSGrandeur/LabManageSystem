@@ -9,6 +9,8 @@ $(document).ready(function ()
 		ondo_addstatistic();
 	
 })
+
+
 function ondo_addstatistic()
 {
 	$('#addstatistic_form').unbind("ajaxForm").ajaxForm();
@@ -52,6 +54,7 @@ function ondo_addstatistic()
     	return false;
     });
     $('#allow_anonymouse_div').checkbox();
+    $('#allow_item_pass_div').checkbox();
 
 }
 function AddstatisticAjaxSubmit()

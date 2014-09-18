@@ -4,12 +4,15 @@
 		每行一条信息，如：<br/>
 		姓名<br/>
 		年龄<br/>
-		身高
+		如需信息不允许普通用户在结果中查看，对应的行尾加上'$'
 	</div>
 	<form id="addstatistic_form" action="/home/admin/addstatistic_ajax" method="post">
 		<div class='ui form'>
 			<div class="field">
 				<div><input id='statistic_title' name="statistic_title" type="text" placeholder="标题..."/></div>
+				<br/>
+				<input id='item_key' name="item_key" type="text" placeholder="内容主键，为空则没有..."/>
+				<br/>
 				<br/>
 				<div>
 					开始时间：<input id="statistic_starttime" name="statistic_starttime" type="datetime-local" value="{$nowtime}"/>
@@ -18,8 +21,14 @@
 				<br/>
 				<div id="allow_anonymouse_div" class="ui toggle checkbox">
 					<input type="checkbox" name="allow_anonymous">
-					<label>允许未登录用户匿名填表？</label>
+					<label>允许未登录用户匿名填表</label>
 				</div>
+				<br/>
+				<div id="allow_item_pass_div" class="ui toggle checkbox">
+					<input type="checkbox" id="item_pass_flag" name="item_pass_flag">
+					<label>开启内容密码</label>
+				</div>
+				<br/>
 			</div>
 			<div>信息项列表：</div>
 			<div class="field">
