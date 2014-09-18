@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -50,6 +51,11 @@ namespace PrinterManager
             InfoToSend its = new InfoToSend();
             List<PrintSystemJobInfo> joblist = new List<PrintSystemJobInfo>();
             string sendstr = "";
+
+            //Dictionary<int, int> tmp_pagenum = new Dictionary<int, int>();
+            Dictionary<int, bool> sended = new Dictionary<int, bool>();
+            bool newsend = true;
+
             foreach (PrintQueue pq in myPrintQueues)
             {
                 pq.Refresh();
@@ -63,58 +69,76 @@ namespace PrinterManager
                 var Jobs = pq.GetPrintJobInfoCollection();
                 foreach (PrintSystemJobInfo Job in Jobs)
                 {
-                    if(Job.JobIdentifier > maxidentifier)
+                    if (Job.JobIdentifier > omaxidentifier)
                     {
                         Job.Pause();
                         if(Job.JobIdentifier > nmaxidentifier)
                             nmaxidentifier = Job.JobIdentifier;
+                        //tmp_pagenum.Add(Job.JobIdentifier, Job.NumberOfPages);//添加临时页码
+                        sended.Add(Job.JobIdentifier, false);//添加是否已发标记
                     }
                 }
                 mut.WaitOne();
                 maxidentifier = nmaxidentifier;
                 mut.ReleaseMutex();
             }
+            if (nmaxidentifier <= omaxidentifier) return;//如果没有新任务则返回
+                       
+            //Thread.Sleep(10000);//等待插入打印队列的初始化，以免得到0页的结果。
 
-            Thread.Sleep(2000);//太快的话读不到正确页码
-
-            foreach (PrintQueue pq in myPrintQueues)
+            while(newsend == true)
             {
-                pq.Refresh();
-                //排除非打印机的打印任务，暂时没找到更好的识别真实打印机的方法
-                if (pq.Name == "发送至 OneNote 2013" ||
-                    pq.Name == "Microsoft XPS Document Writer" ||
-                    pq.Name == "Foxit Reader PDF Printer" ||
-                    pq.Name == "Fax"
-                    )
-                    continue;
-                var Jobs = pq.GetPrintJobInfoCollection();
-                foreach (PrintSystemJobInfo Job in Jobs)
+                newsend = false;
+                foreach (PrintQueue pq in myPrintQueues)
                 {
-                    if (Job.JobIdentifier > omaxidentifier && Job.JobIdentifier <= nmaxidentifier)
+                    pq.Refresh();
+                    //排除非打印机的打印任务，暂时没找到更好的识别真实打印机的方法
+                    if (pq.Name == "发送至 OneNote 2013" ||
+                        pq.Name == "Microsoft XPS Document Writer" ||
+                        pq.Name == "Foxit Reader PDF Printer" ||
+                        pq.Name == "Fax"
+                        )
+                        continue;
+                    var Jobs = pq.GetPrintJobInfoCollection();
+                    foreach (PrintSystemJobInfo Job in Jobs)
                     {
-                        joblist.Add(Job);
+                        //using (System.IO.StreamWriter sw = new System.IO.StreamWriter(ConstVal.logsite, true))
+                        //{
+                        //    sw.WriteLine(tmp_pagenum[Job.JobIdentifier] + "\t" + Job.NumberOfPages + "\t" + Job.JobSize + "\t" + Job.JobStatus);
+                        //}
+                        if (Job.JobIdentifier > omaxidentifier && Job.JobIdentifier <= nmaxidentifier)
+                        {
+                            if (sended[Job.JobIdentifier] == true) continue;
+                            newsend = true;
+                            //if (tmp_pagenum[Job.JobIdentifier] < Job.NumberOfPages)
+                            if(!Job.IsSpooling)//后台处理完成
+                            {
+                                sended[Job.JobIdentifier] = true;
+
+                                its.submitter = Job.Submitter;
+                                its.pagenum = Job.NumberOfPages;
+                                its.jobname = Job.Name;
+                                its.identifier = Job.JobIdentifier;
+                                its.jobtime = Job.TimeJobSubmitted + "";
+
+                                sendstr = its.ToHttpGetStr();
+                                string retstr = HttpSend.HttpGet(ConstVal.send_url, "info=" + Encrypt.Base64Encode(sendstr));
+                                if (retstr != "0")
+                                    Job.Resume();
+                                else
+                                    Job.Cancel();
+                                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(ConstVal.logsite, true))
+                                {
+                                    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ") + "\r\n" + "info=" + Encrypt.Base64Encode(sendstr) + "\r\n" + sendstr + "\r\n" + "response:" + "\r\n" + retstr + "\r\n\r\n");
+                                }
+                            }
+                        }
                     }
                 }
+                Thread.Sleep(2000);//每5秒确认一次任务的页码是否还在增加
             }
-            for (int i = 0; i < joblist.Count; i++)
-            {
-                its.submitter = joblist[i].Submitter;
-                its.pagenum = joblist[i].NumberOfPages;
-                its.jobname = joblist[i].Name;
-                its.identifier = joblist[i].JobIdentifier;
-                its.jobtime = joblist[i].TimeJobSubmitted + "";
-                sendstr = its.ToHttpGetStr();
+        
 
-                string retstr = HttpSend.HttpGet(ConstVal.send_url, "info=" + Encrypt.Base64Encode(sendstr));
-                if (retstr != "0")
-                    joblist[i].Resume();
-                else
-                    joblist[i].Cancel();
-                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(ConstVal.logsite, true))
-                {
-                    sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss ") + "\r\n" + "info=" + Encrypt.Base64Encode(sendstr) + "\r\n" + sendstr + "\r\n" + "response:" + "\r\n" + retstr + "\r\n\r\n");
-                }
-            }
             //Thread thread = new Thread(new ThreadStart(st.SendInfo));
             //thread.Start();
         }

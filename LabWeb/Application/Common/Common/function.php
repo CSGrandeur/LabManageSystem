@@ -213,8 +213,6 @@ function base64_json_decode($str)
 		for($i = strlen($jsonstr) - 1; $i >= 0; $i --)
 			if($jsonstr[$i] == '\\') $jsonstr[$i] = '/';
 		$jsondata = json_decode(stripslashes($jsonstr), true);
-file_put_contents("/var/www/abc.txt", print_r($jsonstr, true)."\n", FILE_APPEND);
-file_put_contents("/var/www/abc.txt", print_r($jsondata, true)."\n", FILE_APPEND);
 		return $jsondata;
 	}
 	return false;

@@ -13,7 +13,6 @@ class PrinterController extends Controller {
 			if(array_key_exists("uid", $info))//info数组中有uid
 			{
 				$info['jobname'] = base64_decode($info['jobname']);
-file_put_contents("/var/www/abc.txt", print_r($info, true)."\n", FILE_APPEND);
 				$info['infohash'] = md5(I('param.info'));
 				$Printrecord = M('printrecord');
 				$map = array(
