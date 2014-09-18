@@ -165,7 +165,8 @@ function char2utf8($data){
 /************************************************************/
 function base64_json_decode($str)
 {
-	$jsonstr = char2utf8(base64_decode($str));//转utf8
+	$jsonstr = base64_decode($str);//转utf8
+	//$jsonstr = char2utf8(base64_decode($str));//转utf8
 	$jsonstr = strtr($jsonstr, "\t", ' ');
 	if($jsonstr != false)
 	{
