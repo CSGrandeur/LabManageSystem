@@ -147,16 +147,17 @@ namespace CheckingInClient
             //GetKeyboardInformations();
             //GetOnlyName();
 
-            string getinfo = "";
 
             sampcnt++;//采样sampcnt次发送一次
             if(sampcnt >= ConstVal.send_period)
             {
+                string getinfo = "";
                 GetProcessInformations();
                 GetNetInformations();
                 //CPU
+                cpuload = cpuload / sampcnt;
                 while (cpuload > 100) cpuload *= 0.5;
-                info.cpuload = cpuload / sampcnt;
+                info.cpuload = cpuload;
                 cpuload = 0;
                 //内存
                 info.memload = memload / sampcnt; 

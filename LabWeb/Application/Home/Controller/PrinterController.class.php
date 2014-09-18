@@ -3,7 +3,7 @@ namespace Home\Controller;
 use Think\Controller;
 class PrinterController extends Controller {
 	private function receive_return()
-	{//返回非0，表示允许打印。只有准确判断纸张数超出规定时候返回0，禁止打印。
+	{//返回非0，表示允许打印。
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data['wrongcode'] = $WRONG_CODE['totally_right'];
@@ -11,7 +11,7 @@ class PrinterController extends Controller {
 		if(I('param.info', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
 		{
 			$info = base64_json_decode(I('param.info'));//函数在Common/function.php中
-			if(array_key_exists("uid", $info))
+			if(array_key_exists("uid", $info))//info数组中有uid
 			{
 				$info['infohash'] = md5(I('param.info'));
 				$Printrecord = M('printrecord');
@@ -66,6 +66,10 @@ class PrinterController extends Controller {
 					);
 					$Printrecord = M('printrecord');
 					$printrecord_add['result'] = $alreadyused >= $paperlimit ? 0 : 1;
+					if(ItemExists($info['uid'], 'uid', 'user', false) == $WRONG_CODE['not_exist'])
+						$printrecord_add['result'] = 0;//如果系统不存在该用户，则不允许打印
+					
+					
 					$Printrecord->add($printrecord_add);
 					if($printrecord_add['result'] != 0)
 						$papercount['papersum'] += intval($info['papernum']);

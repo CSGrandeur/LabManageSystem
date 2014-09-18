@@ -54,12 +54,12 @@ namespace PrinterManager
             {
                 pq.Refresh();
                 //排除非打印机的打印任务，暂时没找到更好的识别真实打印机的方法
-                //if (pq.Name == "发送至 OneNote 2013" ||
-                //    pq.Name == "Microsoft XPS Document Writer" ||
-                //    pq.Name == "Foxit Reader PDF Printer" ||
-                //    pq.Name == "Fax"
-                //    )
-                //    continue;
+                if (pq.Name == "发送至 OneNote 2013" ||
+                    pq.Name == "Microsoft XPS Document Writer" ||
+                    pq.Name == "Foxit Reader PDF Printer" ||
+                    pq.Name == "Fax"
+                    )
+                    continue;
                 var Jobs = pq.GetPrintJobInfoCollection();
                 foreach (PrintSystemJobInfo Job in Jobs)
                 {
@@ -81,12 +81,12 @@ namespace PrinterManager
             {
                 pq.Refresh();
                 //排除非打印机的打印任务，暂时没找到更好的识别真实打印机的方法
-                //if (pq.Name == "发送至 OneNote 2013" ||
-                //    pq.Name == "Microsoft XPS Document Writer" ||
-                //    pq.Name == "Foxit Reader PDF Printer" ||
-                //    pq.Name == "Fax"
-                //    )
-                //    continue;
+                if (pq.Name == "发送至 OneNote 2013" ||
+                    pq.Name == "Microsoft XPS Document Writer" ||
+                    pq.Name == "Foxit Reader PDF Printer" ||
+                    pq.Name == "Fax"
+                    )
+                    continue;
                 var Jobs = pq.GetPrintJobInfoCollection();
                 foreach (PrintSystemJobInfo Job in Jobs)
                 {
@@ -108,12 +108,12 @@ namespace PrinterManager
                 string retstr = HttpSend.HttpGet(ConstVal.send_url, "info=" + Encrypt.Base64Encode(sendstr));
                 if (retstr != "0")
                     joblist[i].Resume();
-                //else
-                //    joblist[i].Cancel();
-                using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
-                {
-                    sw.WriteLine("response:" + "\r\n" + sendstr + "\r\n" + retstr + "\r\n");
-                }
+                else
+                    joblist[i].Cancel();
+                //using (System.IO.StreamWriter sw = new System.IO.StreamWriter("D:/PrinterManagerLog.txt", true))
+                //{
+                //    sw.WriteLine("response:" + "\r\n" + sendstr + "\r\n" + retstr + "\r\n");
+                //}
             }
             //Thread thread = new Thread(new ThreadStart(st.SendInfo));
             //thread.Start();

@@ -110,7 +110,6 @@ function JudgeDoing(jdatas)
 //	else if(jdatas['memload'][j].y < 30) $('#whatdoing').text('什么都没干');
 //	else if(jdatas['memload'][j].y > 60 && jdatas['keybutton'][j].y > 10) $('#whatdoing').text('写代码');
 //	else if(jdatas['appprocessnum'][j].y > 10) $('#whatdoing').text('检查代码');
-//	else $('#whatdoing').text('逛淘宝 XD');
 }
 //判断在干什么
 function WhatIsSomeoneDoing()
