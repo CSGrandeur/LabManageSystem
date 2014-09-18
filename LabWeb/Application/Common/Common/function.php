@@ -161,13 +161,28 @@ function char2utf8($data){
 	return $data;
 }
 /************************************************************/
+//unicode转utf8
+/************************************************************/
+function unicode2utf8($str){
+	if(!$str) return $str;
+	$decode = json_decode($str);
+	if($decode) return $decode;
+	$str = '["' . $str . '"]';
+	$decode = json_decode($str);
+	if(count($decode) == 1){
+		return $decode[0];
+	}
+	return $str;
+}
+/************************************************************/
 //将base64加密过的json字符串转换为php关联数组返回
 /************************************************************/
-function base64_json_decode($str)
+function base64_json_decode($str, $content)
 {
 	$jsonstr = base64_decode($str);
 	//$jsonstr = char2utf8(base64_decode($str));//转utf8
-	$jsonstr = preg_replace("#\\\u([0-9a-f]+)#ie","iconv('UCS-2','UTF-8', pack('H4', '\\1'))", $jsonstr);
+	if($content == 'printer')
+		$jsonstr = unicode2utf8($jsonstr);
 	$jsonstr = strtr($jsonstr, "\t", ' ');
 	if($jsonstr != false)
 	{
