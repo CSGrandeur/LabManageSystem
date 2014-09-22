@@ -24,7 +24,7 @@ class PrinterController extends Controller {
 				else 
 				{
 					$Printarrange = M('printarrange');
-					$arrange = $Printarrange->where('uid='.$info['uid'])->find();
+					$arrange = $Printarrange->where('uid="%s"', $info['uid'])->find();
 					$paperlimit = $arrange == null ? C('PAPER_LIMIT') : $arrange['paperlimit'];
 					//计算本月额外配给纸张数（允许多次配给，求和）
 					$Printaddition = M('printaddition');
@@ -291,5 +291,43 @@ class PrinterController extends Controller {
 			$data['recordsFiltered'] = $Printrecord->where($map)->count();
 		}
 		$this->ajaxReturn($data);
+	}
+	//计算某用户某月剩余总张数
+	private function month_papernum($uid, $month)
+	{
+		//使用的张数
+		$Printcount = M('printcount');
+		$map = array(
+				'uid' => $uid,
+				'month' => $month
+		);
+		$papercount = $Printcount->where($map)->find();
+		if($papercount == null)
+		{
+			$alreadyused = 0;
+		}
+		$alreadyused = $papercount['papersum'];
+		
+		//分配的张数
+		$Printarrange = M('printarrange');
+		$arrange = $Printarrange->where('uid="%s"', $info['uid'])->find();
+		$paperlimit = $arrange == null ? C('PAPER_LIMIT') : $arrange['paperlimit'];
+		//计算对应月额外配给纸张数（允许多次配给，求和）
+		$Printaddition = M('printaddition');
+		$map = array(
+				'uid' => $uid,
+				'month' => $month,
+				'available' => 1
+		);
+		$addition = $Printaddition->where($map)->select();
+		$additionnum = 0;
+		if($addition != null)
+		{
+			foreach($addition as $addition_item)
+				$additionnum += $addition_item['addnum'];
+		}
+		$paperlimit += $additionnum;
+		$paper_remain = $paperlimit - $alreadyused;
+		return $paper_remain >= 0 ? $paper_remain : 0;
 	}
 }
