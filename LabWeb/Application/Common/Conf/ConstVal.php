@@ -3,7 +3,7 @@
 return array(
 		'DISPLAY_ITEM_NUM' => 20,
 		'PAGE_ITEM_NUM' => 25,
-		'PAPER_LIMIT' => 30,					//打印纸默认规定月使用量
+		'PAPER_LIMIT' => 300,					//打印纸默认规定月使用量
 		'PRIVILEGE_KIND' => array(
 			'lab_super_admin',				//超级管理员
 			'lab_admin',					//管理员
