@@ -12,6 +12,9 @@ class PrinterController extends Controller {
 			$info = base64_json_decode(I('param.info'));//函数在Common/function.php中
 			if(array_key_exists("uid", $info))//info数组中有uid
 			{
+				if(ItemExists($info['uid'], 'uid', 'user', false) == $WRONG_CODE['not_exist'])
+					return 0;//如果系统不存在该用户，则不允许打印
+				$this->add_lastmonth($info['uid']);//累计上月剩余打印纸
 				$info['jobname'] = base64_decode($info['jobname']);
 				$info['infohash'] = md5(I('param.info'));
 				$Printrecord = M('printrecord');
@@ -66,8 +69,6 @@ class PrinterController extends Controller {
 					);
 					$Printrecord = M('printrecord');
 					$printrecord_add['result'] = $alreadyused >= $paperlimit ? 0 : 1;
-					if(ItemExists($info['uid'], 'uid', 'user', false) == $WRONG_CODE['not_exist'])
-						$printrecord_add['result'] = 0;//如果系统不存在该用户，则不允许打印
 					
 					
 					$Printrecord->add($printrecord_add);
@@ -291,6 +292,23 @@ class PrinterController extends Controller {
 			$data['recordsFiltered'] = $Printrecord->where($map)->count();
 		}
 		$this->ajaxReturn($data);
+	}
+	//将上个月没用完的纸累计到本月
+	private function add_lastmonth($uid)
+	{
+		$map = array(
+			'uid' => $uid,
+			'month' => date("Y-m-01", strtotime('-1 month')),
+			'kind' => 2
+		);
+		$Printaddition = M('printaddition');
+		if($Printaddition->where($map)->find() != null) return;
+		$lastmonth_papernum = $this->month_papernum($uid, date("Y-m-01"));
+		if($lastmonth_papernum > C('ADDUP_PAPER_LIMIT')) $lastmonth_papernum = C('ADDUP_PAPER_LIMIT');
+		$printaddition_add = $map + array(
+			'addnum' => $lastmonth_papernum,
+		);
+		$Printaddition->add($printaddition_add);
 	}
 	//计算某用户某月剩余总张数
 	private function month_papernum($uid, $month)
