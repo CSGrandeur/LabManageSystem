@@ -7,3 +7,12 @@ D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\Check
 D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.csproj.GenerateResource.Cache
 D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.exe
 D:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.pdb
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\bin\Release\CheckingInClient.exe.config
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.exe
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.pdb
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\bin\Release\CheckingInClient.exe
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\bin\Release\CheckingInClient.pdb
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.csprojResolveAssemblyReference.cache
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.CheckingInSystem.resources
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.Properties.Resources.resources
+E:\workspace\LabManageSystem\CheckingInClient\checkinginclient\obj\Release\CheckingInClient.csproj.GenerateResource.Cache

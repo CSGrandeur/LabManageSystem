@@ -303,7 +303,7 @@ class PrinterController extends Controller {
 		);
 		$Printaddition = M('printaddition');
 		if($Printaddition->where($map)->find() != null) return;
-		$lastmonth_papernum = $this->month_papernum($uid, date("Y-m-01"));
+		$lastmonth_papernum = $this->month_papernum($uid, date("Y-m-01", strtotime('-1 month')));
 		if($lastmonth_papernum > C('ADDUP_PAPER_LIMIT')) $lastmonth_papernum = C('ADDUP_PAPER_LIMIT');
 		$printaddition_add = $map + array(
 			'addnum' => $lastmonth_papernum,
