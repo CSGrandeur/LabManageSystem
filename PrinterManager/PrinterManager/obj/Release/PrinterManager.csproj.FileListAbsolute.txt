@@ -6,3 +6,6 @@ D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Release\PrinterMa
 D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Release\PrinterManager.exe
 D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Release\PrinterManager.pdb
 D:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Release\PrinterManager.csprojResolveAssemblyReference.cache
+E:\workspace\LabManageSystem\PrinterManager\PrinterManager\bin\Release\PrinterManager.exe.config
+E:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Release\PrinterManager.exe
+E:\workspace\LabManageSystem\PrinterManager\PrinterManager\obj\Release\PrinterManager.pdb
