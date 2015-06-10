@@ -2,21 +2,21 @@
 namespace Home\Controller;
 use Think\Controller;
 class UserController extends Controller {
-    public function userinfo()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
-    	
-    	if(I('param.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
-    	{
-    		$uid = trim(I('param.uid'));
-    		$User = M('user');
-    		$map = array(
-    			'user.uid' => $uid
-    		);
-    		$data['userinfo'] = $User->table('lab_user user')
+	public function userinfo()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		
+		if(I('param.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
+		{
+			$uid = trim(I('param.uid'));
+			$User = M('user');
+			$map = array(
+				'user.uid' => $uid
+			);
+			$data['userinfo'] = $User->table('lab_user user')
 						->join('LEFT JOIN lab_userdetail userdetail ON userdetail.uid = user.uid')
 						->field('
 								user.uid uid, 
@@ -40,82 +40,82 @@ class UserController extends Controller {
 								')
 						->where($map)
 						->find();
-    		if($data['userinfo'] == null)
-    		{
-    			$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
-    		}
-    		$data['strlist'] = C('STR_LIST');
-    	}
-    	else 
-    	{
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-    	}
-    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-        $this->assign($data);
-        if($data['wrongcode'] != $WRONG_CODE['totally_right'])
-        	$this->display('Public:alert');
-        else
-        	$this->display();
-    }
-    public function login_function()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(I('post.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
-    	{
-    		$uid = trim(I('post.uid'));
-    		$passwd = MkPasswd(trim(I('post.passwd')));
-    		$User = M('user');
-    		$map = array(
-    			'uid' => $uid
-    		);
-    		$userinfo = $User->where($map)->find();
-    		if($userinfo == null)
-    			$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
-    		else
-    		{
-    			if($passwd == $userinfo['passwd'])
-    			{
-    				session('lab_uid', $uid);
-    				session('lab_uname', $userinfo['name']);
-    				$Privilege = M('privilege');
-    				$privilegelist = $Privilege->where('uid="%s"', $uid)->field('privi')->select();
-    				foreach($privilegelist as $privilege)
-    					session($privilege['privi'], true);
-    				if(session('?lab_super_admin') && session('lab_super_admin') == true)
-    					session('lab_admin', true);
-    				$data['uid'] = $userinfo['uid'];
-    				$data['uname'] = $userinfo['name'];
-    				$data['privilege'] = $privilegelist;
-    			}
-    			else 
-    				$data['wrongcode'] = $WRONG_CODE['passwd_error'];
-    		}
-    	}
-    	else
-    		$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
-    	$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-    	$this->ajaxReturn($data);
-    }
-    public function logout_function()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$WRONG_MSG = C('WRONG_MSG');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	if(session('?lab_uid'))
-    	{
-    		session(null);
-    		$data['msg'] = $WRONG_CODE['成功登出'];
-    	}
-    	else 
-    	{
-    		$data['wrongcode'] = $WRONG_CODE['user_notloggin'];
-    		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
-    	}
-    	$this->ajaxReturn($data);
-    }
-    private function modify_data()
+			if($data['userinfo'] == null)
+			{
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			}
+			$data['strlist'] = C('STR_LIST');
+		}
+		else 
+		{
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		}
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->assign($data);
+		if($data['wrongcode'] != $WRONG_CODE['totally_right'])
+			$this->display('Public:alert');
+		else
+			$this->display();
+	}
+	public function login_function()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(I('post.uid', $WRONG_CODE['not_exist']) != $WRONG_CODE['not_exist'])
+		{
+			$uid = trim(I('post.uid'));
+			$passwd = MkPasswd(trim(I('post.passwd')));
+			$User = M('user');
+			$map = array(
+				'uid' => $uid
+			);
+			$userinfo = $User->where($map)->find();
+			if($userinfo == null)
+				$data['wrongcode'] = $WRONG_CODE['userid_notexist'];
+			else
+			{
+				if($passwd == $userinfo['passwd'])
+				{
+					session('lab_uid', $uid);
+					session('lab_uname', $userinfo['name']);
+					$Privilege = M('privilege');
+					$privilegelist = $Privilege->where('uid="%s"', $uid)->field('privi')->select();
+					foreach($privilegelist as $privilege)
+						session($privilege['privi'], true);
+					if(session('?lab_super_admin') && session('lab_super_admin') == true)
+						session('lab_admin', true);
+					$data['uid'] = $userinfo['uid'];
+					$data['uname'] = $userinfo['name'];
+					$data['privilege'] = $privilegelist;
+				}
+				else 
+					$data['wrongcode'] = $WRONG_CODE['passwd_error'];
+			}
+		}
+		else
+			$data['wrongcode'] = $WRONG_CODE['query_data_invalid'];
+		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		$this->ajaxReturn($data);
+	}
+	public function logout_function()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$WRONG_MSG = C('WRONG_MSG');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		if(session('?lab_uid'))
+		{
+			session(null);
+			$data['msg'] = $WRONG_CODE['成功登出'];
+		}
+		else 
+		{
+			$data['wrongcode'] = $WRONG_CODE['user_notloggin'];
+			$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
+		}
+		$this->ajaxReturn($data);
+	}
+	private function modify_data()
 	{
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
@@ -183,7 +183,7 @@ class UserController extends Controller {
 	}
 	public function modify()
 	{
-    	if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
+		if(!IsPjax()) layout(true);//判断pjax确定是否加载layout
 		$WRONG_CODE = C('WRONG_CODE');
 		$WRONG_MSG = C('WRONG_MSG');
 		$data = $this->modify_data();
@@ -276,17 +276,17 @@ class UserController extends Controller {
 		$data['wrongmsg'] = $WRONG_MSG[$data['wrongcode']];
 		$this->ajaxReturn($data);
 	}
-    public function whether_loggedin_ajax()
-    {
-    	$WRONG_CODE = C('WRONG_CODE');
-    	$data['wrongcode'] = $WRONG_CODE['totally_right'];
-    	$data['loggedin'] = false;
-    	if(session('?lab_uid'))
-    	{
-    		$data['loggedin'] = true;
-    		$data['uid'] = session('lab_uid');
-    		$data['uname'] = session('lab_uname');
-    	}
-    	$this->ajaxReturn($data);
-    }
+	public function whether_loggedin_ajax()
+	{
+		$WRONG_CODE = C('WRONG_CODE');
+		$data['wrongcode'] = $WRONG_CODE['totally_right'];
+		$data['loggedin'] = false;
+		if(session('?lab_uid'))
+		{
+			$data['loggedin'] = true;
+			$data['uid'] = session('lab_uid');
+			$data['uname'] = session('lab_uname');
+		}
+		$this->ajaxReturn($data);
+	}
 }
